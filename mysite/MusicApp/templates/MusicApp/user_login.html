@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Login Page</title>
+</head>
+<body>
+	<h1>
+		Login
+	</h1>
+	<form method="POST" action="{% url "musicapp:login" %}"> {% csrf_token %}
+		<p>Username</p><br>
+		<input type="text" name="username"><br>
+		<p>Password</p><br>
+		<input type="text" name="password"><br>
+		<br>
+		<input type="submit" name="submit"><br>
+	</form>
+</body>
+</html>
