@@ -1,0 +1,9 @@
+language: python
+sudo: True
+python:
+- "3.4"
+install:
+- pip install -r requirements.txt
+script:
+- cd mysite
+- python manage.py test MusicApp
