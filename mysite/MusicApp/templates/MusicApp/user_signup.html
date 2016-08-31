@@ -1,0 +1,24 @@
+<<!DOCTYPE html>
+<html>
+<head>
+	<title>Sign up</title>
+</head>
+<body>
+
+<form method="post" action="{% url "musicapp:signup" %}">
+	{% csrf_token %}
+	<p>Username</p><br>
+	<input type="text" name="username">
+	<p>password</p><br>
+	<input type="text" name="passwd">
+	<p>email</p>
+	<input type="text" name="email">
+	<p>first name</p>
+	<input type="text" name="first_name">
+	<p>Last Name</p>
+	<input type="text" name="last_name">
+	<input type="submit" name="submit">
+</form>
+
+</body>
+</html>

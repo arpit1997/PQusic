@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Activation Form</title>
+</head>
+<body>
+<form method="POST" action="{% url "musicapp:activate" %}">
+    {% csrf_token %}
+	<p>email</p>
+	<input type="text" name="email">
+	<P>aCTIVATION kEY</P>
+	<input type="text" name="key">
+	<input type="submit" name="submit">
+</form>
+</body>
+</html>
