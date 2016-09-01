@@ -1,13 +1,15 @@
+import base64
+import os
 import smtplib
+
+from Crypto.Cipher import XOR
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
-from Crypto.Cipher import AES, XOR
-import base64
-import os
+
 # encryption key for creating activation key
 secret_key = os.environ.get("encryption_key")
 # sender's email address in account verification email
@@ -24,10 +26,12 @@ def user_login(request):
 		passwd = request.POST.get("password")
 		user = authenticate(username=username, password=passwd)
 		if user is not None:
-			# if user's email has been verfied then this will be true. default is false here
-			if user.is_active :
+			# if user's email has been verified then this will be true. default is false here
+			if user.is_active:
 				login(request, user)
-				return HttpResponse("success")
+				return HttpResponseRedirect(reverse('musicapp:home'))
+			else:
+				return HttpResponseRedirect(reverse('musicapp:activate'))
 		else:
 			messages.error(request, "username and password did not match")
 			return render(request, "MusicApp/user_login.html")
@@ -39,7 +43,10 @@ def user_login(request):
 
 # homepage of MusicApp yet to be implemented
 def home(request):
-	pass
+	context = {
+		'user': request.user
+	}
+	return render(request, "MusicApp/homepage.html", context)
 
 
 # view to handle user sign up
@@ -53,10 +60,10 @@ def user_signup(request):
 		first_name = request.POST.get("first_name")
 		last_name = request.POST.get("last_name")
 		# creating user
-		user = User.objects.create_user(username,email,passwd,first_name=first_name,last_name=last_name)
+		user = User.objects.create_user(username, email, passwd, first_name=first_name, last_name=last_name)
 		# custom save for creating non active user
 		custom_save(user)
-		activation_key = encrypt(secret_key,email)
+		activation_key = encrypt(secret_key, email)
 		# sending account verification mail
 		send_verification_mail(email, activation_key)
 		return HttpResponseRedirect(reverse("musicapp:activate"))
@@ -112,9 +119,9 @@ def decrypt(key, ciphertext):
 
 # simple function for sending verification mails
 def send_verification_mail(email, activation_key):
-		server = smtplib.SMTP('smtp.gmail.com',587)
-		server.starttls()
-		server.login(email_address,email_password)
-		msg = "Your Email address is"+email+"activation key is "+activation_key.decode("utf-8")
-		server.sendmail(email_address, email, msg)
-		server.quit()
+	server = smtplib.SMTP('smtp.gmail.com', 587)
+	server.starttls()
+	server.login(email_address, email_password)
+	msg = "Your Email address is" + email + "activation key is " + activation_key.decode("utf-8")
+	server.sendmail(email_address, email, msg)
+	server.quit()
