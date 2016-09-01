@@ -2,6 +2,7 @@ import base64
 import os
 import smtplib
 
+import binascii
 from Crypto.Cipher import XOR
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
@@ -60,13 +61,18 @@ def user_signup(request):
 		first_name = request.POST.get("first_name")
 		last_name = request.POST.get("last_name")
 		# creating user
-		user = User.objects.create_user(username, email, passwd, first_name=first_name, last_name=last_name)
-		# custom save for creating non active user
-		custom_save(user)
-		activation_key = encrypt(secret_key, email)
-		# sending account verification mail
-		send_verification_mail(email, activation_key)
-		return HttpResponseRedirect(reverse("musicapp:activate"))
+		user_exists_or_not, message = validate_username_email(username, email)
+		if not user_exists_or_not:
+			user = User.objects.create_user(username, email, passwd, first_name=first_name, last_name=last_name)
+			# custom save for creating non active user
+			custom_save(user)
+			activation_key = encrypt(secret_key, email)
+			# sending account verification mail
+			send_verification_mail(email, activation_key)
+			return HttpResponseRedirect(reverse("musicapp:activate"))
+		else:
+			messages.error(request, message)
+			return render(request, "MusicApp/user_signup.html")
 
 	# for a GET request
 	else:
@@ -79,18 +85,25 @@ def activate(request):
 		email = request.POST.get("email")
 		activation_key = request.POST.get("key")
 		# verifying thw activation key
-		decoded = decrypt(secret_key, activation_key)
+		try:
+			decoded = decrypt(secret_key, activation_key)
+		except binascii.Error :
+			decoded = None
 		decoded = decoded.decode("utf-8")
 		if email == decoded:
 			user = User.objects.get(email=email)
 			if user is None:
-				print("none user")
+				messages.error(request, "This email id is not valid")
+				return render(request, 'MusicApp/activation_form.html')
 			# activating the user
-			user.is_active = True
-			user.save()
-			return HttpResponse("account activated successfully")
+			else:
+				user.is_active = True
+				user.save()
+				messages.success(request, "account activated successfully please Login Now")
+				return HttpResponseRedirect(reverse("musicapp:login"))
 		else:
-			return HttpResponse("failed")
+			messages.error(request, "wrong activation key")
+			return render(request, 'MusicApp/activation_form.html')
 	else:
 		return render(request, 'MusicApp/activation_form.html')
 
@@ -125,3 +138,35 @@ def send_verification_mail(email, activation_key):
 	msg = "Your Email address is" + email + "activation key is " + activation_key.decode("utf-8")
 	server.sendmail(email_address, email, msg)
 	server.quit()
+
+
+def validate_username_email(username, email):
+	try:
+		user_name = User.objects.get(username=username)
+	except User.DoesNotExist:
+		user_name = None
+
+	try:
+		e_mail = User.objects.get(email=email)
+	except User.DoesNotExist:
+		e_mail = None
+
+	print(user_name)
+	print(e_mail)
+
+	if user_name is None and e_mail is None:
+		user_exists_or_not = False
+		message = ""
+	else:
+		if user_name is None and e_mail is not None:
+			user_exists_or_not = True
+			message = "A user is already regsitered with this email address"
+		else:
+			if user_name is not None and e_mail is None:
+				user_exists_or_not = True
+				message = "username already exists"
+			else:
+				user_exists_or_not = True
+				message = "username and email already exists"
+
+	return user_exists_or_not, message

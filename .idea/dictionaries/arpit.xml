@@ -2,8 +2,10 @@
   <dictionary name="arpit">
     <words>
       <w>firstname</w>
+      <w>gmail</w>
       <w>lastname</w>
       <w>musicapp</w>
+      <w>smtp</w>
     </words>
   </dictionary>
 </component>

@@ -4,7 +4,13 @@
 	<title>Sign up</title>
 </head>
 <body>
-
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
 <form method="post" action="{% url "musicapp:signup" %}">
 	{% csrf_token %}
 	<p>Username</p><br>
