@@ -6,7 +6,8 @@ import re
 import binascii
 from Crypto.Cipher import XOR
 from django.contrib import messages
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
@@ -90,7 +91,7 @@ def activate(request):
 		# verifying thw activation key
 		try:
 			decoded = decrypt(secret_key, activation_key)
-		except binascii.Error :
+		except binascii.Error:
 			decoded = None
 		decoded = decoded.decode("utf-8")
 		if email == decoded:
@@ -114,7 +115,11 @@ def activate(request):
 def password_reset(request):
 	if request.method == 'POST':
 		email = request.POST.get("email")
-		new_password = encrypt(secret_key, email).decode("utf-8")
+		re_expression = re.match(r'(.*)@(.*?)', email)
+		email_user_name = re_expression.group(1)
+		current_time = str(timezone.now())
+		key_text = email_user_name + current_time
+		new_password = encrypt(secret_key, key_text).decode("utf-8")
 		message = str(new_password)
 		try:
 			user = User.objects.get(email=email)
@@ -124,15 +129,41 @@ def password_reset(request):
 			user.set_password(new_password)
 			user.save()
 			send_verification_mail(email, new_password, message)
-			messages.success(request,"new password has been sent to your email please login with given password")
+			messages.success(request, "new password has been sent to your email please login with given password")
 			return HttpResponseRedirect(reverse("musicapp:login"))
 		else:
-			messages.error(request,"Sorry this email address is incorrect")
-			return render(request,"MusicApp/password_reset.html")
-
-
+			messages.error(request, "Sorry this email address is incorrect")
+			return render(request, "MusicApp/password_reset.html")
 	else:
-		return render(request,"MusicApp/password_reset.html")
+		return render(request, "MusicApp/password_reset.html")
+
+
+@login_required
+def change_password(request):
+	user = request.user
+	if request.method == "POST":
+		username = user.username
+		old_password = request.POST.get("old_password")
+		new_password = request.POST.get("new_password")
+		new_password_again = request.POST.get("new_password_again")
+		user = authenticate(username=username, password=old_password)
+		if user is not None:
+			if new_password == new_password_again:
+				user.set_password(new_password)
+				user.save()
+				logout(request)
+				messages.success(request, "password has been changed successfully now login")
+				return HttpResponseRedirect(reverse("musicapp:login"))
+			else:
+				messages.error(request, "new password you entered did not match")
+				return render(request, "MusicApp/change_password.html", {'user': user})
+		else:
+			messages.error(request, "sorry the password you entered is not correct")
+			return render(request, "MusicApp/change_password.html", {'user': user})
+	else:
+		messages.success(request, "changing password will logout and you have to login again")
+		return render(request, "MusicApp/change_password.html", {'user': user})
+
 
 # <---------------------------->
 # helper functions
