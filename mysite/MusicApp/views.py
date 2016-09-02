@@ -1,6 +1,7 @@
 import base64
 import os
 import smtplib
+import re
 
 import binascii
 from Crypto.Cipher import XOR
@@ -10,6 +11,7 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
+from django.utils import timezone
 
 # encryption key for creating activation key
 secret_key = os.environ.get("encryption_key")
@@ -68,7 +70,8 @@ def user_signup(request):
 			custom_save(user)
 			activation_key = encrypt(secret_key, email)
 			# sending account verification mail
-			send_verification_mail(email, activation_key)
+			message = "Your Email address is" + email + "activation key is " + activation_key.decode("utf-8")
+			send_verification_mail(email, activation_key, message)
 			return HttpResponseRedirect(reverse("musicapp:activate"))
 		else:
 			messages.error(request, message)
@@ -108,6 +111,29 @@ def activate(request):
 		return render(request, 'MusicApp/activation_form.html')
 
 
+def password_reset(request):
+	if request.method == 'POST':
+		email = request.POST.get("email")
+		new_password = encrypt(secret_key, email).decode("utf-8")
+		message = str(new_password)
+		try:
+			user = User.objects.get(email=email)
+		except User.DoesNotExist:
+			user = None
+		if user is not None:
+			user.set_password(new_password)
+			user.save()
+			send_verification_mail(email, new_password, message)
+			messages.success(request,"new password has been sent to your email please login with given password")
+			return HttpResponseRedirect(reverse("musicapp:login"))
+		else:
+			messages.error(request,"Sorry this email address is incorrect")
+			return render(request,"MusicApp/password_reset.html")
+
+
+	else:
+		return render(request,"MusicApp/password_reset.html")
+
 # <---------------------------->
 # helper functions
 
@@ -131,11 +157,10 @@ def decrypt(key, ciphertext):
 
 
 # simple function for sending verification mails
-def send_verification_mail(email, activation_key):
+def send_verification_mail(email, activation_key, msg):
 	server = smtplib.SMTP('smtp.gmail.com', 587)
 	server.starttls()
 	server.login(email_address, email_password)
-	msg = "Your Email address is" + email + "activation key is " + activation_key.decode("utf-8")
 	server.sendmail(email_address, email, msg)
 	server.quit()
 
