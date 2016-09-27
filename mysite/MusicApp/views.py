@@ -1,16 +1,16 @@
 import base64
-import os
-import smtplib
-import re
-
 import binascii
+import os
+import re
+import smtplib
+
 from Crypto.Cipher import XOR
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.utils import timezone
 
@@ -24,7 +24,12 @@ email_password = os.environ.get("password_a")
 
 # View to handle user login
 def user_login(request):
-	# if user has submitted a form for login
+
+	"""
+	handle for user login
+	:param request:
+	:return: httpresponse or rendered template
+	"""
 	if request.method == "POST":
 		username = request.POST.get("username")
 		passwd = request.POST.get("password")
@@ -45,17 +50,29 @@ def user_login(request):
 		return render(request, "MusicApp/user_login.html")
 
 
-# homepage of MusicApp yet to be implemented
 def home(request):
+	"""
+	homepage of MusicApp
+	:param request:
+	:return: render(html)
+
+	:To do: implement this function prperly
+	"""
 	context = {
 		'user': request.user
 	}
 	return render(request, "MusicApp/homepage.html", context)
 
 
-# view to handle user sign up
 def user_signup(request):
 	# if user has submitted a form
+	"""
+	handle for user sign up
+	:param request:
+	:return: httpresponse or rendered html
+	:To do: generate unique key according to time function or etc
+
+	"""
 	if request.method == "POST":
 		# extracting form's data submitted by user
 		username = request.POST.get("username")
@@ -84,7 +101,12 @@ def user_signup(request):
 
 
 def activate(request):
-	# if user has submitted a form for activation of an account
+	"""
+	handle for user account activation
+	:param request:
+	:return: httpresponseredirect or rendered html
+
+	"""
 	if request.method == "POST":
 		email = request.POST.get("email")
 		activation_key = request.POST.get("key")
@@ -113,6 +135,13 @@ def activate(request):
 
 
 def password_reset(request):
+	"""
+	handle for user account password reset functionality
+	:param request:
+	:return: httpresponseredirect or rendered html
+	:To do: generate unique key everytime a user request for password reset
+
+	"""
 	if request.method == 'POST':
 		email = request.POST.get("email")
 		re_expression = re.match(r'(.*)@(.*?)', email)
@@ -140,6 +169,11 @@ def password_reset(request):
 
 @login_required
 def change_password(request):
+	"""
+	handle for user account password change functionality
+	:param request:
+	:return: httpresponseredirect or rendered html
+	"""
 	user = request.user
 	if request.method == "POST":
 		username = user.username
@@ -165,30 +199,49 @@ def change_password(request):
 		return render(request, "MusicApp/change_password.html", {'user': user})
 
 
-# <---------------------------->
+# ******************************************** #
 # helper functions
+# ********************************************* #
 
-
-# custom save function for creating non active user
 def custom_save(user):
+	"""
+	custom save function for creating non active user
+	checking a user is active or not
+	:param user:
+	"""
 	user.is_active = False
 	user.save()
 
 
-# encrypt function for creating activation keys
 def encrypt(key, plaintext):
+	"""
+	encrypt a string and return
+	:param key:
+	:param plaintext:
+	:return: unicode(encryptedtext)
+	"""
 	cipher = XOR.new(key)
 	return base64.b64encode(cipher.encrypt(plaintext))
 
 
-# for decryption of activation keys
 def decrypt(key, ciphertext):
+	"""
+	decrypt a string with key and return
+	:param key:
+	:param ciphertext:
+	:return:decrypted text
+	"""
 	cipher = XOR.new(key)
 	return cipher.decrypt(base64.b64decode(ciphertext))
 
 
-# simple function for sending verification mails
 def send_verification_mail(email, activation_key, msg):
+	"""
+	send verification mail for new registered user
+	:param email:
+	:param activation_key:
+	:param msg:
+	"""
 	server = smtplib.SMTP('smtp.gmail.com', 587)
 	server.starttls()
 	server.login(email_address, email_password)
@@ -197,6 +250,12 @@ def send_verification_mail(email, activation_key, msg):
 
 
 def validate_username_email(username, email):
+	"""
+	check user exists or not
+	:param username:
+	:param email:
+	:return:boolean, message
+	"""
 	try:
 		user_name = User.objects.get(username=username)
 	except User.DoesNotExist:
