@@ -10,7 +10,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 from django.utils import timezone
 
@@ -22,9 +22,7 @@ email_address = os.environ.get("email")
 email_password = os.environ.get("password_a")
 
 
-# View to handle user login
 def user_login(request):
-
 	"""
 	handle for user login
 	:param request:
@@ -58,8 +56,14 @@ def home(request):
 
 	:To do: implement this function prperly
 	"""
+	# import pafy
+	# url = "https://www.youtube.com/watch?v=PT2_F-1esPk"
+	# video = pafy.new(url)
+	# audio = video.audiostreams
+	# yt_url = audio[0].url
+
 	context = {
-		'user': request.user
+		'user': request.user,
 	}
 	return render(request, "MusicApp/homepage.html", context)
 
@@ -197,6 +201,21 @@ def change_password(request):
 	else:
 		messages.success(request, "changing password will logout and you have to login again")
 		return render(request, "MusicApp/change_password.html", {'user': user})
+
+def get_video_url(request):
+
+	try:
+		import pafy
+	except:
+		pass
+	if request.method == "POST":
+		yt_url = request.POST.get("yt_url")
+		video = pafy.new(yt_url)
+		audio = video.audiostreams
+		audio_url = audio[0].url
+		return HttpResponse(audio_url)
+	else:
+		return HttpResponse("NULL")
 
 
 # ******************************************** #
