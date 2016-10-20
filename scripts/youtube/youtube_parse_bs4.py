@@ -40,4 +40,4 @@ for thumbs in thumb_nail:
 
 print(yt_links_duration)
 
-yt_links_duration.append(page.findAll('span':'video-time'))
+# yt_links_duration.append(page.findAll('span':'video-time'))

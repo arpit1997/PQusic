@@ -13,6 +13,7 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 from django.utils import timezone
+from .helpers.ytparser import YtParser
 
 # encryption key for creating activation key
 secret_key = os.environ.get("encryption_key")
@@ -62,6 +63,7 @@ def home(request):
 	# audio = video.audiostreams
 	# yt_url = audio[0].url
 
+	parse = YtParser("hello")
 	context = {
 		'user': request.user,
 	}
