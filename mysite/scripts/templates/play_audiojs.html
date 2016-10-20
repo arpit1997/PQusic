@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Play audio js</title>
+</head>
+<body>
+<div>
+	<a id="audio" href="https://r6---sn-cvh7knes.googlevideo.com/videoplayback?nh=IgpwcjAxLmJvbTA3Kg03NC4xMjUuNDguMTM3&initcwndbps=113750&requiressl=yes&ip=117.239.205.193&pl=20&ipbits=0&gcr=in&key=yt6&upn=nbCzO0m0ywM&id=o-AOoNbug5DjWZ97ay1jLCdnRt6aWImN-PRC7OfjV324AQ&ei=RF36V820FceIoQPxtICQAg&dur=261.801&mn=sn-cvh7knes&mm=31&gir=yes&clen=1670265&lmt=1469643233555388&ms=au&mv=m&mt=1476025103&source=youtube&keepalive=yes&mime=audio%2Fwebm&expire=1476047268&itag=249&sparams=clen%2Cdur%2Cei%2Cgcr%2Cgir%2Cid%2Cinitcwndbps%2Cip%2Cipbits%2Citag%2Ckeepalive%2Clmt%2Cmime%2Cmm%2Cmn%2Cms%2Cmv%2Cnh%2Cpl%2Crequiressl%2Csource%2Cupn%2Cexpire&signature=48540BDFD93192B38B112B54FE985975B4CD2FE4.4F276F90FB6BF3D2BEE95E46EB2F571A06FAD4F4&ratebypass=yes">Closer</a>
+	<button id = "stream" onclick="playaudio()">
+		stream
+	</button>
+	<div id="html5player">
+		
+	</div>
+</div>
+<script>
+	function playaudio(){
+		var link = document.getElementById("audio");
+		link = link.getAttribute("href");
+		console.log(link);
+		var audiodiv = document.getElementById("html5player");
+		audiodiv.innerHTML = ' <video controls="" autoplay="" name="media"><source src='+link+' type="audio/webm"></video> ' ;
+	};
+		
+</script>
+</body>
+</html>
