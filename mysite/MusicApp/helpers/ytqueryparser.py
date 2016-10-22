@@ -18,10 +18,11 @@ class YtQueryParser:
 		self.yt_links_thumbs = []
 		self.yt_links_duration = []
 		self.page = self.get_page()
-		self.get_thumbnail()
 		self.get_duration()
 		self.get_links_title()
 		self.get_views_age()
+		self.get_thumbnail()
+
 
 	def get_page(self):
 		r = requests.get(self.yt_query_url)
@@ -42,10 +43,9 @@ class YtQueryParser:
 			self.yt_links_views.append(data.find_all('li')[1].get_text())
 
 	def get_thumbnail(self):
-		"""
-		get it from ytPlylistparser.py
-
-		"""
+		for i in self.yt_links_href:
+			url = "http://img.youtube.com/vi/%s/default.jpg" % i[9:]
+			self.yt_links_thumbs.append(url)
 
 	def get_duration(self):
 		video_time_list = self.page.find_all('span', {'class': 'video-time'})
