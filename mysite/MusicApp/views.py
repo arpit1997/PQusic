@@ -221,3 +221,55 @@ def get_video_url(request):
 		return HttpResponse(audio_url)
 	else:
 		return HttpResponse("NULL")
+
+
+def view_user_profile(request):
+	pass
+
+
+def search_users(request):
+	pass
+
+
+def create_playlist(request):
+	pass
+
+
+def delete_playlist(request):
+	pass
+
+
+def add_to_playlist(request):
+	pass
+
+
+def remove_from_playlist(request):
+	pass
+
+
+def view_playlists(request):
+	pass
+
+
+def view_history(request):
+	pass
+
+
+def follow_user(request):
+	pass
+
+
+def unfollow_user(request):
+	pass
+
+
+def list_followers(request):
+	pass
+
+
+def list_followings(request):
+	pass
+
+
+def modify_mood_of_song(request):
+	pass
