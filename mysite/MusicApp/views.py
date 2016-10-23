@@ -1,12 +1,8 @@
-import base64
 import binascii
 import os
 import re
-import smtplib
 
-from Crypto.Cipher import XOR
 from django.contrib import messages
-from .models import AppUser
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -14,7 +10,10 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 from django.utils import timezone
+
+from .helpers.helper import custom_save, encrypt, decrypt, send_verification_mail, validate_username_email
 from .helpers.ytqueryparser import YtQueryParser
+from .models import AppUserProfile
 
 # encryption key for creating activation key
 secret_key = os.environ.get("encryption_key")
@@ -87,10 +86,13 @@ def user_signup(request):
 		passwd = request.POST.get("passwd")
 		first_name = request.POST.get("first_name")
 		last_name = request.POST.get("last_name")
+		privacy = request.POST.get("privacy")
+		privacy = bool(privacy)
 		# creating user
 		user_exists_or_not, message = validate_username_email(username, email)
 		if not user_exists_or_not:
 			user = User.objects.create_user(username, email, passwd, first_name=first_name, last_name=last_name)
+			user = AppUserProfile.objects.create(user=user, privacy=privacy)
 			# custom save for creating non active user
 			custom_save(user)
 			activation_key = encrypt(secret_key, email)
@@ -205,8 +207,8 @@ def change_password(request):
 		messages.success(request, "changing password will logout and you have to login again")
 		return render(request, "MusicApp/change_password.html", {'user': user})
 
-def get_video_url(request):
 
+def get_video_url(request):
 	try:
 		import pafy
 	except:
@@ -219,91 +221,3 @@ def get_video_url(request):
 		return HttpResponse(audio_url)
 	else:
 		return HttpResponse("NULL")
-
-
-# ******************************************** #
-# helper functions
-# ********************************************* #
-
-def custom_save(user):
-	"""
-	custom save function for creating non active user
-	checking a user is active or not
-	:param user:
-	"""
-	user.is_active = False
-	user.save()
-
-
-def encrypt(key, plaintext):
-	"""
-	encrypt a string and return
-	:param key:
-	:param plaintext:
-	:return: unicode(encryptedtext)
-	"""
-	cipher = XOR.new(key)
-	return base64.b64encode(cipher.encrypt(plaintext))
-
-
-def decrypt(key, ciphertext):
-	"""
-	decrypt a string with key and return
-	:param key:
-	:param ciphertext:
-	:return:decrypted text
-	"""
-	cipher = XOR.new(key)
-	return cipher.decrypt(base64.b64decode(ciphertext))
-
-
-def send_verification_mail(email, activation_key, msg):
-	"""
-	send verification mail for new registered user
-	:param email:
-	:param activation_key:
-	:param msg:
-	"""
-	server = smtplib.SMTP('smtp.gmail.com', 587)
-	server.starttls()
-	server.login(email_address, email_password)
-	server.sendmail(email_address, email, msg)
-	server.quit()
-
-
-def validate_username_email(username, email):
-	"""
-	check user exists or not
-	:param username:
-	:param email:
-	:return:boolean, message
-	"""
-	try:
-		user_name = User.objects.get(username=username)
-	except User.DoesNotExist:
-		user_name = None
-
-	try:
-		e_mail = User.objects.get(email=email)
-	except User.DoesNotExist:
-		e_mail = None
-
-	print(user_name)
-	print(e_mail)
-
-	if user_name is None and e_mail is None:
-		user_exists_or_not = False
-		message = ""
-	else:
-		if user_name is None and e_mail is not None:
-			user_exists_or_not = True
-			message = "A user is already regsitered with this email address"
-		else:
-			if user_name is not None and e_mail is None:
-				user_exists_or_not = True
-				message = "username already exists"
-			else:
-				user_exists_or_not = True
-				message = "username and email already exists"
-
-	return user_exists_or_not, message
