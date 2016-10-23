@@ -6,6 +6,7 @@ import smtplib
 
 from Crypto.Cipher import XOR
 from django.contrib import messages
+from .models import AppUser
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
