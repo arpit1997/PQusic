@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
@@ -14,6 +15,8 @@ from django.utils import timezone
 from .helpers.helper import custom_save, encrypt, decrypt, send_verification_mail, validate_username_email
 from .helpers.ytqueryparser import YtQueryParser
 from .models import AppUserProfile
+from .models import Playlist
+from .models import PlaylistSongs
 
 # encryption key for creating activation key
 secret_key = os.environ.get("encryption_key")
@@ -70,8 +73,11 @@ def home(request):
 	return render(request, "MusicApp/homepage.html", context)
 
 
+def results_query(request):
+	pass
+
+
 def user_signup(request):
-	# if user has submitted a form
 	"""
 	handle for user sign up
 	:param request:
@@ -209,10 +215,15 @@ def change_password(request):
 
 
 def get_video_url(request):
+	"""
+	also sue a create history function
+	:param request:
+	:return:
+	"""
 	try:
 		import pafy
-	except:
-		pass
+	except ImportError:
+		print("Can not import Pafy")
 	if request.method == "POST":
 		yt_url = request.POST.get("yt_url")
 		video = pafy.new(yt_url)
@@ -224,31 +235,123 @@ def get_video_url(request):
 
 
 def view_user_profile(request):
-	pass
+	if request.method == "POST":
+		search_query = request.POST.get('username')
+		try:
+			user = User.objects.get(username=search_query)
+		except User.DoesNotExist:
+			user = None
+		if user is not None:
+			name = user.first_name + " " + user.last_name
 
 
 def search_users(request):
 	pass
 
 
+@login_required
 def create_playlist(request):
-	pass
+	if request.method == "POST":
+		user = request.user
+		playlist_name = request.POST.get('name')
+		privacy = request.POST.get('privacy')
+		if not Playlist.objects.exists(user=user, playlist_name=playlist_name):
+			new_playlist = Playlist(user=user, playlist_name=playlist_name, privacy=privacy)
+			new_playlist.save()
+			return HttpResponse("created successfully")
+		else:
+			return HttpResponse("playlist already exists")
+	else:
+		return HttpResponse("Bad Request")
 
 
+@login_required
 def delete_playlist(request):
-	pass
+	if request.method == "POST":
+		user = request.user
+		playlist_name = request.POST.get('name')
+		try:
+			playlist = Playlist.objects.get(user=user, playlist_name=playlist_name)
+		except ObjectDoesNotExist:
+			playlist = None
+		if playlist is not None:
+			playlist.delete()
+			return HttpResponse("playlist deleted")
+		else:
+			return HttpResponse("playlist Does not exist")
+	else:
+		return HttpResponse("Bad request")
 
 
+@login_required
 def add_to_playlist(request):
-	pass
+	if request.method == "POST":
+		user = request.user
+		playlist_name = request.POST.get('name')
+		try:
+			playlist = Playlist.objects.get(user=user, playlist_name=playlist_name)
+		except ObjectDoesNotExist:
+			playlist = None
+		if playlist is not None:
+			song_id = request.POST.get('id')
+			song_name = request.POST.get('songname')
+			try:
+				mood = request.POST.get('mood')
+			except KeyError:
+				mood = None
+			try:
+				song = PlaylistSongs.objects.get(song_id=song_id)
+			except ObjectDoesNotExist:
+				song = None
+			if song is None:
+				song = PlaylistSongs(song_id=song_id, song_name=song_name, mood=mood)
+				playlist.songs.add(song)
+				playlist.save()
+				return HttpResponse("song added")
+			else:
+				playlist.songs.add(song)
+				playlist.save()
+				return HttpResponse("song added")
+		else:
+			return HttpResponse("Playlist does not exist")
 
 
 def remove_from_playlist(request):
-	pass
+	if request.method == "POST":
+		user = request.user
+		song_id = request.POST.get('song_id')
+		playlist_name = request.POST.get("name")
+		try:
+			playlist = Playlist.objects.get(user=user, playlist_name=playlist_name)
+		except ObjectDoesNotExist:
+			playlist = None
+		if playlist is not None:
+			try:
+				song = PlaylistSongs.objects.get(song_id=song_id)
+			except ObjectDoesNotExist:
+				song = None
+			if song is not None:
+				playlist.songs.remove(song)
+				playlist.save()
+				return HttpResponse("song deleted")
+			else:
+				return HttpResponse("song not found")
+		else:
+			return HttpResponse("playlist not found")
 
 
 def view_playlists(request):
-	pass
+	if request.method == "POST":
+		user = request.user
+		playlists = Playlist.objects.filter(user__username=user)
+		"""
+		fetching attributes
+		playlist_name = playlists[0].playlist_name
+		playlist_name = playlists[1].playlist_name
+
+		To get count of songs in every playlist do
+		count = playlists[0].songs.count()
+		"""
 
 
 def view_history(request):

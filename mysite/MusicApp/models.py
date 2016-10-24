@@ -25,8 +25,8 @@ class Playlist(models.Model):
 	Playlist model
 	"""
 	user = models.ForeignKey(User)
-	playlist_name = models.CharField(max_length=100, unique=False, null=False)
-	songs = models.ForeignKey(PlaylistSongs, null=True, blank=True)
+	playlist_name = models.CharField(max_length=100, unique=True, null=False)
+	songs = models.ManyToManyField(PlaylistSongs, null=True, blank=True, default=None)
 	privacy_choices = (
 		(True, 'public'),
 		(False, 'private')
@@ -35,8 +35,11 @@ class Playlist(models.Model):
 
 
 class SongHistory(models.Model):
+	"""
+	model containing songs for history
+	"""
 	last_listened = models.DateTimeField()
-	song_id = models.CharField(max_length=20)
+	song_id = models.CharField(max_length=20, unique=True)
 	song_name = models.TextField()
 
 
@@ -44,7 +47,7 @@ class History(models.Model):
 	"""
 	History of a user
 	"""
-	song = models.ForeignKey(SongHistory, blank=True, null=True)
+	song = models.ManyToManyField(SongHistory, blank=True, null=True)
 	user = models.ForeignKey(User)
 
 
