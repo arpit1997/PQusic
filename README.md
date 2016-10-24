@@ -1,6 +1,7 @@
 # MusicWebApp
 A Music playlist app
 
+[![Build Status](https://travis-ci.com/arpit1997/MusicWebApp.svg?token=3Uc9gKxpBA3p2jCgiRiz&branch=master)](https://travis-ci.com/arpit1997/MusicWebApp)
 ## How to run this code
 1. pull this repository
 2. set three environment variables to your machine:
