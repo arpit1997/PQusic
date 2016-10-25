@@ -309,9 +309,11 @@ def add_to_playlist(request):
 				playlist.save()
 				return HttpResponse("song added")
 			else:
+				"""
 				playlist.songs.add(song)
 				playlist.save()
-				return HttpResponse("song added")
+				"""
+				return HttpResponse("song is already present in the playlist")
 		else:
 			return HttpResponse("Playlist does not exist")
 
