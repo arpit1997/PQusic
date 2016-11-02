@@ -51,7 +51,17 @@ class History(models.Model):
 	user = models.ForeignKey(User)
 
 
-class Follow(models.Model):
+class Followers(models.Model):
 	"""
-	Followers and following
+	Followers
 	"""
+	user = models.OneToOneField(User)
+	followers = models.ManyToManyField(User)
+
+
+class Followings(models.Model):
+	"""
+	Followings
+	"""
+	user = models.OneToOneField(User)
+	followings = models.ManyToManyField(User)

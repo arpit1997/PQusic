@@ -16,7 +16,7 @@ from .helpers.helper import custom_save, encrypt, decrypt, send_verification_mai
 from .helpers.ytqueryparser import YtQueryParser
 from .models import AppUserProfile
 from .models import Playlist
-from .models import PlaylistSongs
+from .models import PlaylistSongs, Followers, Followings
 
 # encryption key for creating activation key
 secret_key = os.environ.get("encryption_key")
@@ -359,11 +359,26 @@ def view_history(request):
 
 
 def follow_user(request):
-	pass
-
+	if request.method == "POST":
+		user = request.user
+		follow_user = request.POST.get("follower")
+		follow = Followers.objects.get(user=user)
+		if follow.followers.filter(followers__followers__email=follow_user.email).exists():
+			return HttpResponse("already followed")
+		else:
+			follow.followers.add(follow_user)
+			return HttpResponse("follow successful")
 
 def unfollow_user(request):
-	pass
+	if request.method == "POST":
+		user = request.user
+		unfollow_user = request.POST.get("unfollower")
+		follow = Followers.objects.get(user=user)
+		if follow.followers.filter(followers__followers__email=unfollow_user.email).exists():
+			follow.followers.remove(unfollow_user)
+			return HttpResponse("unfollowed")
+		else:
+			return HttpResponse("user does not exist")
 
 
 def list_followers(request):
@@ -375,4 +390,12 @@ def list_followings(request):
 
 
 def modify_mood_of_song(request):
+	pass
+
+
+def share_playlist(request):
+	pass
+
+
+def import_playlist(request):
 	pass
