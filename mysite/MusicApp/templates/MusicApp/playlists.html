@@ -1,0 +1,21 @@
+<html>
+<body>
+<p>
+    {{ request.user }}
+</p>
+{% if playlists%}
+    <p>
+    hello
+    </p>
+    <ul>
+        {% for name,song_count in playlists %}
+            <li>
+                {{ name }}
+                {{ song_count }}
+            </li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+</body>
+</html>

@@ -219,6 +219,7 @@ def get_video_url(request):
 	also sue a create history function
 	:param request:
 	:return:
+	:To do - don't forget to create history
 	"""
 	try:
 		import pafy
@@ -245,31 +246,54 @@ def view_user_profile(request):
 			name = user.first_name + " " + user.last_name
 
 
-def search_users(request):
+def search_users(request, username):
+	"""
+	just use a filter query
+	use a GET request
+	:param request, username:
+	:return a list of relevent users:
+	use some regex
+	"""
 	pass
 
 
 @login_required
 def create_playlist(request):
+	"""
+	create playlist
+	:param request:
+	:return:
+	"""
 	if request.method == "POST":
 		user = request.user
 		playlist_name = request.POST.get('name')
+		print(playlist_name)
 		privacy = request.POST.get('privacy')
-		if not Playlist.objects.exists(user=user, playlist_name=playlist_name):
+		try:
+			p = Playlist.objects.get(user=user, playlist_name=playlist_name)
+		except ObjectDoesNotExist:
+			p = None
+		if p is None:
 			new_playlist = Playlist(user=user, playlist_name=playlist_name, privacy=privacy)
 			new_playlist.save()
 			return HttpResponse("created successfully")
 		else:
 			return HttpResponse("playlist already exists")
 	else:
-		return HttpResponse("Bad Request")
+		return render(request, "MusicApp/create_playlist.html")
 
 
 @login_required
-def delete_playlist(request):
-	if request.method == "POST":
+def delete_playlist(request,name):
+	"""
+	name parameter is case sensitive ve careful
+	:param request:
+	:param name:
+	:return:
+	"""
+	if request.method == "GET":
 		user = request.user
-		playlist_name = request.POST.get('name')
+		playlist_name = name
 		try:
 			playlist = Playlist.objects.get(user=user, playlist_name=playlist_name)
 		except ObjectDoesNotExist:
@@ -285,6 +309,12 @@ def delete_playlist(request):
 
 @login_required
 def add_to_playlist(request):
+	"""
+	adds a song to playlist
+	request type can be decided from discussion with front-end people
+	:param request:
+	:return:
+	"""
 	if request.method == "POST":
 		user = request.user
 		playlist_name = request.POST.get('name')
@@ -341,9 +371,15 @@ def remove_from_playlist(request):
 
 
 def view_playlists(request):
-	if request.method == "POST":
+	"""
+	working
+	:param request:
+	:return:
+	"""
+	if request.method == "GET":
 		user = request.user
-		playlists = Playlist.objects.filter(user__username=user)
+		playlists = Playlist.objects.filter(user__username=user.username)
+		playlist_attr = []
 		"""
 		fetching attributes
 		playlist_name = playlists[0].playlist_name
@@ -352,30 +388,46 @@ def view_playlists(request):
 		To get count of songs in every playlist do
 		count = playlists[0].songs.count()
 		"""
+		for playlist in playlists:
+			n = playlist.playlist_name
+			c = playlist.songs.all().count()
+			playlist_attr.append((n,c))
+			print(c)
+		context = {
+			"playlists":playlist_attr
+		}
+		return render(request, "MusicApp/playlists.html", context)
 
 
 def view_history(request):
 	pass
 
 
-def follow_user(request):
-	if request.method == "POST":
+def follow_user(request, username):
+	if request.method == "GET":
+		# user = the user logged in
 		user = request.user
-		follow_user = request.POST.get("follower")
-		follow = Followers.objects.get(user=user)
-		if follow.followers.filter(followers__followers__email=follow_user.email).exists():
+		# user wants to follow the followers_user
+		follower_user = str(username)
+		follow, created = Followers.objects.get_or_create(follower_user=user)
+		follow.save()
+		if follow.followers.filter(followers__followers__username=follower_user).exists():
 			return HttpResponse("already followed")
 		else:
-			follow.followers.add(follow_user)
+			follower_user_object = User.objects.get(username=follower_user)
+			follow.followers.add(follower_user_object)
+			follow.save()
 			return HttpResponse("follow successful")
 
-def unfollow_user(request):
-	if request.method == "POST":
+
+def unfollow_user(request, username):
+	if request.method == "GET":
 		user = request.user
-		unfollow_user = request.POST.get("unfollower")
-		follow = Followers.objects.get(user=user)
-		if follow.followers.filter(followers__followers__email=unfollow_user.email).exists():
+		unfollower_user = username
+		follow = Followers.objects.get(follower_user=user)
+		if follow.followers.filter(followers__followers__username=unfollower_user).count() != 0:
 			follow.followers.remove(unfollow_user)
+			follow.save()
 			return HttpResponse("unfollowed")
 		else:
 			return HttpResponse("user does not exist")
@@ -399,3 +451,8 @@ def share_playlist(request):
 
 def import_playlist(request):
 	pass
+
+
+# test view .
+def hello(request, name):
+	return HttpResponse(str(name))

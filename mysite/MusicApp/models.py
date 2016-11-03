@@ -55,13 +55,13 @@ class Followers(models.Model):
 	"""
 	Followers
 	"""
-	user = models.OneToOneField(User)
-	followers = models.ManyToManyField(User)
+	follower_user = models.OneToOneField(User)
+	followers = models.ManyToManyField(User, related_name="followers_key")
 
 
 class Followings(models.Model):
 	"""
 	Followings
 	"""
-	user = models.OneToOneField(User)
-	followings = models.ManyToManyField(User)
+	following_user = models.OneToOneField(User)
+	followings = models.ManyToManyField(User, related_name="followings_key")
