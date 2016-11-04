@@ -1,9 +1,12 @@
-<<!DOCTYPE html>
+{% load staticfiles %}
 <html>
 <head>
 	<title>Sign up</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+     <link href="{% static "MusicApp/css/style.css" %}" rel="stylesheet" type="text/css">
+     <link href="{% static "MusicApp/css/bootstrap.min.css" %}" rel="stylesheet" type="text/css">
 </head>
-<body>
+<body class="wraper">
     {% if messages %}
         <ul class="messages">
             {% for message in messages %}
@@ -11,23 +14,41 @@
             {% endfor %}
         </ul>
     {% endif %}
-<form method="post" action="{% url "musicapp:signup" %}">
-	{% csrf_token %}
-	<p>Username</p><br>
-	<input type="text" name="username">
-	<p>password</p><br>
-	<input type="text" name="passwd">
-	<p>email</p>
-	<input type="text" name="email">
-	<p>first name</p>
-	<input type="text" name="first_name">
-	<p>Last Name</p>
-	<input type="text" name="last_name">
-    <p>Privacy</p>
-    <input type="text" name="privacy">
+ <div class="row Hheader">
+                <div class="col-md-5"><p>PQusic</p></div>
+                <div class="col-md-4 col-md-offset-3">
+                    <div class="row Hheader1">
+                        <div class="col-md-3"></div>
+                        <div class="col-md-3"></div>
+                        <div class="col-md-3"></div>
+                    </div>
+                </div>
+            </div>
 
-	<input type="submit" name="submit">
-</form>
-
+            <div class="row login_body">
+                <div class="col-md-4 col-md-offset-4">
+                    <div class="model">
+                        <form class="modal-content animate" method="POST" action="{% url "musicapp:login" %}">
+                            {% csrf_token %}
+                            <div class="imgcontainer">
+                                <img src="{% static "MusicApp/user.jpg" %}" alt="Avatar" class="avatar">
+                            </div>
+                            <div class="container">
+                                <label><b>Username</b></label>
+                                <input type="text" placeholder="Enter Username" name="username" required>
+                                <label><b>Password</b></label>
+                                <input type="password" placeholder="Enter Password" name="password" required>
+                                <label><b>Email</b></label>
+                                <input type="text" placeholder="Enter Email" name="email" required>
+                                <label><b>First Name</b></label>
+                                <input type="text" placeholder="Enter First Name" name="f_name" required>
+                                <label><b>Last Name</b></label>
+                                <input type="text" placeholder="Enter Last Name" name="l_name" required>
+                                <button type="submit" name="submit">Sign up</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
 </body>
 </html>
