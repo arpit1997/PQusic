@@ -1,22 +1,13 @@
 {% load staticfiles %}
-<html>
-<head>
-	<title>Hompage</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-     <link href="{% static "MusicApp/css/style.css" %}" rel="stylesheet" type="text/css">
+<html xmlns="http://www.w3.org/1999/html">
+
+    <head>
+     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+      <link href="{% static "MusicApp/css/style.css" %}" rel="stylesheet" type="text/css">
      <link href="{% static "MusicApp/css/bootstrap.min.css" %}" rel="stylesheet" type="text/css">
-</head>
-<body class="wraper">
-    {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
-{% if user.is_authenticated %}
-	{{ user }}
-{% endif %}
+        <title>HomePage</title>
+    </head>
+
 
     <body class="wraper">
 
@@ -26,12 +17,14 @@
                     <div class="row Hheader1">
                         <div class="col-md-3"></div>
                         <div class="col-md-3">
-                            <form method="post" action="{% url "musicapp:login" %}">{% csrf_token %}
+                            <form method="get" action="{% url "musicapp:login" %}">
+                                {% csrf_token %}
                                 <button type="submit" value="submit">Login</button>
                             </form>
                         </div>
                         <div class="col-md-3">
-                            <form method="post" action="{% url "musicapp:signup" %}">{% csrf_token %}
+                            <form method="get" action="{% url "musicapp:signup" %}">
+                                {% csrf_token %}
                                 <button type="submit" value="submit">Sign up</button>
                             </form>
                         </div>
@@ -42,7 +35,8 @@
             <div class="col-md-12">
             <div class="row Hmiddle">
                 <div class="col-md-12">
-                    <form action="main.html" method="post">{% csrf_token %}
+                    <form action="main.html" method="post">
+                        {% csrf_token %}
                     <div class="row Hmiddle1">
 
                         <div class="col-md-7 col-md-offset-2"><input type="text" name="search"
@@ -124,5 +118,6 @@
 
             </div>
         </div>
-</body>
+
+    </body>
 </html>
