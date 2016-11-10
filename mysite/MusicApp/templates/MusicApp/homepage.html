@@ -1,20 +1,127 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Hompage</title>
-</head>
-<body>
-    {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
-{% if user.is_authenticated %}
-	{{ user }}
-{% endif %}
+{% load staticfiles %}
+<html xmlns="http://www.w3.org/1999/html">
 
-Homepage
-</body>
+    <head>
+     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+      <link href="{% static "MusicApp/css/style.css" %}" rel="stylesheet" type="text/css">
+     <link href="{% static "MusicApp/css/bootstrap.min.css" %}" rel="stylesheet" type="text/css">
+        <title>HomePage</title>
+    </head>
+
+
+    <body class="wraper">
+            <div>
+                <p>
+                    {{ user }}
+                </p>
+            </div>
+            <div class="row Hheader">
+                <div class="col-md-5"><p>PQusic</p></div>
+                <div class="col-md-4 col-md-offset-3">
+                    <div class="row Hheader1">
+                        <div class="col-md-3"></div>
+                        <div class="col-md-3">
+                            <form method="get" action="{% url "musicapp:login" %}">
+                                {% csrf_token %}
+                                <button type="submit" value="submit">Login</button>
+                            </form>
+                        </div>
+                        <div class="col-md-3">
+                            <form method="get" action="{% url "musicapp:signup" %}">
+                                {% csrf_token %}
+                                <button type="submit" value="submit">Sign up</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <div class="row Hheight">
+            <div class="col-md-12">
+            <div class="row Hmiddle">
+                <div class="col-md-12">
+                    <form action="main.html" method="post">
+                        {% csrf_token %}
+                    <div class="row Hmiddle1">
+
+                        <div class="col-md-7 col-md-offset-2"><input type="text" name="search"
+                                                                     placeholder="Search songs..."></div>
+                        <div class="col-md-1"><button type="submit" value="submit">Search</button></div>
+
+                    </div>
+                        </form>
+                </div>
+            </div>
+                <br>
+                <div class="row OR">
+                    <div class="col-md-8 col-md-offset-2">
+                        <h3 style="font-family:serif">Trending songs</h3>
+                    </div>
+                </div>
+                <br>
+                    <div class="row song_list">
+                    <div class="col-md-8 col-md-offset-2">
+<!-- ###############for loop row and column wise -->
+                        <div class="row stream_list">
+                            <div class="col-md-4"><img src="{% static "MusicApp/user.jpg" %}" width="190px" height="150px">
+                                <br>
+                                <p>Song name</p>        <!---first row and first column-->
+                                <p>Duration</p>
+                                <p>Singer name</p>
+                                <p>Views</p>
+
+                            </div>
+                            <div class="col-md-4"><img src="{% static "MusicApp/user.jpg" %}"  width="190px" height="150px">
+                                <br>
+                                <p>Song name</p>        <!--first row and second column-->
+                                <p>Duration</p>
+                                <p>Singer name</p>
+                                <p>Views</p>
+                                </div>
+                            <div class="col-md-4"><img src="{% static "MusicApp/user.jpg" %}" width="190px" height="150px">
+                                <br>
+                                <p>Song name</p>           <!---first row and third column-->
+                                <p>Duration</p>
+                                <p>Singer name</p>
+                                <p>Views</p>
+                            </div>
+                        </div>
+    <!---End for loop and repeat again for second row-->
+
+<!--comment up to-->       <div class="row stream_list">
+                            <div class="col-md-4"><img src="{% static "MusicApp/user.jpg" %}" width="190px" height="150px">
+                                <br>
+                                <p>Song name</p>
+                                <p>Duration</p>
+                                <p>Singer name</p>
+                                <p>Views</p>
+
+                            </div>
+                            <div class="col-md-4"><img src="{% static "MusicApp/user.jpg" %}"  width="190px" height="150px">
+                                <br>
+                                <p>Song name</p>
+                                <p>Duration</p>
+                                <p>Singer name</p>
+                                <p>Views</p>
+                                </div>
+                            <div class="col-md-4"><img src="{% static "MusicApp/user.jpg" %}" width="190px" height="150px">
+                                <br>
+                                <p>Song name</p>
+                                <p>Duration</p>
+                                <p>Singer name</p>
+                                <p>Views</p>
+                            </div>
+<!---This one-->          </div>
+
+
+                    </div>
+                </div>
+                </div>
+        </div>
+        <div class="row footer"> <!---footer-->
+            <div class="col-md-12">
+
+            </div>
+        </div>
+
+    </body>
 </html>

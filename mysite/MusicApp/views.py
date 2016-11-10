@@ -65,16 +65,19 @@ def home(request):
 	# video = pafy.new(url)
 	# audio = video.audiostreams
 	# yt_url = audio[0].url
+	if request.method == "POST":
+		search = request.POST.get("search")
 
 	parse = YtQueryParser("hello")
 	context = {
 		'user': request.user,
 	}
+	print(parse)
 	return render(request, "MusicApp/homepage.html", context)
 
 
 def results_query(request):
-	pass
+	return render(request, "MusicApp/main.html")
 
 
 def user_signup(request):
@@ -92,13 +95,14 @@ def user_signup(request):
 		passwd = request.POST.get("passwd")
 		first_name = request.POST.get("first_name")
 		last_name = request.POST.get("last_name")
-		privacy = request.POST.get("privacy")
-		privacy = bool(privacy)
+		print(username,email,passwd,first_name,last_name,sep='$')
+		#privacy = request.POST.get("privacy")
+		#privacy = bool(privacy)
 		# creating user
 		user_exists_or_not, message = validate_username_email(username, email)
 		if not user_exists_or_not:
 			user = User.objects.create_user(username, email, passwd, first_name=first_name, last_name=last_name)
-			user = AppUserProfile.objects.create(user=user, privacy=privacy)
+			user = AppUserProfile.objects.create(user=user)
 			# custom save for creating non active user
 			custom_save(user)
 			activation_key = encrypt(secret_key, email)
@@ -108,7 +112,7 @@ def user_signup(request):
 			return HttpResponseRedirect(reverse("musicapp:activate"))
 		else:
 			messages.error(request, message)
-			return render(request, "MusicApp/user_signup.html")
+		return render(request, "MusicApp/user_signup.html")
 
 	# for a GET request
 	else:

@@ -1,0 +1,106 @@
+{% load staticfiles %}
+<html>
+    
+    <head>
+     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+        <link href="{% static "MusicApp/css/style.css" %}" rel="stylesheet" type="text/css">
+     <link href="{% static "MusicApp/css/bootstrap.min.css" %}" rel="stylesheet" type="text/css">
+    </head>
+ <style>   
+</style>
+    
+    <body class="wraper">
+        
+            <div id="mySidenav" class="sidenav">
+                <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+                <a href="{% url "musicapp:home" %}">Home</a>
+                <a href="{% url "musicapp:home" %}">Trending</a>
+                <a href="#">PlayList</a>
+                <a href="#">Profile</a>
+                <a href="#">History</a>
+            </div>
+
+            <div class="row Mheader">
+                
+                <div class="col-md-2">
+                <div class="row logo">
+                    <div class="col-md-4"><span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;
+                        </span></div>
+                    <div class="col-md-8"><p>PQusic</p></div>
+                </div>
+                </div>
+                <div class="col-md-7">
+                    <div class="row Mheader1">
+                        <div class="col-md-10"><input type="text" name="search" 
+                                                                     placeholder="Search songs..."></div>
+                        <div class="col-md-2"><button type="button">Search</button></div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="row Mheader2">
+                        
+                        <div class="col-md-5 col-md-offset-1"></div>
+                        <div class="col-md-6"></div>
+                    </div>
+                </div>
+            </div>
+            
+            
+        
+        
+        <div class="row Mmiddle">
+            <div class="col-md-12">
+            <!--div class="list"-->  
+                
+                <div class="row search_song_list">
+                    <div class="col-md-8 col-md-offset-2">
+        <!------------------------------------ For loop----------------------------------------->
+                        <div class="row search_stream_list">
+                            <div class="col-md-3"><img src="{% static "MusicApp/user.jpg" %}" width="190px" height="150px"></div>
+                            <div class="col-md-9">
+                                <p>Song name</p>
+                                <p>Duration</p>
+                                <p>Singer name</p>
+                                <p>Views</p>
+                            </div>
+                            
+                        </div>
+                        
+                        <!---- make below class comment--->
+                        <div class="row search_stream_list">
+                            <div class="col-md-3"><img src="{% static "MusicApp/user.jpg" %}" width="190px" height="150px"></div>
+                            <div class="col-md-9">
+                                <p>Song name</p>
+                                <p>Duration</p>
+                                <p>Singer name</p>
+                                <p>Views</p>
+                            </div>
+                        </div><!--- make comment------>
+                        
+            <!-------------------------------End For loop------------------------------------------->
+                        
+                    </div>
+                </div>
+                
+                
+                </div>
+            </div>
+        
+        
+        
+        
+        
+            
+        <script>
+            function openNav() {
+                document.getElementById("mySidenav").style.width = "250px";
+                }
+
+            function closeNav() {
+                document.getElementById("mySidenav").style.width = "0";
+                }
+        </script>
+
+        
+    </body>
+</html>
