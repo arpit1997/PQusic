@@ -14,6 +14,7 @@ from django.utils import timezone
 
 from .helpers.helper import custom_save, encrypt, decrypt, send_verification_mail, validate_username_email
 from .helpers.ytqueryparser import YtQueryParser
+from .helpers.ytPlaylistParser import YtPlaylist
 from .models import AppUserProfile
 from .models import Playlist
 from .models import PlaylistSongs, Followers, Followings
@@ -69,10 +70,14 @@ def home(request):
 		search = request.POST.get("search")
 
 	parse = YtQueryParser("hello")
+
+	pl = YtPlaylist()
+	# x = pl.yt_playlist['Country']
+	# x = x[:3]
 	context = {
 		'user': request.user,
+		'pl':pl.yt_playlist,
 	}
-	print(parse)
 	return render(request, "MusicApp/homepage.html", context)
 
 

@@ -54,37 +54,32 @@
                 <br>
                 <div class="row OR">
                     <div class="col-md-8 col-md-offset-2">
-                        <h3 style="font-family:serif">Trending songs</h3>
+                        <h3 style="font-family:serif">Trending songs </h3>
                     </div>
                 </div>
                 <br>
                     <div class="row song_list">
                     <div class="col-md-8 col-md-offset-2">
 <!-- ###############for loop row and column wise -->
+                    {% for category, songs in pl.items %}
+                    <div class="row OR">
+                        <div class="col-md-8 col-md-offset-2">
+                            <h3 style="font-family:serif">{{ category }} </h3>
+                        </div>
+                    </div>
                         <div class="row stream_list">
-                            <div class="col-md-4"><img src="{% static "MusicApp/user.jpg" %}" width="190px" height="150px">
+                         {% for song in songs %}
+                            <div class="col-md-4"><img src="{{ song.yt_thumbnail }}" width="190px" height="150px">
                                 <br>
-                                <p>Song name</p>        <!---first row and first column-->
-                                <p>Duration</p>
-                                <p>Singer name</p>
-                                <p>Views</p>
+                                <p><a href="{{ song.yt_href }}">{{ song.yt_title }}</a></p>        <!---first row and first column-->
+                                <p>{{ song.yt_duration }}</p>
+                                <p>{{ song.yt_artist }}</p>
+                                <p>{{ song.yt_views }}</p>
 
                             </div>
-                            <div class="col-md-4"><img src="{% static "MusicApp/user.jpg" %}"  width="190px" height="150px">
-                                <br>
-                                <p>Song name</p>        <!--first row and second column-->
-                                <p>Duration</p>
-                                <p>Singer name</p>
-                                <p>Views</p>
-                                </div>
-                            <div class="col-md-4"><img src="{% static "MusicApp/user.jpg" %}" width="190px" height="150px">
-                                <br>
-                                <p>Song name</p>           <!---first row and third column-->
-                                <p>Duration</p>
-                                <p>Singer name</p>
-                                <p>Views</p>
-                            </div>
+                         {% endfor %}
                         </div>
+                    {% endfor %}
     <!---End for loop and repeat again for second row-->
 
 <!--comment up to-->       <div class="row stream_list">
@@ -96,21 +91,6 @@
                                 <p>Views</p>
 
                             </div>
-                            <div class="col-md-4"><img src="{% static "MusicApp/user.jpg" %}"  width="190px" height="150px">
-                                <br>
-                                <p>Song name</p>
-                                <p>Duration</p>
-                                <p>Singer name</p>
-                                <p>Views</p>
-                                </div>
-                            <div class="col-md-4"><img src="{% static "MusicApp/user.jpg" %}" width="190px" height="150px">
-                                <br>
-                                <p>Song name</p>
-                                <p>Duration</p>
-                                <p>Singer name</p>
-                                <p>Views</p>
-                            </div>
-<!---This one-->          </div>
 
 
                     </div>
