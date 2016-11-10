@@ -54,6 +54,7 @@ class History(models.Model):
 class Followers(models.Model):
 	"""
 	Followers
+	follower_user follows followers
 	"""
 	follower_user = models.OneToOneField(User)
 	followers = models.ManyToManyField(User, related_name="followers_key")

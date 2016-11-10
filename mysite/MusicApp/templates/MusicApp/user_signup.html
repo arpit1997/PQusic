@@ -14,6 +14,11 @@
             {% endfor %}
         </ul>
     {% endif %}
+ <div>
+     <p>
+         {{ request.user }}
+     </p>
+ </div>
  <div class="row Hheader">
                 <div class="col-md-5"><p>PQusic</p></div>
                 <div class="col-md-4 col-md-offset-3">
@@ -28,7 +33,7 @@
             <div class="row login_body">
                 <div class="col-md-4 col-md-offset-4">
                     <div class="model">
-                        <form class="modal-content animate" method="POST" action="{% url "musicapp:login" %}">
+                        <form class="modal-content animate" method="POST" action="{% url "musicapp:signup" %}">
                             {% csrf_token %}
                             <div class="imgcontainer">
                                 <img src="{% static "MusicApp/user.jpg" %}" alt="Avatar" class="avatar">
@@ -41,9 +46,9 @@
                                 <label><b>Email</b></label>
                                 <input type="text" placeholder="Enter Email" name="email" required>
                                 <label><b>First Name</b></label>
-                                <input type="text" placeholder="Enter First Name" name="f_name" required>
+                                <input type="text" placeholder="Enter First Name" name="first_name" required>
                                 <label><b>Last Name</b></label>
-                                <input type="text" placeholder="Enter Last Name" name="l_name" required>
+                                <input type="text" placeholder="Enter Last Name" name="last_name" required>
                                 <button type="submit" name="submit">Sign up</button>
                             </div>
                         </form>
