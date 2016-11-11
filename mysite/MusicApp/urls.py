@@ -13,7 +13,9 @@ urlpatterns = [
 	# Test view url
 	url(r'^playlists$', views.view_playlists, name="view-playlists"),
 	url(r'^playlists/$', views.view_playlists, name="view-playlists"),
-	url(r'^playlists/create', views.create_playlist, name="create-playlists"),
+	url(r'^playlist/(?P<playlist_name>[a-zA-Z0-9]{1,})', views.view_playlist_songs, name="playlist_songs"),
+	url(r'^playlists/create$', views.create_playlist, name="create-playlists"),
+	url(r'^playlists/create/$', views.create_playlist, name="create-playlists"),
 	url(r'^playlists/delete/(?P<name>[a-zA-Z]{1,})', views.delete_playlist, name="delete-playlist"),
 	url(r'^follow/(?P<username>[a-zA-Z0-9]{1,})', views.follow_user, name="follow-user"),
 	url(r'^unfollow/(?P<username>[a-zA-Z0-9]{1,})', views.unfollow_user, name="unfollow-user"),

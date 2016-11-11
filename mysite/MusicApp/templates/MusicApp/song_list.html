@@ -46,22 +46,20 @@
             
 
         <div class="song_level">
-        <pre>Playlists</pre></div>
+    {% if name %}
+        <pre>{{ name }} {{ privacy }}</pre></div>
         <div class="playlist_song">
         <table class="table table-bordered hover-table">
-        {% if playlists %}
-            {% for name, song_count in playlists %}
-                <tr class="T_tr">
-                    <th class="td1"><a href="{% url "musicapp:playlist_songs" name %}">{{ name }}</a></th>
-                    <th class="td2">{{ song_count }}</th>
-                    <th class="td2">{{ privacy }}</th>
-                    <th class="td4">Delete</th>
-                </tr>
-            {% endfor %}
-        {% endif %}
-            
+        {% for song in songs %}
+            <tr class="T_tr">
+                <th class="td2">{{ song.song_name }}</th>
+                <th class="td3">{{ song.mood }}</th>
+                <th class="td4">Delete</th>
+            </tr>
+        {% endfor %}
         </table>
         </div>
+    {% endif %}
         
         <div class="row footer"> <!-------footer------->
             <div class="col-md-7"></div>

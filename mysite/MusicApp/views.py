@@ -417,6 +417,26 @@ def view_playlists(request):
 		return render(request, "MusicApp/playlist.html", context)
 
 
+def view_playlist_songs(request, playlist_name):
+	if request.method == "GET":
+		playlist_name = playlist_name
+		user = request.user
+		try:
+			playlist = Playlist.objects.get(user=user, playlist_name=playlist_name)
+		except ObjectDoesNotExist:
+			playlist = None
+		if playlist is not None:
+			songs = playlist.songs.all()
+		for song in songs:
+			print(song.song_name)
+		context = {
+			'name':playlist_name,
+			'songs':songs,
+			'privacy':playlist.privacy
+		}
+		return render(request, "MusicApp/song_list.html", context)
+
+
 def view_history(request):
 	pass
 
