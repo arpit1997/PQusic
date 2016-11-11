@@ -460,3 +460,64 @@ padding-top: 0px !important;
     color: #000;
     margin-bottom: 0px !important;
 }
+.song_level{
+    margin-top: 30px;
+}
+.song_level pre{
+    width: 75%;
+    text-align: center;
+    margin: 5px auto;
+    background-color: #cccdce;
+}
+.Psong_level{
+    margin-top: 20px;
+}
+.Psong_level pre{
+    width: 80%;
+    text-align: center;
+    margin: 5px auto;
+    background-color: #cccdce;
+}
+
+
+.playlist_song{
+    min-height: 450px;
+    width: 100%;
+    margin-top: 15px;
+}
+.playlist_song .table{
+    width: 75% !important;
+    margin: 5px auto;
+}
+
+.playlist_song .table .T_tr td.td1{
+    width: 5% !important;
+}
+.playlist_song .table .T_tr td.td2{
+    width: 65% !important;
+}
+.playlist_song .table .T_tr td.td3{
+    width: 15% !important;
+}
+.table tr:hover{
+    background-color: #DDDDDD;
+}
+.table tr th{
+    background-color: #e1e6ef;
+}
+
+.row.Pheader{
+    width: 80%;
+    margin: 0px auto;
+}
+.row.Pheader .col-md-12{
+    padding: 0px;
+}
+.P-image{
+    width: 80%;
+    margin: 0px auto;
+}
+.P-image img{
+    border-radius: 50%;
+    margin: 0px auto;
+}

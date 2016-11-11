@@ -69,8 +69,6 @@ def home(request):
 	if request.method == "POST":
 		search = request.POST.get("search")
 
-	parse = YtQueryParser("hello")
-
 	pl = YtPlaylist()
 	# x = pl.yt_playlist['Country']
 	# x = x[:3]
@@ -82,7 +80,18 @@ def home(request):
 
 
 def results_query(request):
-	return render(request, "MusicApp/main.html")
+	if request.method == "POST":
+		query = request.POST.get("query")
+		results = YtQueryParser(query)
+		print(results)
+		print(len(results.yt_links_artist))
+		context = {
+			'results':results.yt_search_list,
+		}
+		print(results.yt_search_list[0].yt_title)
+		return render(request, "MusicApp/main.html", context)
+	else:
+		return HttpResponse("Bad request")
 
 
 def user_signup(request):
@@ -405,7 +414,7 @@ def view_playlists(request):
 		context = {
 			"playlists":playlist_attr
 		}
-		return render(request, "MusicApp/playlists.html", context)
+		return render(request, "MusicApp/playlist.html", context)
 
 
 def view_history(request):

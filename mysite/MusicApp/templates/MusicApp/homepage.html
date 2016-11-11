@@ -6,6 +6,8 @@
       <link href="{% static "MusicApp/css/style.css" %}" rel="stylesheet" type="text/css">
      <link href="{% static "MusicApp/css/bootstrap.min.css" %}" rel="stylesheet" type="text/css">
         <title>HomePage</title>
+     <script src="https://cdn.plyr.io/2.0.10/plyr.js"></script>
+    <link rel="stylesheet" href="https://cdn.plyr.io/2.0.10/plyr.css">
     </head>
 
 
@@ -15,6 +17,10 @@
                     {{ user }}
                 </p>
             </div>
+{#            <audio controls>#}
+{#                <source src="https://r5---sn-cvh7knez.googlevideo.com/videoplayback?ei=vmolWIWKCNyqoQOz44iwBg&upn=uGNGcWWAEZY&mm=31&pl=20&mn=sn-cvh7knez&id=o-AGwPx4QrzTEyMpl61j5mco6mq5fwvN9RBUUglV2vTJNB&dur=366.821&requiressl=yes&mt=1478847090&mv=m&ms=au&ip=117.239.205.194&initcwndbps=192500&lmt=1445520217678135&ipbits=0&expire=1478868766&source=youtube&sparams=clen%2Cdur%2Cei%2Cgir%2Cid%2Cinitcwndbps%2Cip%2Cipbits%2Citag%2Ckeepalive%2Clmt%2Cmime%2Cmm%2Cmn%2Cms%2Cmv%2Cnh%2Cpl%2Crequiressl%2Csource%2Cupn%2Cexpire&clen=2304654&gir=yes&keepalive=yes&nh=IgpwcjAxLmJvbTA3KgkxMjcuMC4wLjE&mime=audio%2Fwebm&key=yt6&itag=249&signature=03529E1B969B2645F5550645FA969D07178E80A2.51402BBDC0C7F3D80BE4A06423C854B934E098D9&ratebypass=yes" type="audio/mp3">#}
+{#            </audio>#}
+
             <div class="row Hheader">
                 <div class="col-md-5"><p>PQusic</p></div>
                 <div class="col-md-4 col-md-offset-3">
@@ -39,12 +45,12 @@
             <div class="col-md-12">
             <div class="row Hmiddle">
                 <div class="col-md-12">
-                    <form action="main.html" method="post">
+                    <form action="{% url "musicapp:search-result" %}" method="post">
                         {% csrf_token %}
                     <div class="row Hmiddle1">
 
-                        <div class="col-md-7 col-md-offset-2"><input type="text" name="search"
-                                                                     placeholder="Search songs..."></div>
+                        <div class="col-md-7 col-md-offset-2">
+                            <input type="text" name="query" placeholder="Search songs..."></div>
                         <div class="col-md-1"><button type="submit" value="submit">Search</button></div>
 
                     </div>
