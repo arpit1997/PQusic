@@ -54,7 +54,7 @@
             <tr class="T_tr">
                 <th class="td2">{{ song.song_name }}</th>
                 <th class="td3">{{ song.mood }}</th>
-                <th class="td4">Delete</th>
+                <th class="td4"><a href="{% url "musicapp:delete-songs" name song.song_id%}">Delete</a></th>
             </tr>
         {% endfor %}
         </table>

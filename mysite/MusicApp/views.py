@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, render_to_response
 from django.utils import timezone
 
 from .helpers.helper import custom_save, encrypt, decrypt, send_verification_mail, validate_username_email
@@ -146,9 +146,9 @@ def activate(request):
 		# verifying thw activation key
 		try:
 			decoded = decrypt(secret_key, activation_key)
+			decoded = decoded.decode("utf-8")
 		except binascii.Error:
 			decoded = None
-		decoded = decoded.decode("utf-8")
 		if email == decoded:
 			user = User.objects.get(email=email)
 			if user is None:
@@ -230,6 +230,12 @@ def change_password(request):
 	else:
 		messages.success(request, "changing password will logout and you have to login again")
 		return render(request, "MusicApp/change_password.html", {'user': user})
+
+
+def user_logout(request):
+	print(request.user)
+	logout(request)
+	return HttpResponseRedirect(reverse("musicapp:home"))
 
 
 def get_video_url(request):
@@ -318,7 +324,7 @@ def delete_playlist(request,name):
 			playlist = None
 		if playlist is not None:
 			playlist.delete()
-			return HttpResponse("playlist deleted")
+			return HttpResponseRedirect(reverse("musicapp:view-playlists"))
 		else:
 			return HttpResponse("playlist Does not exist")
 	else:
@@ -364,11 +370,11 @@ def add_to_playlist(request):
 			return HttpResponse("Playlist does not exist")
 
 
-def remove_from_playlist(request):
-	if request.method == "POST":
+def remove_from_playlist(request, playlist_name, song_id):
+	if request.method == "GET":
 		user = request.user
-		song_id = request.POST.get('song_id')
-		playlist_name = request.POST.get("name")
+		song_id = song_id
+		playlist_name = playlist_name
 		try:
 			playlist = Playlist.objects.get(user=user, playlist_name=playlist_name)
 		except ObjectDoesNotExist:
@@ -381,7 +387,7 @@ def remove_from_playlist(request):
 			if song is not None:
 				playlist.songs.remove(song)
 				playlist.save()
-				return HttpResponse("song deleted")
+				return HttpResponseRedirect(reverse("musicapp:playlist_songs", args=(playlist_name,)))
 			else:
 				return HttpResponse("song not found")
 		else:
@@ -419,7 +425,7 @@ def view_playlists(request):
 
 def view_playlist_songs(request, playlist_name):
 	if request.method == "GET":
-		playlist_name = playlist_name
+		playlist_name = str(playlist_name)
 		user = request.user
 		try:
 			playlist = Playlist.objects.get(user=user, playlist_name=playlist_name)

@@ -55,7 +55,7 @@
                     <th class="td1"><a href="{% url "musicapp:playlist_songs" name %}">{{ name }}</a></th>
                     <th class="td2">{{ song_count }}</th>
                     <th class="td2">{{ privacy }}</th>
-                    <th class="td4">Delete</th>
+                    <th class="td4"><a href="{% url "musicapp:delete-playlist" name %}">Delete</a></th>
                 </tr>
             {% endfor %}
         {% endif %}
