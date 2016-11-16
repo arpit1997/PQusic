@@ -1,81 +1,133 @@
-{% load static %}
 <html>
-    
-    <head>
-     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-     <link href="{% static "MusicApp/css/style.css" %}" rel="stylesheet" type="text/css" rel="stylesheet" type="text/css">
-     <link href="{% static "MusicApp/css/bootstrap.min.css" %}" rel="stylesheet" type="text/css" rel="stylesheet" type="text/css">
-    </head>
-    
-    
-    <body class="wraper">
-        
-            <div id="mySidenav" class="sidenav">
-                <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-                <a href="homepage.html">Home</a>
-                <a href="homepage.html">Trending</a>
-                <a href="#">PlayList</a>
-                <a href="profile.html">Profile</a>
-                <a href="#">History</a>
-            </div>
 
-            <div class="row Mheader">
-                
-                <div class="col-md-2">
-                <div class="row logo">
-                    <div class="col-md-4"><span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link href="css/style.css" rel="stylesheet" type="text/css">
+    <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
+</head>
+
+<style>
+    input[type=text] {
+        width: 100%;
+        box-sizing: border-box;
+        border: 2px solid #ccc;
+        border-radius: 4px;
+        font-size: 16px;
+        background-color: white;
+        background-image: url('css/images/search.png');
+        background-position: 96% 50%;
+        background-size: 25px 25px;
+        background-repeat: no-repeat;
+        padding: 12px 20px 12px 40px;
+        /*-webkit-transition: width 0.4s ease-in-out;
+        transition: width 0.4s ease-in-out;*/
+    }
+
+    input[type=text]:focus {
+        width: 100%;
+    }
+</style>
+
+
+<body class="wraper">
+<div id="mySidenav" class="sidenav">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+    <a href="homepage.html">Home</a>
+
+    <a href="playlist.html">PlayList</a>
+    <a href="profile.html">Profile</a>
+    <a href="history.html">History</a>
+</div>
+
+<div class="row Mheader">
+
+    <div class="col-md-3">
+        <div class="row logo">
+            <div class="col-md-4"><span class="sideIcon" style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;
                         </span></div>
-                    <div class="col-md-8"><p>PQusic</p></div>
-                </div>
-                </div>
-                <div class="col-md-7">
-                    <div class="row Mheader1">
-                        <div class="col-md-10"><input type="text" name="search" 
-                                                                     placeholder="Search songs..."></div>
-                        <div class="col-md-2"><button type="button">Search</button></div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="row Mheader2">
-                        
-                        <div class="col-md-5 col-md-offset-1"></div>
-                        <div class="col-md-6"></div>
-                    </div>
-                </div>
-            </div>
-            
-
-        <div class="song_level">
-        <pre>Playlists</pre></div>
-        <div class="playlist_song">
-        <table class="table table-bordered hover-table">
-        {% if playlists %}
-            {% for name, song_count in playlists %}
-                <tr class="T_tr">
-                    <th class="td1"><a href="{% url "musicapp:playlist_songs" name %}">{{ name }}</a></th>
-                    <th class="td2">{{ song_count }}</th>
-                    <th class="td2">{{ privacy }}</th>
-                    <th class="td4"><a href="{% url "musicapp:delete-playlist" name %}">Delete</a></th>
-                </tr>
-            {% endfor %}
-        {% endif %}
-            
-        </table>
+            <div class="col-md-8"><p class="pqusic">PQusic</p>
+                <p class="webApp">A Music Web App</p></div>
         </div>
-        
-        <div class="row footer"> <!-------footer------->
-            <div class="col-md-7"></div>
-            <div class="col-md-5"><img src="css/images/f.png"  width="60px" height="60px"><img src="css/images/y.png"  width="60px" height="60px"><img src="css/images/g.png"  width="60px" height="60px"><img src="css/images/in.png"  width="60px" height="60px"><img src="css/images/t.png"  width="60px" height="60px"></div>
-        </div><!--footer--->
-    
-        <script>
-            function openNav() {
-                document.getElementById("mySidenav").style.width = "250px";
-                }
+    </div>
+    <div class="col-md-6">
+        <div class="row Mheader1">
+            <div class="following">
+                <form action="#">
+                    <input type="text" name="search" placeholder="Search ...">
+                </form>
+            </div>
+        </div>
+    </div>
 
-            function closeNav() {
-                document.getElementById("mySidenav").style.width = "0";
-                }
-        </script>
-    </body>
+</div>
+
+
+<div class="middle_content">
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+
+                <div class="panel panel-primary">
+
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            Playlist Names
+                        </h3></div>
+                    <span class="pull-right btn-click">
+                        
+                        <form method="post" action="new_playlist.html"><!--------Create new playlist-------------->
+                            <button type="submit" class="btn btn-sm btn-primary btn-create">create new</button>
+                        </form><!---------$$$$$$$$$$$$$--->
+                    
+                </span>
+
+
+                    <div class="clearfix"></div>
+
+                    <div class="panel-body">
+
+                        <table class="table table-condensed">
+                            <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr><!-----------Show all playlist------------------>
+                                <td><a href="song_list.html">playlist name 1</a></td>
+                                <td><a href="#"><img src="css/images/delete1.png" width="20px" height="20px"></a></td>
+                            </tr><!-----------$$$$$$$$$$$$$$-------------------->
+                            <tr>
+                                <td><a href="song_list.html">playlist name 2</a></td>
+                                <td><a href="#"><img src="css/images/delete1.png" width="20px" height="20px"></a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="song_list.html">playlist name 3</a></td>
+                                <td><a href="#"><img src="css/images/delete1.png" width="20px" height="20px"></a></td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function openNav() {
+        document.getElementById("mySidenav").style.width = "200px";
+    }
+
+    function closeNav() {
+        document.getElementById("mySidenav").style.width = "0";
+    }
+</script>
+</body>
 </html>

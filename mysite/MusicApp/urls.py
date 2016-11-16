@@ -22,6 +22,6 @@ urlpatterns = [
 	url(r'^follow/(?P<username>[a-zA-Z0-9]{1,})', views.follow_user, name="follow-user"),
 	url(r'^unfollow/(?P<username>[a-zA-Z0-9]{1,})', views.unfollow_user, name="unfollow-user"),
 	url(r'^search', views.results_query, name="search-result"),
-	url(r'^audio/geturl$', views.get_video_url, name="get_url"),
+	url(r'^audio/geturl/(?P<yt_url>[\S]+)', views.get_video_url, name="get_url"),
 	url(r'^audio/geturl/$', views.get_video_url, name="get_url")
 ]

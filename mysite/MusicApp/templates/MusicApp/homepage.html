@@ -1,132 +1,396 @@
 {% load static %}
 <html>
-    
-    <head>
-     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-      <link href="{% static "MusicApp/css/style.css" %}" rel="stylesheet" type="text/css">
-     <link href="{% static "MusicApp/css/bootstrap.min.css" %}" rel="stylesheet" type="text/css">
 
-    </head>
-    
-     <style>
-input[type=text] {
-    width: 100%;
-    box-sizing: border-box;
-    border: 2px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
-    background-color: white;
-    background-image: url('{% static "MusicApp/css/images/search.png" %}');
-    background-position: 96% 50%;
-    background-size: 25px 25px;
-    background-repeat: no-repeat;
-    padding: 12px 20px 12px 40px;
-    /*-webkit-transition: width 0.4s ease-in-out;
-    transition: width 0.4s ease-in-out;*/
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link href="{% static "MusicApp/css/style.css" %}" rel="stylesheet" type="text/css">
+    <link href="{% static "MusicApp/css/bootstrap.min.css" %}" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/css/materialize.min.css">
+    <link rel="stylesheet" href="https://cdn.plyr.io/2.0.7/plyr.css">
+
+
+</head>
+
+<style>
+    input[type=text] {
+        width: 100%;
+        box-sizing: border-box;
+        border: 2px solid #ccc;
+        border-radius: 4px;
+        font-size: 16px;
+        background-color: white;
+        background-image: url('{% static "MusicApp/css/images/search.png" %}');
+        background-position: 96% 50%;
+        background-size: 25px 25px;
+        background-repeat: no-repeat;
+        padding: 12px 20px 12px 40px;
+        /*-webkit-transition: width 0.4s ease-in-out;
+        transition: width 0.4s ease-in-out;*/
+    }
+
+    input[type=text]:focus {
+        width: 100%;
+    }
+
+    #search-preloader {
+    display: none;
+    margin-bottom: 4rem;
 }
 
-input[type=text]:focus {
+#search-preloader .preloader-wrapper,#stream-preloader .preloader-wrapper {
+    display: block;
+    margin: 0 auto;
+}
+
+#stream-preloader,.stream-progress {
+    display: none;
+}
+
+.stream-wait .stream-player-wrapper {
+    display: none;
+}
+
+.stream-wait #stream-preloader,.stream-wait .stream-progress {
+    display: flex;
+}
+
+#stream-player-container .progress {
+    background-color: rgba(244,67,54,0.2);
+}
+
+#stream-player-container .progress .indeterminate {
+    background-color: rgba(244,67,54,0.75);
+}
+
+#stream-player-container.no-music {
+    transform: translateY(75px);
+}
+
+#stream-player-container {
+    position: fixed;
+    bottom: 0;
+    z-index: 999;
     width: 100%;
+    background-color: rgb(255,255,255);
+    padding: 1rem 5rem;
+    box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12);
+    border: 1px solid rgba(198,214,219,.66);
+    transform: translateY(0);
+    transition: transform 0.5s;
+}
+
+.plyr--audio .plyr__controls {
+    border: 0;
+}
+
+.plyr__progress--played,.plyr__volume--display {
+    color: rgba(244,67,54,0.75);
+}
+
+.plyr--audio .plyr__controls button.tab-focus:focus,.plyr--audio .plyr__controls button:hover,.plyr__play-large {
+    background: rgba(244,67,54,0.75);
+}
+
+.plyr input[type=range]::-ms-fill-lower,.plyr input[type=range]:active::-moz-range-thumb,.plyr input[type=range]:active::-webkit-slider-thumb,.plyr input[type=range]:active::-ms-thumb {
+    background: rgba(244,67,54,0.75);
+}
+
+.plyr {
+    padding: 0 0 0 1rem;
+}
+
+.plyr__progress input[type=range] {
+    display: none;
+}
+
+.stream-progress {
+    min-height: 52px;
+}
+
+.stream-progress .progress {
+    width: 60%;
+}
+
+input[type=range]+.thumb.active {
+    display: none;
+}
+
+.player-meta {
+    width: 300px;
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0 2rem 0 1rem;
+    border-right: 2px solid rgb(217,228,231);
+}
+
+.plyr--wrapper {
+    display: inline-block;
+    width: calc(100% - 310px);
+}
+
+.player-meta .player-albumart {
+    min-height: 50px;
+    min-width: 50px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    position: relative;
+    justify-content: center;
+}
+
+.player-meta .player-albumart img {
+    max-height: 50px;
+    display: inline-block;
+    position: absolute;
+}
+
+.stream-player-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.player-name-artist {
+    margin-left: 20px;
+    overflow: hidden;
+}
+
+.player-name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.player-meta .player-artist {
+    font-size: 1.25rem;
+    color: rgba(244,67,54,0.85);
+}
+
+.tandc-btn {
+    position: absolute;
+    bottom: 20px;
+    font-size: 1.8rem;
+    color: rgba(244,67,54,0.7);
+}
+
+.tandc-btn:hover {
+    color: rgb(244,67,54);
 }
 </style>
-    <body class="wraper">
-        
-            <div class="row Hheader">
-                <div class="col-md-5"><p class="pqusic">PQusic</p><p class="webApp">A Music Web App</p></div>
-                <div class="col-md-4 col-md-offset-3">
-                    <div class="row Hheader1">
-                    {% if request.user %}
-                        <div class="col-md-3">
-                            <form method="post" action="following.html">
-                                <button type="submit" value="submit">People</button>
-                                
-                            </form>
-                        </div>
-                    {% endif %}
-                        <div class="col-md-3">
-                        {% if request.user.is_authenticated %}
-                            <form method="get" action="{% url "musicapp:logout" %}">
-                                <button type="submit" value="submit">Logout</button>
-                                
-                            </form>
-                        {% else %}
-                            <form method="get" action="{% url "musicapp:login" %}">
-                                <button type="submit" value="submit">Login</button>
-                            </form>
-                        {% endif %}
-                        </div>
-                        <div class="col-md-3">
-                        {% if request.user.is_authenticated %}
-                            <form action="#">
-                                <button>{{ request.user }}</button>
-                            </form>
-                        {% else %}
-                            <form method="get" action="{% url "musicapp:signup" %}">
-                                <button type="submit" value="submit">Sign up</button>
-                            </form>
-                        {% endif %}
-                        </div>
-                    </div>
+<body class="wraper">
+<div id="mySidenav" class="sidenav">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+    <a href="{% url "musicapp:home" %}">Home</a>
+
+    <a href="{% url "musicapp:view-playlists" %}">PlayList</a>
+    <a href="profile.html">Profile</a>
+    <a href="history.html">History</a>
+</div>
+<script src="https://code.jquery.com/jquery-2.2.4.min.js"
+        integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/js/materialize.min.js"></script>
+<script src="https://cdn.plyr.io/2.0.7/plyr.js"></script>
+<script src="../static/js/main_new.js"></script>
+<script>
+    function openNav() {
+        document.getElementById("mySidenav").style.width = "250px";
+    }
+
+    function closeNav() {
+        document.getElementById("mySidenav").style.width = "0";
+    }
+</script>
+<div class="row Hheader">
+    <div class="col-md-1">
+                    <span class="sideIcon" style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;
+                        </span>
+    </div>
+    <div class="col-md-8"><p class="pqusic">PQusic</p>
+        <p class="webApp">A Music Web App</p></div>
+
+    <div class="col-md-3">
+        <div class="row Hheader1">
+            {% if request.user %}
+                <div class="col-md-4">
+                    <form method="post" action="following.html">
+                        <button type="submit" value="submit">People</button>
+
+                    </form>
                 </div>
+            {% endif %}
+            <div class="col-md-4">
+                {% if request.user.is_authenticated %}
+                    <form method="get" action="{% url "musicapp:logout" %}">
+                        <button type="submit" value="submit">Logout</button>
+
+                    </form>
+                {% else %}
+                    <form method="get" action="{% url "musicapp:login" %}">
+                        <button type="submit" value="submit">Login</button>
+                    </form>
+                {% endif %}
             </div>
-        <div class="middle_content">
-        <div class="row Hheight">
-            <div class="col-md-12">
+            <div class="col-md-4">
+                {% if request.user.is_authenticated %}
+                    <form action="#">
+                        <button>{{ request.user }}</button>
+                    </form>
+                {% else %}
+                    <form method="get" action="{% url "musicapp:signup" %}">
+                        <button type="submit" value="submit">Signup</button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+<div class="middle_content">
+    <div class="row Hheight">
+        <div class="col-md-12">
             <div class="row Hmiddle">
                 <div class="col-md-12">
                     <form action="{% url "musicapp:search-result" %}" method="post">
                         {% csrf_token %}
-                    <div class="row Hmiddle1">
-                        
-                         <div class="following">
-                            <form action="{% url "musicapp:search-result" %}">
-                                {% csrf_token %}
-                                <input type="text" name="query" placeholder="Search...">
-                            </form>
+                        <div class="row Hmiddle1">
+
+                            <div class="following">
+                                <form action="{% url "musicapp:search-result" %}">
+                                    {% csrf_token %}
+                                    <input type="text" name="query" placeholder="Search...">
+                                </form>
+                            </div>
+
                         </div>
-                        
-                    </div>
                     </form>
                 </div>
             </div>
-                <br>
-                <div class="row OR">
-                    <div class="col-md-8 col-md-offset-2">
-                        <h3 style="font-family:serif">Trending songs</h3>
-                    </div>
+            <br>
+            <div class="row OR">
+                <div class="col-md-8 col-md-offset-2">
+                    <h3 style="font-family:serif">Trending songs</h3>
                 </div>
-                <br>
-                   <div class="row song_list">
-                    <div class="col-md-8 col-md-offset-2">
-<!-- ###############for loop row and column wise -->
+            </div>
+            <br>
+            <div class="row song_list">
+                <div class="col-md-8 col-md-offset-2">
+                    <!-- ###############for loop row and column wise -->
                     {% for category, songs in pl.items %}
-                    <div class="row OR">
-                        <div class="col-md-8 col-md-offset-2">
-                            <h3 style="font-family:serif">{{ category }} </h3>
-                        </div>
-                    </div>
-                        <div class="row stream_list">
-                         {% for song in songs %}
-                            <div class="col-md-4"><img src="{{ song.yt_thumbnail }}" width="190px" height="150px">
-                                <br>
-                                <p><a href="{{ song.yt_href }}">{{ song.yt_title }}</a></p>        <!---first row and first column-->
-                                <p>{{ song.yt_duration }}</p>
-                                <p>{{ song.yt_artist }}</p>
-                                <p>{{ song.yt_views }}</p>
-
+                        <div class="row OR">
+                            <div class="col-md-8 col-md-offset-2">
+                                <h3 style="font-family:serif">{{ category }} </h3>
                             </div>
-                         {% endfor %}
+                        </div>
+                        <div class="row stream_list">
+                            {% for song in songs %}
+                                <div class="col-md-4 card--ym3"><img class="card-image" src="{{ song.yt_thumbnail }}" width="190px" height="150px">
+                                    <br>
+                                    <p><a href="{{ song.yt_href }}" class="card--ym3--title">{{ song.yt_title }}</a></p>
+                                    <!---first row and first column-->
+                                    <p>{{ song.yt_duration }}</p>
+                                    <p class="channel">{{ song.yt_artist }}</p>
+                                    <p>{{ song.yt_views }}</p>
+                                    <a class="stream-now btn btn-primary" data-stream-url="{{ song.yt_id }}" href="">Stream</a>
+
+                                </div>
+                            {% endfor %}
                         </div>
                     {% endfor %}
-                    </div>
-                </div>            
                 </div>
+            </div>
         </div>
+    </div>
+</div>
+<div class="row footer"> <!-------footer------->
+    <div class="col-md-7"></div>
+    <div class="col-md-5"><img src="css/images/f.png" width="60px" height="60px"><img src="css/images/y.png"
+                                                                                      width="60px" height="60px"><img
+            src="css/images/g.png" width="60px" height="60px"><img src="css/images/in.png" width="60px"
+                                                                   height="60px"><img src="css/images/t.png"
+                                                                                      width="60px" height="60px"></div>
+</div><!--footer--->
+<div id="stream-player-container" class="stream-player no-music">
+
+    <!--Preloader-->
+    <div class="stream-progress valign-wrapper">
+        <div class="progress">
+            <div class="indeterminate"></div>
         </div>
-        <div class="row footer"> <!-------footer------->
-            <div class="col-md-7"></div>
-            <div class="col-md-5"><img src="css/images/f.png"  width="60px" height="60px"><img src="css/images/y.png"  width="60px" height="60px"><img src="css/images/g.png"  width="60px" height="60px"><img src="css/images/in.png"  width="60px" height="60px"><img src="css/images/t.png"  width="60px" height="60px"></div>
-        </div><!--footer--->
-    
-    </body>
+    </div>
+    <div class="stream-player-wrapper">
+        <div class="player-meta">
+            <div class="player-albumart">
+                <img src="http://img.youtube.com/vi/YQHsXMglC9A/0.jpg" class="">
+            </div>
+            <div class="player-name-artist">
+                <div class="player-name">Adele Hello Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta,
+                    numquam.
+                </div>
+                <div class="player-artist">Adele Vevo</div>
+            </div>
+        </div>
+        <div class="plyr--wrapper">
+            <audio class="" id="stream-player" src="" controls preload="metadata">
+            </audio>
+        </div>
+    </div>
+</div>
+<script>
+
+    var streamPlayer = plyr.setup(document.querySelector('#stream-player'));
+
+     $('body').on('click', '.stream-now', function(e) {
+        e.preventDefault();
+         var $this = $(this);
+        var streamUrl = $(this).data('stream-url');
+        var card = $this.closest('.card--ym3');
+        var title = card.find('.card--ym3--title').text();
+        var artist = card.find('.channel').text();
+        var albumart = card.find('.card-image').attr('src');
+        var streamData = {
+            title: title,
+            artist: artist,
+            albumart: albumart,
+            streamUrl: streamUrl
+        };
+        console.log(streamUrl);
+        startStream(streamPlayer, streamData);
+    });
+
+    function startStream(streamPlayer, streamData) {
+    var $streamContainer = $('#stream-player-container');
+    streamPlayer[0].pause();
+    console.log(streamData);
+    $streamContainer.addClass('stream-wait');
+    $streamContainer.find('.player-albumart img').attr('src', streamData.albumart);
+    $streamContainer.find('.player-name').text(streamData.title);
+    $streamContainer.find('.player-artist').text(streamData.artist);
+    if ($streamContainer.hasClass('no-music')) {
+        $streamContainer.removeClass('no-music')
+    }
+        console.log('/audio/geturl/'+streamData.streamUrl);
+
+        $.get('/audio/geturl/'+streamData.streamUrl, function(data) {
+            $('#stream-player-container').removeClass('stream-wait');
+            console.log(data);
+             $('#stream-player').attr('src', data);
+             streamPlayer[0].play();
+        }
+
+   {% comment %} $.getJSON('/audio/geturl/'+streamData.streamUrl, success = function(data, textStatus, jqXHR) {
+        $('#stream-player-container').removeClass('stream-wait');
+
+          console.log(data);
+
+        if (data['status'] != 200) {
+            Materialize.toast('<h4 class="font-200">Can\'t Stream</h4>', 4000);
+            return;
+        }
+        $('#stream-player').attr('src', data['url']);
+        streamPlayer[0].play();
+    }{% endcomment %}
+    );
+    return false;
+}
+</script>
+</body>
 </html>

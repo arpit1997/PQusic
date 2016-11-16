@@ -10,7 +10,9 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, render_to_response
+from django.template.context_processors import csrf
 from django.utils import timezone
+from django.views.decorators.csrf import csrf_exempt
 
 from .helpers.helper import custom_save, encrypt, decrypt, send_verification_mail, validate_username_email
 from .helpers.ytqueryparser import YtQueryParser
@@ -200,7 +202,6 @@ def password_reset(request):
 		return render(request, "MusicApp/password_reset.html")
 
 
-@login_required
 def change_password(request):
 	"""
 	handle for user account password change functionality
@@ -209,13 +210,16 @@ def change_password(request):
 	"""
 	user = request.user
 	if request.method == "POST":
+		print(request.POST)
 		username = user.username
 		old_password = request.POST.get("old_password")
 		new_password = request.POST.get("new_password")
 		new_password_again = request.POST.get("new_password_again")
 		user = authenticate(username=username, password=old_password)
+		print(new_password)
+		print(new_password_again)
 		if user is not None:
-			if new_password == new_password_again:
+			if str(new_password) == str(new_password_again):
 				user.set_password(new_password)
 				user.save()
 				logout(request)
@@ -228,6 +232,7 @@ def change_password(request):
 			messages.error(request, "sorry the password you entered is not correct")
 			return render(request, "MusicApp/change_password.html", {'user': user})
 	else:
+		print("get request")
 		messages.success(request, "changing password will logout and you have to login again")
 		return render(request, "MusicApp/change_password.html", {'user': user})
 
@@ -238,7 +243,8 @@ def user_logout(request):
 	return HttpResponseRedirect(reverse("musicapp:home"))
 
 
-def get_video_url(request):
+@csrf_exempt
+def get_video_url(request,yt_url):
 	"""
 	also sue a create history function
 	:param request:
@@ -249,8 +255,9 @@ def get_video_url(request):
 		import pafy
 	except ImportError:
 		print("Can not import Pafy")
-	if request.method == "POST":
-		yt_url = request.POST.get("yt_url")
+	if request.method == "GET":
+		yt_url = "http://youtube.com/watch?v="+yt_url
+		print(yt_url)
 		video = pafy.new(yt_url)
 		audio = video.audiostreams
 		audio_url = audio[0].url
