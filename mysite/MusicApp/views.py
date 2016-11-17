@@ -2,6 +2,7 @@ import binascii
 import os
 import re
 
+import requests
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -14,6 +15,7 @@ from django.template.context_processors import csrf
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 
+from bs4 import BeautifulSoup
 from .helpers.helper import custom_save, encrypt, decrypt, send_verification_mail, validate_username_email
 from .helpers.ytqueryparser import YtQueryParser
 from .helpers.ytPlaylistParser import YtPlaylist
@@ -257,11 +259,19 @@ def get_video_url(request,yt_url):
 	except ImportError:
 		print("Can not import Pafy")
 	if request.method == "GET":
+		video_id = yt_url
 		yt_url = "http://youtube.com/watch?v="+yt_url
 		print(yt_url)
 		video = pafy.new(yt_url)
 		audio = video.audiostreams
 		audio_url = audio[0].url
+
+		r = requests.get(yt_url)
+		print(r.status_code)
+		page = r.text
+		soup = BeautifulSoup(page, 'html.parser')
+		span_title = soup.find_all('span', {'class':'watch-title'})
+		print(span_title  )
 		return HttpResponse(audio_url)
 	else:
 		return HttpResponse("NULL")
@@ -308,9 +318,10 @@ def create_playlist(request):
 		if p is None:
 			new_playlist = Playlist(user=user, playlist_name=playlist_name, privacy=privacy)
 			new_playlist.save()
-			return HttpResponse("created successfully")
+			return HttpResponseRedirect(reverse("musicapp:view-playlists"))
 		else:
-			return HttpResponse("playlist already exists")
+			messages.error(request,"playlist already exists")
+			return render(request, "MusicApp/create_playlist.html")
 	else:
 		return render(request, "MusicApp/create_playlist.html")
 

@@ -7,11 +7,29 @@
     <link href="{% static "MusicApp/css/bootstrap.min.css" %}" rel="stylesheet" type="text/css">
     </head>
     
-    
+    <script>
+    function openNav() {
+        document.getElementById("mySidenav").style.width = "250px";
+    }
+
+    function closeNav() {
+        document.getElementById("mySidenav").style.width = "0";
+    }
+</script>
     
     
     <body class="wraper">
-         
+            {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li style="color: aqua">
+                	{% if message.tags %} "
+                		{{ message }}
+                	{% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
         <div id="mySidenav" class="sidenav">
                 <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
                 <a href="homepage.html">Home</a>
