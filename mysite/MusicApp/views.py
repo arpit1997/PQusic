@@ -300,7 +300,7 @@ def create_playlist(request):
 		user = request.user
 		playlist_name = request.POST.get('name')
 		print(playlist_name)
-		privacy = request.POST.get('privacy')
+		privacy = bool(request.POST.get('privacy'))
 		try:
 			p = Playlist.objects.get(user=user, playlist_name=playlist_name)
 		except ObjectDoesNotExist:
