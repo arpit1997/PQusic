@@ -9,11 +9,14 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, render_to_response
+from django.template.context_processors import csrf
 from django.utils import timezone
+from django.views.decorators.csrf import csrf_exempt
 
 from .helpers.helper import custom_save, encrypt, decrypt, send_verification_mail, validate_username_email
 from .helpers.ytqueryparser import YtQueryParser
+from .helpers.ytPlaylistParser import YtPlaylist
 from .models import AppUserProfile
 from .models import Playlist
 from .models import PlaylistSongs, Followers, Followings
@@ -68,16 +71,29 @@ def home(request):
 	if request.method == "POST":
 		search = request.POST.get("search")
 
-	parse = YtQueryParser("hello")
+	pl = YtPlaylist()
+	# x = pl.yt_playlist['Country']
+	# x = x[:3]
 	context = {
 		'user': request.user,
+		'pl':pl.yt_playlist,
 	}
-	print(parse)
 	return render(request, "MusicApp/homepage.html", context)
 
 
 def results_query(request):
-	return render(request, "MusicApp/main.html")
+	if request.method == "POST":
+		query = request.POST.get("query")
+		results = YtQueryParser(query)
+		print(results)
+		print(len(results.yt_links_artist))
+		context = {
+			'results':results.yt_search_list,
+		}
+		print(results.yt_search_list[0].yt_title)
+		return render(request, "MusicApp/main.html", context)
+	else:
+		return HttpResponse("Bad request")
 
 
 def user_signup(request):
@@ -132,9 +148,9 @@ def activate(request):
 		# verifying thw activation key
 		try:
 			decoded = decrypt(secret_key, activation_key)
+			decoded = decoded.decode("utf-8")
 		except binascii.Error:
 			decoded = None
-		decoded = decoded.decode("utf-8")
 		if email == decoded:
 			user = User.objects.get(email=email)
 			if user is None:
@@ -186,7 +202,6 @@ def password_reset(request):
 		return render(request, "MusicApp/password_reset.html")
 
 
-@login_required
 def change_password(request):
 	"""
 	handle for user account password change functionality
@@ -195,13 +210,16 @@ def change_password(request):
 	"""
 	user = request.user
 	if request.method == "POST":
+		print(request.POST)
 		username = user.username
 		old_password = request.POST.get("old_password")
 		new_password = request.POST.get("new_password")
 		new_password_again = request.POST.get("new_password_again")
 		user = authenticate(username=username, password=old_password)
+		print(new_password)
+		print(new_password_again)
 		if user is not None:
-			if new_password == new_password_again:
+			if str(new_password) == str(new_password_again):
 				user.set_password(new_password)
 				user.save()
 				logout(request)
@@ -214,11 +232,19 @@ def change_password(request):
 			messages.error(request, "sorry the password you entered is not correct")
 			return render(request, "MusicApp/change_password.html", {'user': user})
 	else:
+		print("get request")
 		messages.success(request, "changing password will logout and you have to login again")
 		return render(request, "MusicApp/change_password.html", {'user': user})
 
 
-def get_video_url(request):
+def user_logout(request):
+	print(request.user)
+	logout(request)
+	return HttpResponseRedirect(reverse("musicapp:home"))
+
+
+@csrf_exempt
+def get_video_url(request,yt_url):
 	"""
 	also sue a create history function
 	:param request:
@@ -229,8 +255,9 @@ def get_video_url(request):
 		import pafy
 	except ImportError:
 		print("Can not import Pafy")
-	if request.method == "POST":
-		yt_url = request.POST.get("yt_url")
+	if request.method == "GET":
+		yt_url = "http://youtube.com/watch?v="+yt_url
+		print(yt_url)
 		video = pafy.new(yt_url)
 		audio = video.audiostreams
 		audio_url = audio[0].url
@@ -304,7 +331,7 @@ def delete_playlist(request,name):
 			playlist = None
 		if playlist is not None:
 			playlist.delete()
-			return HttpResponse("playlist deleted")
+			return HttpResponseRedirect(reverse("musicapp:view-playlists"))
 		else:
 			return HttpResponse("playlist Does not exist")
 	else:
@@ -350,11 +377,11 @@ def add_to_playlist(request):
 			return HttpResponse("Playlist does not exist")
 
 
-def remove_from_playlist(request):
-	if request.method == "POST":
+def remove_from_playlist(request, playlist_name, song_id):
+	if request.method == "GET":
 		user = request.user
-		song_id = request.POST.get('song_id')
-		playlist_name = request.POST.get("name")
+		song_id = song_id
+		playlist_name = playlist_name
 		try:
 			playlist = Playlist.objects.get(user=user, playlist_name=playlist_name)
 		except ObjectDoesNotExist:
@@ -367,7 +394,7 @@ def remove_from_playlist(request):
 			if song is not None:
 				playlist.songs.remove(song)
 				playlist.save()
-				return HttpResponse("song deleted")
+				return HttpResponseRedirect(reverse("musicapp:playlist_songs", args=(playlist_name,)))
 			else:
 				return HttpResponse("song not found")
 		else:
@@ -400,7 +427,27 @@ def view_playlists(request):
 		context = {
 			"playlists":playlist_attr
 		}
-		return render(request, "MusicApp/playlists.html", context)
+		return render(request, "MusicApp/playlist.html", context)
+
+
+def view_playlist_songs(request, playlist_name):
+	if request.method == "GET":
+		playlist_name = str(playlist_name)
+		user = request.user
+		try:
+			playlist = Playlist.objects.get(user=user, playlist_name=playlist_name)
+		except ObjectDoesNotExist:
+			playlist = None
+		if playlist is not None:
+			songs = playlist.songs.all()
+		for song in songs:
+			print(song.song_name)
+		context = {
+			'name':playlist_name,
+			'songs':songs,
+			'privacy':playlist.privacy
+		}
+		return render(request, "MusicApp/song_list.html", context)
 
 
 def view_history(request):

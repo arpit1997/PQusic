@@ -17,12 +17,15 @@ class YtQueryParser:
 		self.yt_links_age = []
 		self.yt_links_thumbs = []
 		self.yt_links_duration = []
+		self.yt_links_artist = []
+		self.yt_search_list = []
 		self.page = self.get_page()
 		self.get_duration()
 		self.get_links_title()
 		self.get_views_age()
 		self.get_thumbnail()
-
+		# self.get_artist()
+		self.create_search_object()
 
 	def get_page(self):
 		r = requests.get(self.yt_query_url)
@@ -51,6 +54,36 @@ class YtQueryParser:
 		video_time_list = self.page.find_all('span', {'class': 'video-time'})
 		for video_time in video_time_list:
 			self.yt_links_duration.append(video_time.get_text())
+
+	# def get_artist(self):
+	# 	artist_list = self.page.find_all('span', {'class':"yt-lockup-byline "})
+	# 	for artist in artist_list:
+	# 		a = artist.find_all('a')[0].get_text()
+	# 		self.yt_links_artist.append(a)
+
+	def create_search_object(self):
+		for i in range(10):
+			video_object = YtVideo()
+			video_object.yt_title = self.yt_links_title[i]
+			video_object.yt_href = self.yt_links_href[i]
+			video_object.yt_duration = self.yt_links_duration[i]
+			# video_object.yt_artist = self.yt_links_artist[i]
+			video_object.yt_views = self.yt_links_views[i]
+			video_object.yt_thumbnail = self.yt_links_thumbs[i]
+			self.yt_search_list.append(video_object)
+
+
+class YtVideo:
+	"""
+	video object containing properties of a video
+	"""
+	def __init__(self):
+		self.yt_title = ""
+		self.yt_href = ""
+		self.yt_duration = ""
+		self.yt_artist = ""
+		self.yt_views = ""
+		self.yt_thumbnail = ""
 
 """
 just for some debugging purposes

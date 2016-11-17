@@ -3,7 +3,7 @@
     
     <head>
      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-        <link href="{% static "MusicApp/css/style.css" %}" rel="stylesheet" type="text/css">
+     <link href="{% static "MusicApp/css/style.css" %}" rel="stylesheet" type="text/css">
      <link href="{% static "MusicApp/css/bootstrap.min.css" %}" rel="stylesheet" type="text/css">
     </head>
  <style>   
@@ -13,10 +13,10 @@
         
             <div id="mySidenav" class="sidenav">
                 <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-                <a href="{% url "musicapp:home" %}">Home</a>
-                <a href="{% url "musicapp:home" %}">Trending</a>
-                <a href="#">PlayList</a>
-                <a href="#">Profile</a>
+                <a href="homepage.html">Home</a>
+                <a href="homepage.html">Trending</a>
+                <a href="song_list.html">PlayList</a>
+                <a href="profile.html">Profile</a>
                 <a href="#">History</a>
             </div>
 
@@ -55,20 +55,21 @@
                 <div class="row search_song_list">
                     <div class="col-md-8 col-md-offset-2">
         <!------------------------------------ For loop----------------------------------------->
+                    {% for result in results %}
                         <div class="row search_stream_list">
-                            <div class="col-md-3"><img src="{% static "MusicApp/user.jpg" %}" width="190px" height="150px"></div>
+                            <div class="col-md-3"><img src="{{ result.yt_thumbnail }}" width="190px" height="150px"></div>
                             <div class="col-md-9">
-                                <p>Song name</p>
-                                <p>Duration</p>
+                                <p><a href="{{ result.yt_href }}">{{ result.yt_title }}</a></p>
+                                <p>{{ result.yt_duration }}</p>
                                 <p>Singer name</p>
-                                <p>Views</p>
+                                <p>{{ result.yt_views }}</p>
                             </div>
                             
                         </div>
-                        
+                    {% endfor %}
                         <!---- make below class comment--->
                         <div class="row search_stream_list">
-                            <div class="col-md-3"><img src="{% static "MusicApp/user.jpg" %}" width="190px" height="150px"></div>
+                            <div class="col-md-3"><img src="images1.jpg" width="190px" height="150px"></div>
                             <div class="col-md-9">
                                 <p>Song name</p>
                                 <p>Duration</p>

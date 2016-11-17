@@ -1,0 +1,79 @@
+{% load static %}
+<html>
+    
+    <head>
+     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+     <link href="{% static "MusicApp/css/style.css" %}" rel="stylesheet" type="text/css" rel="stylesheet" type="text/css">
+     <link href="{% static "MusicApp/css/bootstrap.min.css" %}" rel="stylesheet" type="text/css" rel="stylesheet" type="text/css">
+    </head>
+    
+    
+    <body class="wraper">
+        
+            <div id="mySidenav" class="sidenav">
+                <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+                <a href="homepage.html">Home</a>
+                <a href="homepage.html">Trending</a>
+                <a href="#">PlayList</a>
+                <a href="profile.html">Profile</a>
+                <a href="#">History</a>
+            </div>
+
+            <div class="row Mheader">
+                
+                <div class="col-md-2">
+                <div class="row logo">
+                    <div class="col-md-4"><span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;
+                        </span></div>
+                    <div class="col-md-8"><p>PQusic</p></div>
+                </div>
+                </div>
+                <div class="col-md-7">
+                    <div class="row Mheader1">
+                        <div class="col-md-10"><input type="text" name="search" 
+                                                                     placeholder="Search songs..."></div>
+                        <div class="col-md-2"><button type="button">Search</button></div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="row Mheader2">
+                        
+                        <div class="col-md-5 col-md-offset-1"></div>
+                        <div class="col-md-6"></div>
+                    </div>
+                </div>
+            </div>
+            
+
+        <div class="song_level">
+    {% if name %}
+        <pre>{{ name }} {{ privacy }}</pre></div>
+        <div class="playlist_song">
+        <table class="table table-bordered hover-table">
+        {% for song in songs %}
+            <tr class="T_tr">
+                <th class="td2">{{ song.song_name }}</th>
+                <th class="td3">{{ song.mood }}</th>
+                <th class="td4"><a href="{% url "musicapp:delete-songs" name song.song_id%}">Delete</a></th>
+            </tr>
+        {% endfor %}
+        </table>
+        </div>
+    {% endif %}
+        
+        <div class="row footer"> <!-------footer------->
+            <div class="col-md-7"></div>
+            <div class="col-md-5"><img src="css/images/f.png"  width="60px" height="60px"><img src="css/images/y.png"  width="60px" height="60px"><img src="css/images/g.png"  width="60px" height="60px"><img src="css/images/in.png"  width="60px" height="60px"><img src="css/images/t.png"  width="60px" height="60px"></div>
+        </div><!--footer--->
+    
+        <script>
+            function openNav() {
+                document.getElementById("mySidenav").style.width = "250px";
+                }
+
+            function closeNav() {
+                document.getElementById("mySidenav").style.width = "0";
+                }
+        </script>
+    </body>
+</html>
