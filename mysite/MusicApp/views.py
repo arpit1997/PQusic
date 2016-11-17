@@ -2,6 +2,7 @@ import binascii
 import os
 import re
 
+import requests
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -14,12 +15,13 @@ from django.template.context_processors import csrf
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 
+from bs4 import BeautifulSoup
 from .helpers.helper import custom_save, encrypt, decrypt, send_verification_mail, validate_username_email
 from .helpers.ytqueryparser import YtQueryParser
 from .helpers.ytPlaylistParser import YtPlaylist
 from .models import AppUserProfile
 from .models import Playlist
-from .models import PlaylistSongs, Followers, Followings
+from .models import PlaylistSongs, Followers, Followings, SongHistory, History
 
 # encryption key for creating activation key
 secret_key = os.environ.get("encryption_key")
@@ -83,7 +85,14 @@ def home(request):
 
 def results_query(request):
 	if request.method == "POST":
-		query = request.POST.get("query")
+		query = str(request.POST.get("query"))
+		print(query)
+		a = query.split(' ')
+		x = ""
+		for it in a:
+			x = x + it
+		print(x)
+		query = x
 		results = YtQueryParser(query)
 		print(results)
 		print(len(results.yt_links_artist))
@@ -91,6 +100,7 @@ def results_query(request):
 			'results':results.yt_search_list,
 		}
 		print(results.yt_search_list[0].yt_title)
+		print(results.yt_search_list[0].yt_id)
 		return render(request, "MusicApp/main.html", context)
 	else:
 		return HttpResponse("Bad request")
@@ -256,11 +266,30 @@ def get_video_url(request,yt_url):
 	except ImportError:
 		print("Can not import Pafy")
 	if request.method == "GET":
+		video_id = yt_url
 		yt_url = "http://youtube.com/watch?v="+yt_url
 		print(yt_url)
 		video = pafy.new(yt_url)
 		audio = video.audiostreams
 		audio_url = audio[0].url
+		print(audio_url)
+		if request.user.is_authenticated():
+			print("in if")
+			r = requests.get(yt_url)
+			print(r.status_code)
+			page = r.text
+			soup = BeautifulSoup(page, 'html.parser')
+			span_title = soup.find_all('span', {'class':'watch-title'})
+			print(span_title  )
+			title = span_title[0]['title']
+			print(title)
+			new_song_history,_ = SongHistory.objects.get_or_create(song_id=video_id, song_name=title, last_listened=timezone.now())
+			new_song_history.save()
+			user = request.user
+			history_object, _ = History.objects.get_or_create(user=user)
+			history_object.save()
+			history_object.song.add(new_song_history)
+			history_object.save()
 		return HttpResponse(audio_url)
 	else:
 		return HttpResponse("NULL")
@@ -277,15 +306,26 @@ def view_user_profile(request):
 			name = user.first_name + " " + user.last_name
 
 
-def search_users(request, username):
-	"""
+@csrf_exempt
+def search_users(request):
+	"""f
 	just use a filter query
 	use a GET request
-	:param request, username:
+	:param request
 	:return a list of relevent users:
 	use some regex
 	"""
-	pass
+	print("hello")
+	if request.method == "POST":
+		query = request.POST.get('query')
+		relevent_users = User.objects.filter(username__icontains=query)[:10]
+		print(relevent_users)
+		context = {
+			'users':relevent_users,
+		}
+		return render(request, "MusicApp/users_list.html", context)
+	else:
+		return render(request, "MusicApp/users_list.html")
 
 
 @login_required
@@ -299,7 +339,7 @@ def create_playlist(request):
 		user = request.user
 		playlist_name = request.POST.get('name')
 		print(playlist_name)
-		privacy = request.POST.get('privacy')
+		privacy = bool(request.POST.get('privacy'))
 		try:
 			p = Playlist.objects.get(user=user, playlist_name=playlist_name)
 		except ObjectDoesNotExist:
@@ -307,9 +347,10 @@ def create_playlist(request):
 		if p is None:
 			new_playlist = Playlist(user=user, playlist_name=playlist_name, privacy=privacy)
 			new_playlist.save()
-			return HttpResponse("created successfully")
+			return HttpResponseRedirect(reverse("musicapp:view-playlists"))
 		else:
-			return HttpResponse("playlist already exists")
+			messages.error(request,"playlist already exists")
+			return render(request, "MusicApp/create_playlist.html")
 	else:
 		return render(request, "MusicApp/create_playlist.html")
 
@@ -354,8 +395,8 @@ def add_to_playlist(request):
 		except ObjectDoesNotExist:
 			playlist = None
 		if playlist is not None:
-			song_id = request.POST.get('id')
-			song_name = request.POST.get('songname')
+			song_id = request.POST.get('song_id')
+			song_name = "hello"
 			try:
 				mood = request.POST.get('mood')
 			except KeyError:
@@ -366,6 +407,7 @@ def add_to_playlist(request):
 				song = None
 			if song is None:
 				song = PlaylistSongs(song_id=song_id, song_name=song_name, mood=mood)
+				song.save()
 				playlist.songs.add(song)
 				playlist.save()
 				return HttpResponse("song added")
@@ -375,6 +417,18 @@ def add_to_playlist(request):
 				return HttpResponse("song added")
 		else:
 			return HttpResponse("Playlist does not exist")
+
+
+def add_to_playlist_router(request, song_id):
+	user = request.user
+	if request.user:
+		pl = Playlist.objects.filter(user__username=user.username)
+		context = {
+			'playlists':pl,
+			'song_id':song_id,
+		}
+		return  render(request, "MusicApp/add_to_playlist.html", context)
+
 
 
 def remove_from_playlist(request, playlist_name, song_id):
@@ -465,10 +519,20 @@ def follow_user(request, username):
 		if follow.followers.filter(followers__followers__username=follower_user).exists():
 			return HttpResponse("already followed")
 		else:
-			follower_user_object = User.objects.get(username=follower_user)
+			follower_user_object,_ = User.objects.get_or_create(username=follower_user)
 			follow.followers.add(follower_user_object)
 			follow.save()
+			reverse_follow_method(request, username)
 			return HttpResponse("follow successful")
+
+
+def reverse_follow_method(request, username):
+	user = request.user
+	following_user = User.objects.get(username=username)
+	following,_ = Followings.objects.get_or_create(following_user=following_user)
+	following.save()
+	following.followings.add(user)
+	following.save()
 
 
 def unfollow_user(request, username):
@@ -482,6 +546,30 @@ def unfollow_user(request, username):
 			return HttpResponse("unfollowed")
 		else:
 			return HttpResponse("user does not exist")
+
+
+def view_user_playlists(request, username):
+	if request.method == "GET":
+		user = User.objects.get(username=username)
+		playlists = Playlist.objects.filter(user__username=user.username)
+		playlist_attr = []
+		"""
+		fetching attributes
+		playlist_name = playlists[0].playlist_name
+		playlist_name = playlists[1].playlist_name
+
+		To get count of songs in every playlist do
+		count = playlists[0].songs.count()
+		"""
+		for playlist in playlists:
+			n = playlist.playlist_name
+			c = playlist.songs.all().count()
+			playlist_attr.append((n,c))
+			print(c)
+		context = {
+			"playlists":playlist_attr
+		}
+		return render(request, "MusicApp/user_playlist.html", context)
 
 
 def list_followers(request):

@@ -1,0 +1,131 @@
+{% load static %}
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link href="{% static "MusicApp/css/style.css" %}" rel="stylesheet" type="text/css">
+    <link href="{% static "MusicApp/css/bootstrap.min.css" %}" rel="stylesheet" type="text/css">
+
+</head>
+
+<style>
+    input[type=text] {
+        width: 100%;
+        box-sizing: border-box;
+        border: 2px solid #ccc;
+        border-radius: 4px;
+        font-size: 16px;
+        background-color: white;
+        background-image: url('css/images/search.png');
+        background-position: 96% 50%;
+        background-size: 25px 25px;
+        background-repeat: no-repeat;
+        padding: 12px 20px 12px 40px;
+        /*-webkit-transition: width 0.4s ease-in-out;
+        transition: width 0.4s ease-in-out;*/
+    }
+
+    input[type=text]:focus {
+        width: 100%;
+    }
+</style>
+
+
+<body class="wraper">
+<div id="mySidenav" class="sidenav">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+    <a href="homepage.html">Home</a>
+
+    <a href="playlist.html">PlayList</a>
+    <a href="profile.html">Profile</a>
+    <a href="history.html">History</a>
+</div>
+
+<div class="row Mheader">
+
+    <div class="col-md-3">
+        <div class="row logo">
+            <div class="col-md-4"><span class="sideIcon" style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;
+                        </span></div>
+            <div class="col-md-8"><p class="pqusic">PQusic</p>
+                <p class="webApp">A Music Web App</p></div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="row Mheader1">
+            <div class="following">
+                <form  action="{% url "musicapp:search-result" %}" method="post">
+                    {% csrf_token %}
+                    <input type="text" name="query" placeholder="Search ...">
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<div class="middle_content">
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+
+                <div class="panel panel-primary">
+
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            Playlist Names
+                        </h3></div>
+                    <span class="pull-right btn-click">
+                        
+                        <form method="GET" action="{% url "musicapp:create-playlists" %}"><!--------Create new playlist-------------->
+                            <button type="submit" class="btn btn-sm btn-primary btn-create">create new</button>
+                        </form><!---------$$$$$$$$$$$$$--->
+                    
+                </span>
+
+
+                    <div class="clearfix"></div>
+
+                    <div class="panel-body">
+
+                        <table class="table table-condensed">
+                            <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                        {% for name, song_count in playlists %}
+                            <tr><!-----------Show all playlist------------------>
+                                <td><a href="{% url "musicapp:playlist_songs" name %}">{{ name }}</a></td>
+                                <td><a>{{ song_count }}</a></td>
+{#                                <td><a href="/playlists/delete/{{ name }}"><img src="{% static "MusicApp/css/images/delete1.png" %}" width="20px" height="20px"></a></td>#}
+                            </tr>
+                        {% endfor %}
+                            </tbody>
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function openNav() {
+        document.getElementById("mySidenav").style.width = "200px";
+    }
+
+    function closeNav() {
+        document.getElementById("mySidenav").style.width = "0";
+    }
+</script>
+</body>
+</html>

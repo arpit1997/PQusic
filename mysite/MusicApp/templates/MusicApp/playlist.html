@@ -1,9 +1,11 @@
+{% load static %}
 <html>
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <link href="css/style.css" rel="stylesheet" type="text/css">
-    <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="{% static "MusicApp/css/style.css" %}" rel="stylesheet" type="text/css">
+    <link href="{% static "MusicApp/css/bootstrap.min.css" %}" rel="stylesheet" type="text/css">
+
 </head>
 
 <style>
@@ -52,8 +54,9 @@
     <div class="col-md-6">
         <div class="row Mheader1">
             <div class="following">
-                <form action="#">
-                    <input type="text" name="search" placeholder="Search ...">
+                <form  action="{% url "musicapp:search-result" %}" method="post">
+                    {% csrf_token %}
+                    <input type="text" name="query" placeholder="Search ...">
                 </form>
             </div>
         </div>
@@ -76,7 +79,7 @@
                         </h3></div>
                     <span class="pull-right btn-click">
                         
-                        <form method="post" action="new_playlist.html"><!--------Create new playlist-------------->
+                        <form method="GET" action="{% url "musicapp:create-playlists" %}"><!--------Create new playlist-------------->
                             <button type="submit" class="btn btn-sm btn-primary btn-create">create new</button>
                         </form><!---------$$$$$$$$$$$$$--->
                     
@@ -95,18 +98,13 @@
                             </tr>
                             </thead>
                             <tbody>
+                        {% for name, song_count in playlists %}
                             <tr><!-----------Show all playlist------------------>
-                                <td><a href="song_list.html">playlist name 1</a></td>
-                                <td><a href="#"><img src="css/images/delete1.png" width="20px" height="20px"></a></td>
-                            </tr><!-----------$$$$$$$$$$$$$$-------------------->
-                            <tr>
-                                <td><a href="song_list.html">playlist name 2</a></td>
-                                <td><a href="#"><img src="css/images/delete1.png" width="20px" height="20px"></a></td>
+                                <td><a href="{% url "musicapp:playlist_songs" name %}">{{ name }}</a></td>
+                                <td><a>{{ song_count }}</a></td>
+                                <td><a href="/playlists/delete/{{ name }}"><img src="{% static "MusicApp/css/images/delete1.png" %}" width="20px" height="20px"></a></td>
                             </tr>
-                            <tr>
-                                <td><a href="song_list.html">playlist name 3</a></td>
-                                <td><a href="#"><img src="css/images/delete1.png" width="20px" height="20px"></a></td>
-                            </tr>
+                        {% endfor %}
                             </tbody>
                         </table>
 

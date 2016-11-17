@@ -1,0 +1,104 @@
+{% load static %}
+<html>
+    
+    <head>
+     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+     <link href="{% static "MusicApp/css/style.css" %}" rel="stylesheet" type="text/css">
+     <link href="{% static "MusicApp/css/bootstrap.min.css" %}" rel="stylesheet" type="text/css">
+    </head>
+    <style>
+input[type=text] {
+    width: 100%;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    background-color: white;
+    background-image: url('css/images/search.png');
+    background-position: 96% 50%;
+    background-size: 25px 25px;
+    background-repeat: no-repeat;
+    padding: 12px 20px 12px 40px;
+    /*-webkit-transition: width 0.4s ease-in-out;
+    transition: width 0.4s ease-in-out;*/
+}
+
+input[type=text]:focus {
+    width: 100%;
+}
+</style>
+    
+    
+    
+    
+    <body class="wraper">
+          <div id="mySidenav" class="sidenav">
+                <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+                <a href="homepage.html">Home</a>
+                
+                <a href="playlist.html">PlayList</a>
+                <a href="profile.html">Profile</a>
+                <a href="history.html">History</a>
+            </div>
+
+            <div class="row Mheader">
+                
+                <div class="col-md-3">
+                <div class="row logo">
+                    <div class="col-md-4"><span class="sideIcon" style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;
+                        </span></div>
+                    <div class="col-md-8"><p class="pqusic">PQusic</p><p class="webApp">A Music Web App</p></div>
+                </div>
+                </div>
+                <!--div class="col-md-6">
+                    <div class="row Mheader1">
+                        <div class="col-md-10"><input type="text" name="search" 
+                                                                     placeholder="Search songs..."></div>
+                        <div class="col-md-2"><button type="button">Search</button></div>
+                    </div>
+                </div-->
+                
+            </div>
+                 
+        
+       <div class="middle_content">
+       
+           
+           <div class="following">
+            <form action="{% url "musicapp:search_user" %}" method="post">
+                <input type="text" name="query" placeholder="Search users..">
+            </form>
+            </div>
+           <div class="user_list">
+    			<table class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <th>Users</th>
+                            <th>Following</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for user in users %}
+                            <tr><!-----------Show all Users-------for loop----------->
+                                <td><a href="{% url "musicapp:view_user_playlists" user.username %}">{{ user.username }}</a></td>
+                                <td>
+                                    <a class="stream-now btn btn-primary" href="">Follow</a>
+                                </td>
+                            </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+			</div>
+        </div>
+        
+        <script>
+            function openNav() {
+                document.getElementById("mySidenav").style.width = "200px";
+                }
+
+            function closeNav() {
+                document.getElementById("mySidenav").style.width = "0";
+                }
+        </script>
+    </body>
+</html>
