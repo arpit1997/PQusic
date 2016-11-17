@@ -91,6 +91,7 @@ def results_query(request):
 			'results':results.yt_search_list,
 		}
 		print(results.yt_search_list[0].yt_title)
+		print(results.yt_search_list[0].yt_id)
 		return render(request, "MusicApp/main.html", context)
 	else:
 		return HttpResponse("Bad request")
@@ -278,7 +279,7 @@ def view_user_profile(request):
 
 
 def search_users(request, username):
-	"""
+	"""f
 	just use a filter query
 	use a GET request
 	:param request, username:

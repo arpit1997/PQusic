@@ -70,6 +70,7 @@ class YtQueryParser:
 			# video_object.yt_artist = self.yt_links_artist[i]
 			video_object.yt_views = self.yt_links_views[i]
 			video_object.yt_thumbnail = self.yt_links_thumbs[i]
+			video_object.yt_id = self.yt_links_href[i][9:]
 			self.yt_search_list.append(video_object)
 
 
@@ -84,6 +85,7 @@ class YtVideo:
 		self.yt_artist = ""
 		self.yt_views = ""
 		self.yt_thumbnail = ""
+		self.yt_id = ""
 
 """
 just for some debugging purposes
