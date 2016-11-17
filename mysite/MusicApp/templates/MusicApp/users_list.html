@@ -80,7 +80,7 @@ input[type=text]:focus {
                     <tbody>
                     {% for user in users %}
                             <tr><!-----------Show all Users-------for loop----------->
-                                <td><a href="user_all_playlist.html">{{ user.username }}</a></td>
+                                <td><a href="{% url "musicapp:view_user_playlists" user.username %}">{{ user.username }}</a></td>
                                 <td>
                                     <a class="stream-now btn btn-primary" href="">Follow</a>
                                 </td>

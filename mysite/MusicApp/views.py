@@ -512,10 +512,20 @@ def follow_user(request, username):
 		if follow.followers.filter(followers__followers__username=follower_user).exists():
 			return HttpResponse("already followed")
 		else:
-			follower_user_object = User.objects.get(username=follower_user)
+			follower_user_object,_ = User.objects.get_or_create(username=follower_user)
 			follow.followers.add(follower_user_object)
 			follow.save()
+			reverse_follow_method(request, username)
 			return HttpResponse("follow successful")
+
+
+def reverse_follow_method(request, username):
+	user = request.user
+	following_user = User.objects.get(username=username)
+	following,_ = Followings.objects.get_or_create(following_user=following_user)
+	following.save()
+	following.followings.add(user)
+	following.save()
 
 
 def unfollow_user(request, username):
@@ -529,6 +539,30 @@ def unfollow_user(request, username):
 			return HttpResponse("unfollowed")
 		else:
 			return HttpResponse("user does not exist")
+
+
+def view_user_playlists(request, username):
+	if request.method == "GET":
+		user = User.objects.get(username=username)
+		playlists = Playlist.objects.filter(user__username=user.username)
+		playlist_attr = []
+		"""
+		fetching attributes
+		playlist_name = playlists[0].playlist_name
+		playlist_name = playlists[1].playlist_name
+
+		To get count of songs in every playlist do
+		count = playlists[0].songs.count()
+		"""
+		for playlist in playlists:
+			n = playlist.playlist_name
+			c = playlist.songs.all().count()
+			playlist_attr.append((n,c))
+			print(c)
+		context = {
+			"playlists":playlist_attr
+		}
+		return render(request, "MusicApp/user_playlist.html", context)
 
 
 def list_followers(request):
