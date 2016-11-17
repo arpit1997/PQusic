@@ -85,7 +85,14 @@ def home(request):
 
 def results_query(request):
 	if request.method == "POST":
-		query = request.POST.get("query")
+		query = str(request.POST.get("query"))
+		print(query)
+		a = query.split(' ')
+		x = ""
+		for it in a:
+			x = x + it
+		print(x)
+		query = x
 		results = YtQueryParser(query)
 		print(results)
 		print(len(results.yt_links_artist))
@@ -265,8 +272,8 @@ def get_video_url(request,yt_url):
 		video = pafy.new(yt_url)
 		audio = video.audiostreams
 		audio_url = audio[0].url
-
-		if request.user:
+		print(audio_url)
+		if request.user.is_authenticated():
 			print("in if")
 			r = requests.get(yt_url)
 			print(r.status_code)
@@ -276,7 +283,7 @@ def get_video_url(request,yt_url):
 			print(span_title  )
 			title = span_title[0]['title']
 			print(title)
-			new_song_history = SongHistory(song_id=video_id, song_name=title, last_listened=timezone.now())
+			new_song_history,_ = SongHistory.objects.get_or_create(song_id=video_id, song_name=title, last_listened=timezone.now())
 			new_song_history.save()
 			user = request.user
 			history_object, _ = History.objects.get_or_create(user=user)
