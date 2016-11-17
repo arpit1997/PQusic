@@ -21,7 +21,7 @@ from .helpers.ytqueryparser import YtQueryParser
 from .helpers.ytPlaylistParser import YtPlaylist
 from .models import AppUserProfile
 from .models import Playlist
-from .models import PlaylistSongs, Followers, Followings
+from .models import PlaylistSongs, Followers, Followings, SongHistory, History
 
 # encryption key for creating activation key
 secret_key = os.environ.get("encryption_key")
@@ -266,12 +266,23 @@ def get_video_url(request,yt_url):
 		audio = video.audiostreams
 		audio_url = audio[0].url
 
-		r = requests.get(yt_url)
-		print(r.status_code)
-		page = r.text
-		soup = BeautifulSoup(page, 'html.parser')
-		span_title = soup.find_all('span', {'class':'watch-title'})
-		print(span_title  )
+		if request.user:
+			print("in if")
+			r = requests.get(yt_url)
+			print(r.status_code)
+			page = r.text
+			soup = BeautifulSoup(page, 'html.parser')
+			span_title = soup.find_all('span', {'class':'watch-title'})
+			print(span_title  )
+			title = span_title[0]['title']
+			print(title)
+			new_song_history = SongHistory(song_id=video_id, song_name=title, last_listened=timezone.now())
+			new_song_history.save()
+			user = request.user
+			history_object, _ = History.objects.get_or_create(user=user)
+			history_object.save()
+			history_object.song.add(new_song_history)
+			history_object.save()
 		return HttpResponse(audio_url)
 	else:
 		return HttpResponse("NULL")
@@ -288,15 +299,21 @@ def view_user_profile(request):
 			name = user.first_name + " " + user.last_name
 
 
-def search_users(request, username):
+def search_users(request):
 	"""f
 	just use a filter query
 	use a GET request
-	:param request, username:
+	:param request
 	:return a list of relevent users:
 	use some regex
 	"""
-	pass
+	if request.method == "POST":
+		query = request.POST.get('query')
+		relevent_users = User.objects.filter(username__like=query)
+		print(relevent_users)
+		return HttpResponse("ok")
+	else:
+		return HttpResponse("Bad request")
 
 
 @login_required
