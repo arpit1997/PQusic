@@ -299,6 +299,7 @@ def view_user_profile(request):
 			name = user.first_name + " " + user.last_name
 
 
+@csrf_exempt
 def search_users(request):
 	"""f
 	just use a filter query
@@ -307,13 +308,17 @@ def search_users(request):
 	:return a list of relevent users:
 	use some regex
 	"""
+	print("hello")
 	if request.method == "POST":
 		query = request.POST.get('query')
-		relevent_users = User.objects.filter(username__like=query)
+		relevent_users = User.objects.filter(username__icontains=query)[:10]
 		print(relevent_users)
-		return HttpResponse("ok")
+		context = {
+			'users':relevent_users,
+		}
+		return render(request, "MusicApp/users_list.html", context)
 	else:
-		return HttpResponse("Bad request")
+		return render(request, "MusicApp/users_list.html")
 
 
 @login_required
@@ -383,8 +388,8 @@ def add_to_playlist(request):
 		except ObjectDoesNotExist:
 			playlist = None
 		if playlist is not None:
-			song_id = request.POST.get('id')
-			song_name = request.POST.get('songname')
+			song_id = request.POST.get('song_id')
+			song_name = "hello"
 			try:
 				mood = request.POST.get('mood')
 			except KeyError:
@@ -395,6 +400,7 @@ def add_to_playlist(request):
 				song = None
 			if song is None:
 				song = PlaylistSongs(song_id=song_id, song_name=song_name, mood=mood)
+				song.save()
 				playlist.songs.add(song)
 				playlist.save()
 				return HttpResponse("song added")
@@ -404,6 +410,18 @@ def add_to_playlist(request):
 				return HttpResponse("song added")
 		else:
 			return HttpResponse("Playlist does not exist")
+
+
+def add_to_playlist_router(request, song_id):
+	user = request.user
+	if request.user:
+		pl = Playlist.objects.filter(user__username=user.username)
+		context = {
+			'playlists':pl,
+			'song_id':song_id,
+		}
+		return  render(request, "MusicApp/add_to_playlist.html", context)
+
 
 
 def remove_from_playlist(request, playlist_name, song_id):

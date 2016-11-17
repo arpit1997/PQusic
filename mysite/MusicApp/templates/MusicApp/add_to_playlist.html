@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>add to Playlist</title>
+</head>
+<body>
+<form action="{% url "musicapp:add_to_playlist" %}" method="post">
+{% csrf_token %}
+    <p>song_id</p>
+    <input type="text" value="{{ song_id }}"  name="song_id" readonly>
+    <p>playlist names</p>
+    {% for playlist in playlists %}
+        <input type="radio" name="name" value="{{ playlist.playlist_name }}"> <br>
+    {% endfor %}
+    <p>mood</p>
+    <input type="text" name="mood">
+    <input type="submit" name="submit">
+</form>
+</body>
+</html>

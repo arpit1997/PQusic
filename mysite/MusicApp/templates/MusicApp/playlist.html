@@ -100,7 +100,7 @@
                             <tbody>
                         {% for name, song_count in playlists %}
                             <tr><!-----------Show all playlist------------------>
-                                <td><a href="song_list.html">{{ name }}</a></td>
+                                <td><a href="{% url "musicapp:playlist_songs" name %}">{{ name }}</a></td>
                                 <td><a>{{ song_count }}</a></td>
                                 <td><a href="/playlists/delete/{{ name }}"><img src="{% static "MusicApp/css/images/delete1.png" %}" width="20px" height="20px"></a></td>
                             </tr>
