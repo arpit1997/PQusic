@@ -135,31 +135,36 @@ input[type=range]+.thumb.active {
 <script src="https://cdn.plyr.io/2.0.7/plyr.js"></script>
 <script src="../static/js/main_new.js"></script>
     <body class="wraper">
+    {% if request.user.is_authenticated %}
+    <div id="mySidenav" class="sidenav">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+    <a href="{% url "musicapp:home" %}">Home</a>
 
-            <div id="mySidenav" class="sidenav">
-                <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-                <a href="homepage.html">Home</a>
-                <a href="homepage.html">Trending</a>
-                <a href="song_list.html">PlayList</a>
-                <a href="profile.html">Profile</a>
-                <a href="#">History</a>
-            </div>
-
+    <a href="{% url "musicapp:view-playlists" %}">PlayList</a>
+    <a href="{% url "musicapp:view_profile" %}">Profile</a>
+    <a href="{% url "musicapp:view_history" %}">History</a>
+</div>
+    {% endif %}
             <div class="row Mheader">
 
                 <div class="col-md-2">
                 <div class="row logo">
+                    {% if requets.user.is_authenticated %}
                     <div class="col-md-4"><span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;
                         </span></div>
+                    {% endif %}
                     <div class="col-md-8"><p>PQusic</p></div>
                 </div>
                 </div>
                 <div class="col-md-7">
                     <div class="row Mheader1">
-                        <div class="col-md-10"><input type="text" name="search"
+                        <form method="post" action="{% url "musicapp:search-result" %}">
+                          {% csrf_token %}
+                            <div class="col-md-10"><input type="text" name="query"
                                                                      placeholder="Search songs..."></div>
-                        <div class="col-md-2"><button type="button">Search</button></div>
-                    </div>
+
+                        </form>
+                        </div>
                 </div>
                 <div class="col-md-3">
                     <div class="row Mheader2">
@@ -195,16 +200,6 @@ input[type=range]+.thumb.active {
 
                         </div>
                     {% endfor %}
-                        <!---- make below class comment--->
-                        <div class="row search_stream_list">
-                            <div class="col-md-3"><img src="images1.jpg" width="190px" height="150px"></div>
-                            <div class="col-md-9">
-                                <p>Song name</p>
-                                <p>Duration</p>
-                                <p>Singer name</p>
-                                <p>Views</p>
-                            </div>
-                        </div><!--- make comment------>
 
             <!-------------------------------End For loop------------------------------------------->
 

@@ -42,8 +42,13 @@ class YtQueryParser:
 	def get_views_age(self):
 		meta_data = self.page.find_all('ul', {'class': 'yt-lockup-meta-info'})
 		for data in meta_data:
-			self.yt_links_age.append(data.find_all('li')[0].get_text())
-			self.yt_links_views.append(data.find_all('li')[1].get_text())
+			print(data.find_all('li')[0].get_text())
+			try:
+				self.yt_links_age.append(data.find_all('li')[0].get_text())
+				self.yt_links_views.append(data.find_all('li')[1].get_text())
+			except IndexError:
+				self.yt_links_age.append('0')
+				self.yt_links_views.append('0')
 
 	def get_thumbnail(self):
 		for i in self.yt_links_href:
@@ -62,16 +67,20 @@ class YtQueryParser:
 	# 		self.yt_links_artist.append(a)
 
 	def create_search_object(self):
-		for i in range(10):
-			video_object = YtVideo()
-			video_object.yt_title = self.yt_links_title[i]
-			video_object.yt_href = self.yt_links_href[i]
-			video_object.yt_duration = self.yt_links_duration[i]
-			# video_object.yt_artist = self.yt_links_artist[i]
-			video_object.yt_views = self.yt_links_views[i]
-			video_object.yt_thumbnail = self.yt_links_thumbs[i]
-			video_object.yt_id = self.yt_links_href[i][9:]
-			self.yt_search_list.append(video_object)
+		n = 10
+		for i in range(n):
+			if self.yt_links_age[i] == '0' or self.yt_links_views[i] == '0':
+				n += 1
+			else:
+				video_object = YtVideo()
+				video_object.yt_title = self.yt_links_title[i]
+				video_object.yt_href = self.yt_links_href[i]
+				video_object.yt_duration = self.yt_links_duration[i]
+				# video_object.yt_artist = self.yt_links_artist[i]
+				video_object.yt_views = self.yt_links_views[i]
+				video_object.yt_thumbnail = self.yt_links_thumbs[i]
+				video_object.yt_id = self.yt_links_href[i][9:]
+				self.yt_search_list.append(video_object)
 
 
 class YtVideo:

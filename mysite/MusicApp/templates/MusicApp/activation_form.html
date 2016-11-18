@@ -10,24 +10,24 @@
     
     
     
-    
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li style="color: aqua" {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
     <body class="wraper">
-       <div id="mySidenav" class="sidenav">
-                <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-                <a href="homepage.html">Home</a>
-                
-                <a href="playlist.html">PlayList</a>
-                <a href="profile.html">Profile</a>
-                <a href="history.html">History</a>
-            </div>
 
             <div class="row Mheader">
                 
                 <div class="col-md-3">
                 <div class="row logo">
-                    <div class="col-md-4"><span class="sideIcon" style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;
-                        </span></div>
-                    <div class="col-md-8"><p class="pqusic">PQusic</p><p class="webApp">A Music Web App</p></div>
+                    <div class="col-md-8">
+                    <a href="{% url "musicapp:home" %}">
+                       <p class="pqusic">PQusic</p>
+                    </a>
+                        <p class="webApp">A Music Web App</p></div>
                 </div>
                 </div>
                 <!--div class="col-md-6">

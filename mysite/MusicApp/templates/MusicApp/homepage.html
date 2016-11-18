@@ -149,14 +149,16 @@ input[type=range]+.thumb.active {
 }
 </style>
 <body class="wraper">
+{% if request.user.is_authenticated %}
 <div id="mySidenav" class="sidenav">
     <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
     <a href="{% url "musicapp:home" %}">Home</a>
 
     <a href="{% url "musicapp:view-playlists" %}">PlayList</a>
-    <a href="profile.html">Profile</a>
-    <a href="history.html">History</a>
+    <a href="{% url "musicapp:view_profile" %}">Profile</a>
+    <a href="{% url "musicapp:view_history" %}">History</a>
 </div>
+{% endif %}
 <script src="https://code.jquery.com/jquery-2.2.4.min.js"
         integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/js/materialize.min.js"></script>
@@ -171,18 +173,22 @@ input[type=range]+.thumb.active {
     }
 </script>
 <div class="row Hheader">
+{% if request.user.is_authenticated %}
     <div class="col-md-1">
                     <span class="sideIcon" style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;
                         </span>
     </div>
-    <div class="col-md-8"><p class="pqusic">PQusic</p>
+{% endif %}
+    <div class="col-md-8"><a href="{% url "musicapp:home" %}">
+        <p  class="pqusic">PQusic</p>
+    </a>
         <p class="webApp">A Music Web App</p></div>
 
     <div class="col-md-3">
         <div class="row Hheader1">
             {% if request.user %}
                 <div class="col-md-4">
-                    <form method="post" action="following.html">
+                    <form method="get" action="{% url "musicapp:search_user" %}">
                         <button type="submit" value="submit">People</button>
 
                     </form>
@@ -202,7 +208,7 @@ input[type=range]+.thumb.active {
             </div>
             <div class="col-md-4">
                 {% if request.user.is_authenticated %}
-                    <form action="#">
+                    <form action="{% url "musicapp:view_profile" %}">
                         <button>{{ request.user }}</button>
                     </form>
                 {% else %}
@@ -254,7 +260,7 @@ input[type=range]+.thumb.active {
                             {% for song in songs %}
                                 <div class="col-md-4 card--ym3"><img class="card-image " src="{{ song.yt_thumbnail }}" width="190px" height="150px">
                                     <br>
-                                    <p><a href="{{ song.yt_href }}" class="card--ym3--title">{{ song.yt_title }}</a></p>
+                                    <p><a class="card--ym3--title">{{ song.yt_title }}</a></p>
                                     <!---first row and first column-->
                                     <p>{{ song.yt_duration }}</p>
                                     <p class="channel">{{ song.yt_artist }}</p>

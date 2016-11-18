@@ -100,7 +100,7 @@
                             <tbody>
                         {% for name, song_count in playlists %}
                             <tr><!-----------Show all playlist------------------>
-                                <td><a href="">{{ name }}</a></td>
+                                <td><a href="{% url "musicapp:view_user_playlist_songs" uname name %}">{{ name }}</a></td>
                                 <td><a>{{ song_count }}</a></td>
                                 <td>
                                     <a class="stream-now btn btn-primary" data-stream-url="{{ song.yt_id }}" href="{% url "musicapp:import_playlist" uname name %}">Import</a>

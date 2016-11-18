@@ -30,14 +30,14 @@
             {% endfor %}
         </ul>
         {% endif %}
-        <div id="mySidenav" class="sidenav">
-                <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-                <a href="homepage.html">Home</a>
-                
-                <a href="playlist.html">PlayList</a>
-                <a href="profile.html">Profile</a>
-                <a href="history.html">History</a>
-            </div>
+ <div id="mySidenav" class="sidenav">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+    <a href="{% url "musicapp:home" %}">Home</a>
+
+    <a href="{% url "musicapp:view-playlists" %}">PlayList</a>
+    <a href="{% url "musicapp:view_profile" %}">Profile</a>
+    <a href="{% url "musicapp:view_history" %}">History</a>
+</div>
 
             <div class="row Mheader">
                 

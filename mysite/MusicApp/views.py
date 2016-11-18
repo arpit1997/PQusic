@@ -412,11 +412,13 @@ def add_to_playlist(request):
 				song.save()
 				playlist.songs.add(song)
 				playlist.save()
-				return HttpResponse("song added")
+				messages.success(request, "song added")
+				return HttpResponseRedirect(reverse("musicapp:view-playlists"))
 			else:
 				playlist.songs.add(song)
 				playlist.save()
-				return HttpResponse("song added")
+				messages.success(request, "song added")
+				return HttpResponseRedirect(reverse("musicapp:view-playlists"))
 		else:
 			return HttpResponse("Playlist does not exist")
 
@@ -448,6 +450,7 @@ def remove_from_playlist(request, playlist_name, song_id):
 	if request.method == "GET":
 		user = request.user
 		song_id = song_id
+		print(song_id)
 		playlist_name = playlist_name
 		try:
 			playlist = Playlist.objects.get(user=user, playlist_name=playlist_name)
@@ -461,6 +464,7 @@ def remove_from_playlist(request, playlist_name, song_id):
 			if song is not None:
 				playlist.songs.remove(song)
 				playlist.save()
+				messages.success(request,"song deleted")
 				return HttpResponseRedirect(reverse("musicapp:playlist_songs", args=(playlist_name,)))
 			else:
 				return HttpResponse("song not found")
@@ -588,27 +592,28 @@ def view_user_playlists(request, username):
 		return render(request, "MusicApp/user_playlist.html", context)
 
 
-# def view_user_playlist_songs(request, username, playlist_name):
-# 	if request.method == "GET":
-# 		playlist_name = str(playlist_name)
-# 		user = User.objects.get(username=username)
-# 		try:
-# 			playlist = Playlist.objects.get(user=user, playlist_name=playlist_name)
-# 		except ObjectDoesNotExist:
-# 			playlist = None
-# 		if playlist is not None:
-# 			songs = playlist.songs.all()
-# 			for song in songs:
-# 				print(song.song_name)
-# 		songs = None
-# 		context = {
-# 			'name':playlist_name,
-# 			'songs':songs,
-# 			'privacy':playlist.privacy,
-# 			'uname':username,
-# 		}
-# 		return render(request, "MusicApp/song_list.html", context)
-#
+def view_user_playlist_songs(request, username, playlist_name):
+	if request.method == "GET":
+		print("view user playlist songs")
+		playlist_name = str(playlist_name)
+		user = User.objects.get(username=username)
+		print(user)
+		try:
+			playlist = Playlist.objects.get(user=user, playlist_name=playlist_name)
+		except ObjectDoesNotExist:
+			playlist = None
+		if playlist is not None:
+			print("playlistNot None")
+			songs = playlist.songs.all()
+			print(songs)
+		context = {
+			'name':playlist_name,
+			'songs':songs,
+			'privacy':playlist.privacy,
+			'uname':username,
+		}
+		return render(request, "MusicApp/song_list.html", context)
+
 
 
 def list_followers(request):
@@ -644,9 +649,11 @@ def import_playlist(request, username, name):
 			new_imported_playlist.songs.add(song)
 		print("view:import playlist")
 		new_imported_playlist.save()
-		return HttpResponse("ok")
+		messages.success(request, "playlist imported")
+		return HttpResponseRedirect(reverse("musicapp:view-playlists"))
 	else:
-		return HttpResponse("playlist exists")
+		messages.error(request, "playlist with this name already exist")
+		return HttpResponseRedirect(reverse("musicapp:view-playlists"))
 
 
 # test view .
