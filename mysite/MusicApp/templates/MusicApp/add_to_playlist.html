@@ -9,6 +9,7 @@
 {% csrf_token %}
     <p>song_id</p>
     <input type="text" value="{{ song_id }}"  name="song_id" readonly>
+    <input type="text" value="{{ title }}"  name="song_name" readonly>
     <p>playlist names</p>
     {% for playlist in playlists %}
         <input type="radio" name="name" value="{{ playlist.playlist_name }}"> <br>

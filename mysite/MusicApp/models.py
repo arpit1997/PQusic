@@ -25,7 +25,7 @@ class Playlist(models.Model):
 	Playlist model
 	"""
 	user = models.ForeignKey(User)
-	playlist_name = models.CharField(max_length=100, unique=True, null=False)
+	playlist_name = models.CharField(max_length=100, null=False)
 	songs = models.ManyToManyField(PlaylistSongs, null=True, blank=True)
 	privacy_choices = (
 		(True, 'public'),

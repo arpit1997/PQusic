@@ -1,6 +1,7 @@
 import binascii
 import os
 import re
+from copy import copy, deepcopy
 
 import requests
 from django.contrib import messages
@@ -397,7 +398,7 @@ def add_to_playlist(request):
 			playlist = None
 		if playlist is not None:
 			song_id = request.POST.get('song_id')
-			song_name = "hello"
+			song_name = request.POST.get('song_name')
 			try:
 				mood = request.POST.get('mood')
 			except KeyError:
@@ -424,9 +425,20 @@ def add_to_playlist_router(request, song_id):
 	user = request.user
 	if request.user:
 		pl = Playlist.objects.filter(user__username=user.username)
+		# scraper
+		yt_url = "https://www.youtube.com/watch?v="+song_id
+		r = requests.get(yt_url)
+		soup = BeautifulSoup(r.text, 'html.parser')
+		span_tag = soup.find_all('span', {'class':'watch-title'})
+		span_tag = span_tag[0]
+		print(span_tag)
+		title = span_tag.get_text()
+		print(title)
+		# scrpaer
 		context = {
 			'playlists':pl,
 			'song_id':song_id,
+			'title':title,
 		}
 		return  render(request, "MusicApp/add_to_playlist.html", context)
 
@@ -486,6 +498,7 @@ def view_playlists(request):
 
 
 def view_playlist_songs(request, playlist_name):
+	print("view playlist songs")
 	if request.method == "GET":
 		playlist_name = str(playlist_name)
 		user = request.user
@@ -493,10 +506,11 @@ def view_playlist_songs(request, playlist_name):
 			playlist = Playlist.objects.get(user=user, playlist_name=playlist_name)
 		except ObjectDoesNotExist:
 			playlist = None
+		print(playlist)
 		if playlist is not None:
 			songs = playlist.songs.all()
-		for song in songs:
-			print(song.song_name)
+			for song in songs:
+				print(song.song_name)
 		context = {
 			'name':playlist_name,
 			'songs':songs,
@@ -568,9 +582,33 @@ def view_user_playlists(request, username):
 			playlist_attr.append((n,c))
 			print(c)
 		context = {
-			"playlists":playlist_attr
+			"playlists":playlist_attr,
+			'uname':username,
 		}
 		return render(request, "MusicApp/user_playlist.html", context)
+
+
+# def view_user_playlist_songs(request, username, playlist_name):
+# 	if request.method == "GET":
+# 		playlist_name = str(playlist_name)
+# 		user = User.objects.get(username=username)
+# 		try:
+# 			playlist = Playlist.objects.get(user=user, playlist_name=playlist_name)
+# 		except ObjectDoesNotExist:
+# 			playlist = None
+# 		if playlist is not None:
+# 			songs = playlist.songs.all()
+# 			for song in songs:
+# 				print(song.song_name)
+# 		songs = None
+# 		context = {
+# 			'name':playlist_name,
+# 			'songs':songs,
+# 			'privacy':playlist.privacy,
+# 			'uname':username,
+# 		}
+# 		return render(request, "MusicApp/song_list.html", context)
+#
 
 
 def list_followers(request):
@@ -589,8 +627,26 @@ def share_playlist(request):
 	pass
 
 
-def import_playlist(request):
-	pass
+def import_playlist(request, username, name):
+	user = request.user
+	try:
+		pl_object = Playlist.objects.get(user=user, playlist_name=name)
+	except ObjectDoesNotExist:
+		pl_object = None
+	if pl_object is None:
+		user_playlist = Playlist.objects.get(user__username=username, playlist_name=name)
+		new_imported_playlist = Playlist(user=user, playlist_name=name, privacy=True)
+		new_imported_playlist.save()
+		songs = user_playlist.songs.all()
+		print(songs)
+		for song in songs:
+			print(song)
+			new_imported_playlist.songs.add(song)
+		print("view:import playlist")
+		new_imported_playlist.save()
+		return HttpResponse("ok")
+	else:
+		return HttpResponse("playlist exists")
 
 
 # test view .
