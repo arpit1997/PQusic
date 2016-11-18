@@ -87,10 +87,11 @@ def results_query(request):
 	if request.method == "POST":
 		query = str(request.POST.get("query"))
 		print(query)
-		a = query.split(' ')
 		x = ""
-		for it in a:
-			x = x + it
+		for it in query:
+			if it == ' ':
+				it = '+'
+			x += it
 		print(x)
 		query = x
 		results = YtQueryParser(query)
