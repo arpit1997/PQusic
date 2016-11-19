@@ -289,7 +289,7 @@ color: white;
     padding-left: 0px;
 }
 .row.Hheight,.row.login_body,.row.Mmiddle,.middle_content{
-    background: #eaeaea;
+    background: #fdfdfd;
     border-top: 2px solid rgb(223, 223, 223);
 }
 .row.Hheader1,.row.Lheader1{
@@ -313,12 +313,11 @@ font-size: 18px;
     text-align: center;
     background-color: #30b55a;
     font-size: 20px;
-    font-weight: 600;
     line-height: 22px;
     padding: .75em 1.5em;
     text-transform: none;
     border: 0;
-    border-radius: 10px;
+    border-radius: 3px;
     color: #f6f6f6;
     cursor: pointer;
 }
