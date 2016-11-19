@@ -26,11 +26,11 @@ from .models import Playlist
 from .models import PlaylistSongs, Followers, Followings, SongHistory, History
 
 # encryption key for creating activation key
-secret_key = os.environ.get("encryption_key")
+secret_key = "123456789"
 # sender's email address in account verification email
-email_address = os.environ.get("email")
+email_address = "shockwavemoto@gmail.com"
 # sender;s email password
-email_password = os.environ.get("password_a")
+email_password = "9829667088"
 
 
 def user_login(request):

@@ -9,11 +9,12 @@ from django.contrib.auth.models import User
 # helper functions
 # ********************************************* #
 # encryption key for creating activation key
-secret_key = os.environ.get("encryption_key")
+secret_key = "12345678"
 # sender's email address in account verification email
-email_address = os.environ.get("email")
+email_address = "shockwavemoto@gmail.com"
 # sender;s email password
-email_password = os.environ.get("password_a")
+email_password = "9829667088"
+
 
 def custom_save(user):
 	"""
