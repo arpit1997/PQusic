@@ -1,10 +1,43 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>add to Playlist</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link href="{% static "MusicApp/css/style.css" %}" rel="stylesheet" type="text/css">
+    <link href="{% static "MusicApp/css/bootstrap.min.css" %}" rel="stylesheet" type="text/css">
+
 </head>
-<body>
+<style>
+    p{
+        font-size: 18px;
+        font-weight: 400;
+    }
+
+</style>
+<body class="wraper">
+
+<div class="row Mheader">
+
+                <div class="col-md-3">
+                <div class="row logo">
+                    <div class="col-md-4"><span class="sideIcon" style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;
+                        </span></div>
+                    <div class="col-md-8"><p class="pqusic"><a href="{% url "musicapp:home" %}" >PQusic</a></p>
+        <p class="webApp">A Music Web App</p></div>
+                </div>
+                </div>
+                <!--div class="col-md-6">
+                    <div class="row Mheader1">
+                        <div class="col-md-10"><input type="text" name="search"
+                                                                     placeholder="Search songs..."></div>
+                        <div class="col-md-2"><button type="button">Search</button></div>
+                    </div>
+                </div-->
+
+            </div>
+
         {% if messages %}
         <ul class="messages">
             {% for message in messages %}
@@ -12,18 +45,48 @@
             {% endfor %}
         </ul>
     {% endif %}
+
+
+ <div class="middle_content">
+
+ <div class="container">
+    <div class="row">
+      <div class="col-md-4 col-md-offset-4">
+        <div class="panel panel-primary">
+          <div class="panel-heading">
+            <h3 class="panel-title">Add Song to Playlist</h3></div>
+          <div class="panel-body">
+
 <form action="{% url "musicapp:add_to_playlist" %}" method="post">
 {% csrf_token %}
-    <p>song_id</p>
+    <p>Song_id</p>
     <input type="text" value="{{ song_id }}"  name="song_id" readonly>
+<br>
+<p>Song Name</p>
     <input type="text" value="{{ title }}"  name="song_name" readonly>
-    <p>playlist names</p>
+<br>
+    <p>Playlist Names</p><br>
     {% for playlist in playlists %}
         <input type="radio" name="name" value="{{ playlist.playlist_name }}" >{{ playlist.playlist_name }} <br>
+
     {% endfor %}
-    <p>mood</p>
+<br>
+    <p>Mood</p>
     <input type="text" name="mood">
+<br>
     <input type="submit" name="submit">
 </form>
+
+
+
+            </form><!-----------form end---------------------->
+
+            </div>
+        </div>
+        </div>
+    </div>
+  </div>
+
+ </div>
 </body>
 </html>
