@@ -147,6 +147,35 @@ input[type=range]+.thumb.active {
 .tandc-btn:hover {
     color: rgb(244,67,54);
 }
+
+    .navbar-inverse {
+    background-color: transparent !important;
+    border-color: transparent !important;
+
+}
+    .nav.navbar-nav .col-md-4{
+        text-align: center;
+        padding-left: 13px !important;
+        padding-right: 0px !important;
+
+      }
+    nav{
+        box-shadow: none !important;
+
+    }
+    .container-fluid {
+         padding-left: 0px !important;
+         padding-top: 8px !important;
+         padding-right: 8px !important;
+    }
+    .row.Hheader .col-md-1.Bar{
+        padding-top: 25px !important;
+        padding-left: 20px !important;
+    }
+    .row{
+        margin-bottom: 0px !important;
+    }
+
 </style>
 <body class="wraper">
 {% if request.user.is_authenticated %}
@@ -174,18 +203,22 @@ input[type=range]+.thumb.active {
 </script>
 <div class="row Hheader">
 {% if request.user.is_authenticated %}
-    <div class="col-md-1">
+    <div class="col-md-1 Bar">
                     <span class="sideIcon" style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;
                         </span>
     </div>
 {% endif %}
-    <div class="col-md-8"><a href="{% url "musicapp:home" %}">
-        <p  class="pqusic">PQusic</p>
-    </a>
+    <div class="col-md-8"><p class="pqusic"><a href="{% url "musicapp:home" %}" >PQusic</a></p>
         <p class="webApp">A Music Web App</p></div>
 
     <div class="col-md-3">
         <div class="row Hheader1">
+
+         <nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+
+    <ul class="nav navbar-nav">
+
             {% if request.user %}
                 <div class="col-md-4">
                     <form method="get" action="{% url "musicapp:search_user" %}">
@@ -217,8 +250,11 @@ input[type=range]+.thumb.active {
                     </form>
                 {% endif %}
             </div>
+    </ul>
         </div>
+         </nav>
     </div>
+</div>
 </div>
 <div class="middle_content">
     <div class="row Hheight">

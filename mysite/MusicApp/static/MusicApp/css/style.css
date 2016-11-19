@@ -263,12 +263,16 @@ padding-top: 0px !important;
     
 }
 .pqusic{
-    font-size: 40px;
+    font-size: 55px;
     font-family: "Helvetica Neue",Helvetica,Arial,sans-serif !important;
     font-weight: bold;
 }
+.pqusic a{
+    text-decoration: none !important;
+    color: #30b55a !important;
+}
 .webApp{
-    font-size: 20px;
+    font-size: 15px;
     font-family: "Helvetica Neue",Helvetica,Arial,sans-serif !important;
 color: white;
     letter-spacing: 1px;
@@ -347,7 +351,7 @@ width: auto;
     height: auto;
 }
 .row.Hmiddle .col-md-12{
-padding-top: 30px;
+padding-top: 0px;
 }
 .row.Hmiddle1 .col-md-1{
     padding-left: 0px !important;
@@ -476,7 +480,7 @@ padding-top: 0px !important;
 }
 
 .row.search_stream_list .col-md-9{
-    padding-left: 0px;
+    padding-left: 10px;
     
     margin-bottom: 0px !important;
 }

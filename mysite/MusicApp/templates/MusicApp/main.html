@@ -127,7 +127,53 @@ input[type=range]+.thumb.active {
 .tandc-btn:hover {
     color: rgb(244,67,54);
 }
+     #custom-search-input{
+    padding: 1px;
+    border: solid 1px #b2b2b2;
+    border-radius: 6px;
+    background-color: #fff;
+}
 
+#custom-search-input input{
+    border: 0;
+    box-shadow: none;
+}
+
+#custom-search-input button{
+    margin: 2px 0 0 0;
+    background: none;
+    box-shadow: none;
+    border: 0;
+    color: #666666;
+    padding: 0 8px 0 10px;
+    border-left: solid 1px #ccc;
+}
+
+#custom-search-input button:hover{
+    border: 0;
+    box-shadow: none;
+    border-left: solid 1px #ccc;
+}
+
+#custom-search-input .glyphicon-search{
+    font-size: 23px;
+}
+      #custom-search-input input[type=text]{
+        margin: 0px !important;
+      }
+
+      .nav.navbar-nav li{
+            padding-left: 10px;
+        }
+        .navbar-inverse {
+            margin-top: 20px;
+   background-color:  transparent !important;
+            border-color: transparent !important;
+
+}
+.row{
+        margin-bottom: 0px !important;
+    }
 </style>
 <script src="https://code.jquery.com/jquery-2.2.4.min.js"
         integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
@@ -154,21 +200,37 @@ input[type=range]+.thumb.active {
     {% endif %}
             <div class="row Mheader">
 
-                <div class="col-md-2">
+                <div class="col-md-3">
                 <div class="row logo">
                     {% if requets.user.is_authenticated %}
                     <div class="col-md-4"><span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;
                         </span></div>
                     {% endif %}
-                    <div class="col-md-8"><p>PQusic</p></div>
+                    <div class="col-md-8"><p class="pqusic"><a href="{% url "musicapp:home" %}" >PQusic</a></p>
+                    <p class="webApp">A Music Web App</p></div>
                 </div>
                 </div>
-                <div class="col-md-7">
+                <div class="col-md-6">
                     <div class="row Mheader1">
                         <form method="post" action="{% url "musicapp:search-result" %}">
                           {% csrf_token %}
-                            <div class="col-md-10"><input type="text" name="query"
-                                                                     placeholder="Search songs..."></div>
+                            <!--div class="col-md-10"><input type="text" name="query"
+                                                                     placeholder="Search songs..."></div-->
+                            <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+    		  <div id="custom-search-input">
+                <div class="input-group col-md-12">
+                    <input type="text" class="form-control input-lg" name="query" placeholder="Search.." />
+                    <span class="input-group-btn">
+                        <button class="btn btn-info btn-lg" type="submit">
+                            <img src="{% static "MusicApp/css/search_icon.png" %}" width="20px" height="20px">
+                        </button>
+                    </span>
+                </div>
+            </div>
+        </div>
+	</div>
+
 
                         </form>
                         </div>

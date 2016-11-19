@@ -17,6 +17,7 @@
             {% endfor %}
         </ul>
     {% endif %}
+
     <body class="wraper">
 
             <div class="row Mheader">
@@ -24,23 +25,22 @@
                 <div class="col-md-3">
                 <div class="row logo">
                     <div class="col-md-8">
-                    <a href="{% url "musicapp:home" %}">
-                       <p class="pqusic">PQusic</p>
-                    </a>
-                        <p class="webApp">A Music Web App</p></div>
+                   <p class="pqusic"><a href="{% url "musicapp:home" %}" >PQusic</a></p>
+                    <p class="webApp">A Music Web App</p>
                 </div>
                 </div>
-                <!--div class="col-md-6">
-                    <div class="row Mheader1">
+                    </div>
+                <div class="col-md-6">
+                    <!--div class="row Mheader1">
                         <div class="col-md-10"><input type="text" name="search" 
                                                                      placeholder="Search songs..."></div>
                         <div class="col-md-2"><button type="button">Search</button></div>
-                    </div>
-                </div-->
+                    </div-->
+                </div>
                 
             </div>
                
-       
+
         
         <div class="middle_content">
 <div class="container">
