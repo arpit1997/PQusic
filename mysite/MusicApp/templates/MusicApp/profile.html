@@ -1,0 +1,214 @@
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+      <link href="{% static "MusicApp/css/style.css" %}" rel="stylesheet" type="text/css">
+    <link href="{% static "MusicApp/css/bootstrap.min.css" %}" rel="stylesheet" type="text/css">
+
+    </head>
+<style>
+
+.tabs1 {
+  margin: 0px auto;
+  position: relative;
+  background: #EFF1E4;
+  box-shadow: 0px 0px 40px rgba(0, 0, 0, 0.2);
+  width: 80%;
+    height: 500px;
+}
+
+.tabs1 nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  background: #C0C0C0;
+  color: #A6CAA9;
+  text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.2);
+  width: 150px;
+    border-radius: 2px;
+}
+
+.tabs1 nav a {
+  padding: 20px 0px;
+  text-align: center;
+  width: 100%;
+  cursor: pointer;
+}
+
+.tabs1 nav a:hover,
+.tabs1 nav a.selected {
+  background: #A6CAA9;
+  color: black;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+}
+
+.tabs1 .content {
+  padding: 20px 0px;
+  position: absolute;
+  top: 0px;
+  left: 150px;
+  color: #6C5D5D;
+  width: 0px;
+  height: 100%;
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 0.1s linear 0s;
+}
+
+.tabs1 .content.visible {
+  padding: 20px;
+  width: calc(100% - 150px);
+  
+  opacity: 1;
+}
+
+.tabs1 .content p { padding-bottom: 2px; }
+
+.tabs1 .content p:last-of-type { padding-bottom: 0px; }
+</style>
+
+    <body class="wraper">
+     {% if request.user.is_authenticated %}
+    <div id="mySidenav" class="sidenav">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+    <a href="{% url "musicapp:home" %}">Home</a>
+
+    <a href="{% url "musicapp:view-playlists" %}">PlayList</a>
+    <a href="{% url "musicapp:view_profile" %}">Profile</a>
+    <a href="{% url "musicapp:view_history" %}">History</a>
+</div>
+    {% endif %}
+
+            <div class="row Mheader">
+                
+                <div class="col-md-3">
+                <div class="row logo">
+                    <div class="col-md-4"><span class="sideIcon" style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;
+                        </span></div>
+                    <div class="col-md-8"><p class="pqusic">PQusic</p><p class="webApp">A Music Web App</p></div>
+                </div>
+                </div>
+                <!--div class="col-md-6">
+                    <div class="row Mheader1">
+                        <div class="col-md-10"><input type="text" name="search" 
+                                                                     placeholder="Search songs..."></div>
+                        <div class="col-md-2"><button type="button">Search</button></div>
+                    </div>
+                </div-->
+                
+            </div>
+            
+        
+        <div class="middle_content">
+            <div class="container">
+    <div class="row">
+        <div class="col-md-12">	
+    
+			<div class="panel panel-primary">
+            
+    			<div class="panel-heading">
+                    <h3 class="panel-title">
+				        User Profile
+                    </h3></div>
+                    <span class="pull-right btn-click">
+                        
+                        <!------------Change password-------->
+                        <form method="post" action="change_password.html">
+                        <button type="submit" class="btn btn-sm btn-primary btn-create">Change password</button>
+                        </form><!---------$$$$$$$$$$$$$--->
+                    
+                    </span> 
+				
+<div class="panel-body">
+                     <!---------------form started---------------------->
+            <form method="POST" action="{% url "musicapp:activate" %}" class="form-horizontal" role="form">
+	       <div class="form-group">
+                <label for="inputEmail3" class="col-sm-3 control-label">User Name</label>
+                <div class="col-sm-9">
+	           <input type="text" name="name" class="form-control" value="{{ name }}" id="inputEmail3" placeholder="user name" disabled />
+                </div>
+            </div>
+                
+                <div class="form-group">
+                <label for="inputEmail3" class="col-sm-3 control-label">Email</label>
+                <div class="col-sm-9">
+	           <input type="text" name="email" class="form-control" value="{{ email }}" id="inputEmail3" placeholder="email" disabled />
+                </div>
+            </div>
+                
+                <div class="form-group">
+                <label for="inputEmail3" class="col-sm-3 control-label">Following</label>
+                <div class="col-sm-9">
+	           <input type="text" name="email" class="form-control" value="{{ followers }}" id="inputEmail3" placeholder="following" disabled />
+                </div>
+            </div>
+                
+                <div class="form-group">
+                <label for="inputEmail3" class="col-sm-3 control-label">Follower</label>
+                <div class="col-sm-9">
+	           <input type="text" name="email" class="form-control" value="{{ followings }}" id="inputEmail3" placeholder="follower" disabled />
+                </div>
+            </div>
+	
+              
+            </form><!-----------form end---------------------->
+          
+            </div>
+</div>
+        </div>
+                </div>
+            </div>
+        </div>
+        
+<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script> 
+<script>
+$(function() {
+  $('.tabs1 nav a').on('click', function() {
+    show_content($(this).index());
+  });
+  
+  show_content(0);
+
+  function show_content(index) {
+    // Make the content visible
+    $('.tabs1 .content.visible').removeClass('visible');
+    $('.tabs1 .content:nth-of-type(' + (index + 1) + ')').addClass('visible');
+
+    // Set the tab to selected
+    $('.tabs1 nav a.selected').removeClass('selected');
+    $('.tabs1 nav a:nth-of-type(' + (index + 1) + ')').addClass('selected');
+  }
+});
+</script>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-36251023-1']);
+  _gaq.push(['_setDomainName', 'jqueryscript.net']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+        
+        
+        <script>
+            function openNav() {
+                document.getElementById("mySidenav").style.width = "200px";
+                }
+
+            function closeNav() {
+                document.getElementById("mySidenav").style.width = "0";
+                }
+        </script>
+        </body>
+    
+    
+    
+    
+    
+
+</html>

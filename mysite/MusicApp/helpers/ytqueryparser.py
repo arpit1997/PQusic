@@ -25,7 +25,10 @@ class YtQueryParser:
 		self.get_views_age()
 		self.get_thumbnail()
 		# self.get_artist()
-		self.create_search_object()
+		try:
+			self.create_search_object()
+		except IndexError:
+			self.yt_search_list = None
 
 	def get_page(self):
 		r = requests.get(self.yt_query_url)

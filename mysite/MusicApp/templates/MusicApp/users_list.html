@@ -32,14 +32,23 @@ input[type=text]:focus {
     
     
     <body class="wraper">
-          <div id="mySidenav" class="sidenav">
-                <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-                <a href="homepage.html">Home</a>
-                
-                <a href="playlist.html">PlayList</a>
-                <a href="profile.html">Profile</a>
-                <a href="history.html">History</a>
-            </div>
+            {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li style="color: aqua" {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+       {% if request.user.is_authenticated %}
+    <div id="mySidenav" class="sidenav">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+    <a href="{% url "musicapp:home" %}">Home</a>
+
+    <a href="{% url "musicapp:view-playlists" %}">PlayList</a>
+    <a href="{% url "musicapp:view_profile" %}">Profile</a>
+    <a href="{% url "musicapp:view_history" %}">History</a>
+</div>
+    {% endif %}
 
             <div class="row Mheader">
                 
@@ -82,7 +91,7 @@ input[type=text]:focus {
                             <tr><!-----------Show all Users-------for loop----------->
                                 <td><a href="{% url "musicapp:view_user_playlists" user.username %}">{{ user.username }}</a></td>
                                 <td>
-                                    <a class="stream-now btn btn-primary" href="">Follow</a>
+                                    <a class="stream-now btn btn-primary" href="{% url "musicapp:follow-user" user.username %}">Follow</a>
                                 </td>
                             </tr>
                     {% endfor %}

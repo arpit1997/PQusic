@@ -1,6 +1,7 @@
 import binascii
 import os
 import re
+import smtplib
 from copy import copy, deepcopy
 
 import requests
@@ -96,13 +97,11 @@ def results_query(request):
 		print(x)
 		query = x
 		results = YtQueryParser(query)
-		print(results)
-		print(len(results.yt_links_artist))
 		context = {
 			'results':results.yt_search_list,
 		}
-		print(results.yt_search_list[0].yt_title)
-		print(results.yt_search_list[0].yt_id)
+		# print(results.yt_search_list[0].yt_title)
+		# print(results.yt_search_list[0].yt_id)
 		return render(request, "MusicApp/main.html", context)
 	else:
 		return HttpResponse("Bad request")
@@ -298,14 +297,31 @@ def get_video_url(request,yt_url):
 
 
 def view_user_profile(request):
-	if request.method == "POST":
-		search_query = request.POST.get('username')
+	if request.method == "GET":
+		user = request.user
+		name = user.first_name+" "+user.last_name
+		email = user.email
+		followers_count = 0
+		followings_count = 0
 		try:
-			user = User.objects.get(username=search_query)
-		except User.DoesNotExist:
-			user = None
-		if user is not None:
-			name = user.first_name + " " + user.last_name
+			follower_object = Followers.objects.get(follower_user=user)
+		except ObjectDoesNotExist:
+			follower_object = None
+		if follower_object is not None:
+			followers_count = follower_object.followers.all().count()
+		try:
+			following_object = Followings.objects.get(following_user=user)
+		except ObjectDoesNotExist:
+			following_object = None
+		if following_object is not None:
+			followings_count = following_object.followings.all().count()
+		context = {
+			'name':name,
+			'email':email,
+			'followers':followers_count,
+			'followings':followings_count,
+		}
+		return render(request,"MusicApp/profile.html", context)
 
 
 @csrf_exempt
@@ -628,8 +644,36 @@ def modify_mood_of_song(request):
 	pass
 
 
-def share_playlist(request):
-	pass
+def share_playlist_router(request, playlist_name):
+	if request.method == "GET":
+		user = request.user
+		try:
+			follow_object = Followers.objects.get(follower_user=user)
+		except ObjectDoesNotExist:
+			return HttpResponse("you do't follow anyone so you can't share")
+		followers_list = follow_object.followers.all()
+		context = {
+			'followers':followers_list,
+			'playlist_name':playlist_name
+		}
+		return render(request, "MusicApp/share.html", context)
+	else:
+		return HttpResponse("Bad request")
+
+
+def share_playlist(request, playlist_name):
+	if request.method == "POST":
+		username_share = request.POST.get("username")
+		user_share = User.objects.get(username=username_share)
+		email_share = user_share.email
+		msg = request.user.username + " shared playlist " + playlist_name + " with you"
+		server = smtplib.SMTP('smtp.gmail.com', 587)
+		server.starttls()
+		server.login("shockwavemoto@gmail.com", "9829667088")
+		server.sendmail(email_address, email_share, msg)
+		server.quit()
+		messages.success(request, "shared successfully")
+		return HttpResponseRedirect(reverse("musicapp:view-playlists"))
 
 
 def import_playlist(request, username, name):

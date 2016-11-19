@@ -135,6 +135,13 @@ input[type=range]+.thumb.active {
 <script src="https://cdn.plyr.io/2.0.7/plyr.js"></script>
 <script src="../static/js/main_new.js"></script>
     <body class="wraper">
+            {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li style="color: aqua" {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
     {% if request.user.is_authenticated %}
     <div id="mySidenav" class="sidenav">
     <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
@@ -185,7 +192,8 @@ input[type=range]+.thumb.active {
                 <div class="row search_song_list">
                     <div class="col-md-8 col-md-offset-2">
         <!------------------------------------ For loop----------------------------------------->
-                    {% for result in results %}
+                    {% if results %}
+                        {% for result in results %}
                         <div class="row search_stream_list">
                             <div class="col-md-3 card--ym3"><img class="card-image " src="{{ result.yt_thumbnail }}" width="190px" height="150px"></div>
                             <div class="col-md-9 card--ym3">
@@ -200,6 +208,7 @@ input[type=range]+.thumb.active {
 
                         </div>
                     {% endfor %}
+                    {% endif %}
 
             <!-------------------------------End For loop------------------------------------------->
 

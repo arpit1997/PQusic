@@ -32,6 +32,13 @@
 
 
 <body class="wraper">
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li style="color: aqua" {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
     {% if request.user.is_authenticated %}
     <div id="mySidenav" class="sidenav">
     <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
@@ -104,6 +111,10 @@
                                 <td><a href="{% url "musicapp:playlist_songs" name %}">{{ name }}</a></td>
                                 <td><a>{{ song_count }}</a></td>
                                 <td><a href="/playlists/delete/{{ name }}"><img src="{% static "MusicApp/css/images/delete1.png" %}" width="20px" height="20px"></a></td>
+                                <td>
+                   <a class="stream-now btn btn-primary" href="{% url "musicapp:share_playlist-router" name %}">Share</a>
+
+                                </td>
                             </tr>
                         {% endfor %}
                             </tbody>

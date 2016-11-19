@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>share</title>
+</head>
+<body>
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li style="color: aqua" {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+<form action="{% url "musicapp:share_playlist" playlist_name %}" method="post">
+    {% csrf_token %}
+    {% if followers %}
+        {% for follower in followers %}
+            <input type="radio" name="username" value="{{ follower.username }}" >{{ follower.username }} <br>
+        {% endfor %}
+        <input type="submit" name="submit">
+
+    {% endif %}
+</form>
+</body>
+</html>

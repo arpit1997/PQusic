@@ -5,6 +5,13 @@
     <title>add to Playlist</title>
 </head>
 <body>
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li style="color: aqua" {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
 <form action="{% url "musicapp:add_to_playlist" %}" method="post">
 {% csrf_token %}
     <p>song_id</p>
@@ -12,7 +19,7 @@
     <input type="text" value="{{ title }}"  name="song_name" readonly>
     <p>playlist names</p>
     {% for playlist in playlists %}
-        <input type="radio" name="name" value="{{ playlist.playlist_name }}"> <br>
+        <input type="radio" name="name" value="{{ playlist.playlist_name }}" >{{ playlist.playlist_name }} <br>
     {% endfor %}
     <p>mood</p>
     <input type="text" name="mood">
