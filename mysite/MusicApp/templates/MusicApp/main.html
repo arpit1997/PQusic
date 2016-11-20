@@ -261,7 +261,6 @@ input[type=range]+.thumb.active {
                             <div class="col-md-9 card--ym3">
                                 <p><a href="{{ result.yt_href }} " class="card--ym3--title">{{ result.yt_title }}</a></p>
                                 <p>{{ result.yt_duration }}</p>
-                                <p class="channel">Singer name</p>
                                 <p>{{ result.yt_views }}</p>
                                 <a class="stream-now btn btn-primary" style="margin-left: 2%" data-stream-url="{{ result.yt_id }}">Stream</a>
                                 <a class="btn-floating btn waves-effect waves-light" style="margin-left: 1%" href="{% url "musicapp:add_to_playlist_router" result.yt_id %}"><i class="material-icons">+</i></a>
