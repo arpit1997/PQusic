@@ -127,24 +127,16 @@ def user_signup(request):
 		#privacy = bool(privacy)
 		# creating user
 		user_exists_or_not, message = validate_username_email(username, email)
-		i = 0
 		if not user_exists_or_not:
-			try:
-				user = User.objects.create_user(username, email, passwd, first_name=first_name, last_name=last_name)
-				user = AppUserProfile.objects.create(user=user)
-			except ValueError:
-				i = 1
-			if i == 0:
-				# custom save for creating non active user
-				custom_save(user)
-				activation_key = encrypt(secret_key, email)
-				# sending account verification mail
-				message = "Your Email address is" + email + "activation key is " + activation_key.decode("utf-8")
-				send_verification_mail(email, activation_key, message)
-				return HttpResponseRedirect(reverse("musicapp:activate"))
-			else:
-				messages.error(request, "can not create user")
-				return HttpResponseRedirect(reverse("musicapp:activate"))
+			user = User.objects.create_user(username, email, passwd, first_name=first_name, last_name=last_name)
+			user = AppUserProfile.objects.create(user=user)
+			# custom save for creating non active user
+			custom_save(user)
+			activation_key = encrypt(secret_key, email)
+			# sending account verification mail
+			message = "Your Email address is" + email + "activation key is " + activation_key.decode("utf-8")
+			send_verification_mail(email, activation_key, message)
+			return HttpResponseRedirect(reverse("musicapp:activate"))
 		else:
 			messages.error(request, message)
 		return render(request, "MusicApp/user_signup.html")
@@ -548,7 +540,7 @@ def view_playlist_songs(request, playlist_name):
 
 
 def view_history(request):
-	return HttpResponse("not available now ")
+	pass
 
 
 def follow_user(request, username):
