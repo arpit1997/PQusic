@@ -48,7 +48,7 @@ class YtPlaylist:
 				video_object.yt_artist = li_element.find_all('div', {'class': 'yt-lockup-byline'})[0].find_all('a')[
 					0].get_text()
 				video_list.append(video_object)
-			playlist_list.append(video_list[:3])
+			playlist_list.append(video_list[:4])
 		self.yt_playlist = dict(zip(self.playlist_titles, playlist_list))
 		"""
 		just for debugging
