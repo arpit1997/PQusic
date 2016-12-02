@@ -3,7 +3,8 @@
     <!--Import Google Icon Font-->
     <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!--Import materialize.css-->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/css/materialize.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/css/materialize.min.css">
+    <link rel="stylesheet" href="https://cdn.plyr.io/2.0.7/plyr.css">
 
     <!--Let browser know website is optimized for mobile-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -16,6 +17,10 @@
     #sidenav-overlay {
         background-color: transparent;
         max-width: 60%;;
+    }
+
+    nav .nav-wrapper{
+        background-color: #039be5;
     }
 
     @media only screen and (max-width: 992px) {
@@ -99,13 +104,15 @@
         overflow: hidden;
         overflow-wrap: break-word;
     }
-     .meta-data{
+
+    .meta-data {
         position: relative;
         overflow: hidden;
         width: 75%;
         display: inline-block;
     }
-    .stream-btn{
+
+    .stream-btn {
         position: absolute;
         display: inline-block;
         float: right;
@@ -127,13 +134,140 @@
         font-family: Roboto;
     }
 
+
+
+       #search-preloader {
+    display: none;
+    margin-bottom: 4rem;
+}
+#search-preloader .preloader-wrapper,#stream-preloader .preloader-wrapper {
+    display: block;
+    margin: 0 auto;
+}
+#stream-preloader,.stream-progress {
+    display: none;
+}
+.stream-wait .stream-player-wrapper {
+    display: none;
+}
+.stream-wait #stream-preloader,.stream-wait .stream-progress {
+    display: flex;
+}
+#stream-player-container .progress {
+    background-color: rgba(244,67,54,0.2);
+}
+#stream-player-container .progress .indeterminate {
+    background-color: #039be5;
+}
+#stream-player-container.no-music {
+    transform: translateY(75px);
+}
+#stream-player-container {
+    position: fixed;
+    bottom: 0;
+    z-index: 999;
+    width: 100%;
+    background-color: rgb(255,255,255);
+    padding: 1rem 5rem;
+    box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12);
+    border: 1px solid rgba(198,214,219,.66);
+    transform: translateY(0);
+    transition: transform 0.5s;
+}
+.plyr--audio .plyr__controls {
+    border: 0;
+}
+.plyr__progress--played,.plyr__volume--display {
+    color: #039be5;
+}
+.plyr--audio .plyr__controls button.tab-focus:focus,.plyr--audio .plyr__controls button:hover,.plyr__play-large {
+    background: #039be5;
+}
+.plyr input[type=range]::-ms-fill-lower,.plyr input[type=range]:active::-moz-range-thumb,.plyr input[type=range]:active::-webkit-slider-thumb,.plyr input[type=range]:active::-ms-thumb {
+    background: #039be5;
+}
+.plyr {
+    padding: 0 0 0 1rem;
+}
+.plyr__progress input[type=range] {
+    display: none;
+}
+.stream-progress {
+    min-height: 52px;
+}
+.stream-progress .progress {
+    width: 60%;
+}
+input[type=range]+.thumb.active {
+    display: none;
+}
+.player-meta {
+    width: 50%;
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    border-right: 2px solid rgb(217,228,231);
+}
+.plyr--wrapper {
+    display: inline-block;
+    width: calc(100% - 310px);
+}
+
+.player-meta .player-albumart {
+    min-height: 50px;
+    min-width: 50px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    position: relative;
+    justify-content: center;
+}
+.player-meta .player-albumart img {
+    max-height: 50px;
+    display: inline-block;
+    position: absolute;
+}
+.stream-player-wrapper {
+    display: flex;
+    align-items: center;
+}
+.player-name-artist {
+    margin-left: 10px;
+    overflow: hidden;
+    overflow-wrap: break-word;
+    line-height: 1.3em;
+    height: 2.6em;;
+}
+.player-name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.player-meta .player-artist {
+    font-size: 1.25rem;
+    color: #039be5;
+}
+.tandc-btn {
+    position: absolute;
+    bottom: 20px;
+    font-size: 1.8rem;
+    color: #039be5;
+}
+.tandc-btn:hover {
+    color: #039be5;
+}
+
 </style>
 <body>
+<script src="https://code.jquery.com/jquery-2.2.4.min.js"
+        integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/js/materialize.min.js"></script>
+<script src="https://cdn.plyr.io/2.0.7/plyr.js"></script>
 <div class="main-wrapper">
     <div class="navbar-fixed">
         <nav>
             <div class="nav-wrapper">
-                <a href="#" style="padding-left: 20px" class="brand-logo">Logo</a>
+                <a href="#" style="padding-left: 20px" class="brand-logo">PQusic</a>
                 <ul class="right hide-on-med-and-down">
                     <li>
                         <div class="search--bar hide-on-med-and-down">
@@ -145,10 +279,10 @@
                             </form>
                         </div>
                     </li>
-                    <li><a href="sass.html">Sass</a></li>
-                    <li><a href="badges.html">Components</a></li>
-                    <li><a href="collapsible.html">Javascript</a></li>
-                    <li><a href="mobile.html">Mobile</a></li>
+                    <li><a href="sass.html">People</a></li>
+                    <li><a href="badges.html">Playlists</a></li>
+                    <li><a href="collapsible.html">Signup</a></li>
+                    <li><a href="mobile.html">Login</a></li>
                 </ul>
                 <div class="search-bar hide-on-large-only">
                     <form style="display: flex; flex-direction: row">
@@ -185,7 +319,7 @@
     <div class="rows">
         <div style="padding-bottom: 20px">
             <h4 style="text-align:center">
-                 Trending Songs
+                Trending Songs
             </h4>
         </div>
         {% for category, songs in pl.items %}
@@ -197,13 +331,13 @@
             </div>
             {% for song in songs %}
             <div class="col s6 m4 l3">
-                <div class="card card-cr">
+                <div class="card card-cr card--ym3">
                     <div class="card-image card-image-cr">
                         <img src="{{ song.yt_thumbnail }}">
                     </div>
                     <div class="card-content">
-                        <div class="card-content-cr flow-text">
-                            <p>{{ song.yt_title }}</p>
+                        <div class="card-content-cr flow-text card--ym3--title">
+                            {{ song.yt_title }}
                         </div>
                         <div class="meta-data">
                             <div class="channel">
@@ -214,7 +348,7 @@
                             </div>
                         </div>
                         <div class="stream-btn">
-                            <a class="stream-now btn-primary">
+                            <a class="stream-now btn-primary" href="#stream-player" data-stream-url="{{ song.yt_id }}">
                                 <i class="material-icons">play_circle_outline</i>
                             </a>
                         </div>
@@ -227,41 +361,124 @@
         </div>
         {% endfor %}
     </div>
-    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <div id="stream-player-container" class="stream-player no-music">
+        <!--Preloader-->
+        <div class="stream-progress valign-wrapper">
+            <div class="progress">
+                <div class="indeterminate"></div>
+            </div>
+        </div>
+        <div class="stream-player-wrapper">
+            <div class="player-meta">
+                <div class="player-albumart">
+                    <img src="http://img.youtube.com/vi/YQHsXMglC9A/0.jpg" class="">
+                </div>
+                <div class="player-name-artist">
+                    <div class="player-name">Adele Hello Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                        Dicta,
+                        numquam.
+                    </div>
+                    <div class="player-artist">Adele Vevo</div>
+                </div>
+            </div>
+            <div class="plyr--wrapper">
+                <audio class="" id="stream-player" src="" controls preload="metadata">
+                </audio>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 
-    <script>
-        $(document).ready(function () {
-            $(".button-collapse").sideNav({
-                menuWidth: 250, // Default is 240
-                draggable: true // Choose whether you can drag to open on touch screens
+<script>
+    $(document).ready(function () {
+        $(".button-collapse").sideNav({
+            menuWidth: 250, // Default is 240
+            draggable: true // Choose whether you can drag to open on touch screens
 
-            });
         });
-    </script>
-    <!--<script>-->
-    <!--document.getElementById("search-button").addEventListener("click", function myfunction() {-->
-    <!--document.getElementById("search-button").style.display = "none";-->
-    <!--var searchbar = document.getElementById("search&#45;&#45;bar");-->
-    <!--searchbar.style.display = "block";-->
-    <!--console.log("hello world")-->
-    <!--});-->
-    <!--document.getElementById("search&#45;&#45;button").addEventListener("click", function myfunction() {-->
-    <!--document.getElementById("search&#45;&#45;button").remove();-->
-    <!--var c = document.getElementsByTagName("li");-->
-    <!--console.log(c[0]);-->
-    <!--var searchbar = document.getElementById("search&#45;&#45;bar");-->
-    <!--searchbar.style.display = "block";-->
-    <!--c[0].appendChild(searchbar);-->
-    <!--console.log("hello world")-->
-    <!--});-->
-    <!--// document.getElementById("close").addEventListener("click", function myfucntion(){-->
-    <!--// var searchbar = document.getElementById("search&#45;&#45;bar");-->
-    <!--// searchbar.style.display = "none";-->
-    <!--// document.getElementById("search-button").style.display = "block";-->
-    <!--//-->
-    <!--// })-->
+    });
+</script>
+<script>
+    var streamPlayer = plyr.setup(document.querySelector('#stream-player'));
+     $('body').on('click', '.stream-now', function(e) {
+        e.preventDefault();
+         var $this = $(this);
+        var streamUrl = $(this).data('stream-url');
+        var card = $this.closest('.card--ym3');
+        console.log(card);
+        var title = card.find('.card--ym3--title').text();
+         console.log(title);
+        var artist = card.find('.channel').text();
+        var albumart = card.find('.card-image').find('img').attr('src');
+         console.log(albumart);
+        var streamData = {
+            title: title,
+            artist: artist,
+            albumart: albumart,
+            streamUrl: streamUrl
+        };
+        console.log(streamUrl);
+        startStream(streamPlayer, streamData);
+    });
+    function startStream(streamPlayer, streamData) {
+    var $streamContainer = $('#stream-player-container');
+    streamPlayer[0].pause();
+    console.log(streamData);
+    $streamContainer.addClass('stream-wait');
+    $streamContainer.find('.player-albumart img').attr('src', streamData.albumart);
+    $streamContainer.find('.player-name').text(streamData.title);
+    $streamContainer.find('.player-artist').text(streamData.artist);
+    if ($streamContainer.hasClass('no-music')) {
+        $streamContainer.removeClass('no-music')
+    }
+        console.log('/audio/geturl/'+streamData.streamUrl);
+        $.get('/audio/geturl/'+streamData.streamUrl, function(data) {
+            $('#stream-player-container').removeClass('stream-wait');
+            console.log(data);
+             $('#stream-player').attr('src', data);
+             streamPlayer[0].play();
+        }
+   {% comment %} $.getJSON('/audio/geturl/'+streamData.streamUrl, success = function(data, textStatus, jqXHR) {
+        $('#stream-player-container').removeClass('stream-wait');
+          console.log(data);
+        if (data['status'] != 200) {
+            Materialize.toast('<h4 class="font-200">Can\'t Stream</h4>', 4000);
+            return;
+        }
+        $('#stream-player').attr('src', data['url']);
+        streamPlayer[0].play();
+    }{% endcomment %}
+    );
+    return false;
+}
+</script>
 
-    <!--Import jQuery before materialize.js-->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/js/materialize.min.js"></script>
+
+<!--<script>-->
+<!--document.getElementById("search-button").addEventListener("click", function myfunction() {-->
+<!--document.getElementById("search-button").style.display = "none";-->
+<!--var searchbar = document.getElementById("search&#45;&#45;bar");-->
+<!--searchbar.style.display = "block";-->
+<!--console.log("hello world")-->
+<!--});-->
+<!--document.getElementById("search&#45;&#45;button").addEventListener("click", function myfunction() {-->
+<!--document.getElementById("search&#45;&#45;button").remove();-->
+<!--var c = document.getElementsByTagName("li");-->
+<!--console.log(c[0]);-->
+<!--var searchbar = document.getElementById("search&#45;&#45;bar");-->
+<!--searchbar.style.display = "block";-->
+<!--c[0].appendChild(searchbar);-->
+<!--console.log("hello world")-->
+<!--});-->
+<!--// document.getElementById("close").addEventListener("click", function myfucntion(){-->
+<!--// var searchbar = document.getElementById("search&#45;&#45;bar");-->
+<!--// searchbar.style.display = "none";-->
+<!--// document.getElementById("search-button").style.display = "block";-->
+<!--//-->
+<!--// })-->
+
+<!--Import jQuery before materialize.js-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/js/materialize.min.js"></script>
 </body>
 </html>
