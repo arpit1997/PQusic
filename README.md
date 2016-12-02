@@ -20,6 +20,9 @@ A Music playlist app
 4. Go to Browser and type:
 
     `127.0.0.1:8000`
+    
+##Screenshots
+![alt_text](https://raw.githubusercontent.com/arpit1997/pqusic/development3/docs/sc.png "Logo title-text 1")
 
 ## License
 This application is licensed under [Apache license](https://www.apache.org/licenses/LICENSE-2.0)
