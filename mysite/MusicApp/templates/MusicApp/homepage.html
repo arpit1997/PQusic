@@ -19,7 +19,7 @@
         max-width: 60%;;
     }
 
-    nav .nav-wrapper{
+    nav .nav-wrapper {
         background-color: #039be5;
     }
 
@@ -46,6 +46,7 @@
 
     .rows {
         padding-top: 100px;
+        width: 100%;
     }
 
     .row {
@@ -134,132 +135,160 @@
         word-break: break-all;
         font-family: Roboto;
     }
-    .row{
+
+    .row {
         width: 100%;
     }
+    .preloader{
+        display: none;
+    }
 
+    #search-preloader {
+        display: none;
+        margin-bottom: 4rem;
+    }
 
+    #search-preloader .preloader-wrapper, #stream-preloader .preloader-wrapper {
+        display: block;
+        margin: 0 auto;
+    }
 
-       #search-preloader {
-    display: none;
-    margin-bottom: 4rem;
-}
-#search-preloader .preloader-wrapper,#stream-preloader .preloader-wrapper {
-    display: block;
-    margin: 0 auto;
-}
-#stream-preloader,.stream-progress {
-    display: none;
-}
-.stream-wait .stream-player-wrapper {
-    display: none;
-}
-.stream-wait #stream-preloader,.stream-wait .stream-progress {
-    display: flex;
-}
-#stream-player-container .progress {
-    background-color: rgba(244,67,54,0.2);
-}
-#stream-player-container .progress .indeterminate {
-    background-color: #039be5;
-}
-#stream-player-container.no-music {
-    transform: translateY(75px);
-}
-#stream-player-container {
-    position: fixed;
-    bottom: 0;
-    z-index: 999;
-    width: 100%;
-    background-color: rgb(255,255,255);
-    padding: 1rem 5rem;
-    box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12);
-    border: 1px solid rgba(198,214,219,.66);
-    transform: translateY(0);
-    transition: transform 0.5s;
-}
-.plyr--audio .plyr__controls {
-    border: 0;
-}
-.plyr__progress--played,.plyr__volume--display {
-    color: #039be5;
-}
-.plyr--audio .plyr__controls button.tab-focus:focus,.plyr--audio .plyr__controls button:hover,.plyr__play-large {
-    background: #039be5;
-}
-.plyr input[type=range]::-ms-fill-lower,.plyr input[type=range]:active::-moz-range-thumb,.plyr input[type=range]:active::-webkit-slider-thumb,.plyr input[type=range]:active::-ms-thumb {
-    background: #039be5;
-}
-.plyr {
-    padding: 0 0 0 1rem;
-}
-.plyr__progress input[type=range] {
-    display: none;
-}
-.stream-progress {
-    min-height: 52px;
-}
-.stream-progress .progress {
-    width: 60%;
-}
-input[type=range]+.thumb.active {
-    display: none;
-}
-.player-meta {
-    width: 50%;
-    display: inline-flex;
-    flex-direction: row;
-    align-items: center;
-    border-right: 2px solid rgb(217,228,231);
-}
-.plyr--wrapper {
-    display: inline-block;
-    width: calc(100% - 310px);
-}
+    #stream-preloader, .stream-progress {
+        display: none;
+    }
 
-.player-meta .player-albumart {
-    min-height: 50px;
-    min-width: 50px;
-    border-radius: 50%;
-    overflow: hidden;
-    display: flex;
-    position: relative;
-    justify-content: center;
-}
-.player-meta .player-albumart img {
-    max-height: 50px;
-    display: inline-block;
-    position: absolute;
-}
-.stream-player-wrapper {
-    display: flex;
-    align-items: center;
-}
-.player-name-artist {
-    margin-left: 10px;
-    overflow: hidden;
-    overflow-wrap: break-word;
-    line-height: 1.3em;
-    height: 2.6em;;
-}
-.player-name {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-.player-meta .player-artist {
-    font-size: 1.25rem;
-    color: #039be5;
-}
-.tandc-btn {
-    position: absolute;
-    bottom: 20px;
-    font-size: 1.8rem;
-    color: #039be5;
-}
-.tandc-btn:hover {
-    color: #039be5;
-}
+    .stream-wait .stream-player-wrapper {
+        display: none;
+    }
+
+    .stream-wait #stream-preloader, .stream-wait .stream-progress {
+        display: flex;
+    }
+
+    #stream-player-container .progress {
+        background-color: rgba(244, 67, 54, 0.2);
+    }
+
+    #stream-player-container .progress .indeterminate {
+        background-color: #039be5;
+    }
+
+    #stream-player-container.no-music {
+        transform: translateY(75px);
+    }
+
+    #stream-player-container {
+        position: fixed;
+        bottom: 0;
+        z-index: 999;
+        width: 100%;
+        background-color: rgb(255, 255, 255);
+        padding: 1rem 5rem;
+        box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+        border: 1px solid rgba(198, 214, 219, .66);
+        transform: translateY(0);
+        transition: transform 0.5s;
+    }
+
+    .plyr--audio .plyr__controls {
+        border: 0;
+    }
+
+    .plyr__progress--played, .plyr__volume--display {
+        color: #039be5;
+    }
+
+    .plyr--audio .plyr__controls button.tab-focus:focus, .plyr--audio .plyr__controls button:hover, .plyr__play-large {
+        background: #039be5;
+    }
+
+    .plyr input[type=range]::-ms-fill-lower, .plyr input[type=range]:active::-moz-range-thumb, .plyr input[type=range]:active::-webkit-slider-thumb, .plyr input[type=range]:active::-ms-thumb {
+        background: #039be5;
+    }
+
+    .plyr {
+        padding: 0 0 0 1rem;
+    }
+
+    .plyr__progress input[type=range] {
+        display: none;
+    }
+
+    .stream-progress {
+        min-height: 52px;
+    }
+
+    .stream-progress .progress {
+        width: 60%;
+    }
+
+    input[type=range] + .thumb.active {
+        display: none;
+    }
+
+    .player-meta {
+        width: 50%;
+        display: inline-flex;
+        flex-direction: row;
+        align-items: center;
+        border-right: 2px solid rgb(217, 228, 231);
+    }
+
+    .plyr--wrapper {
+        display: inline-block;
+        width: calc(100% - 310px);
+    }
+
+    .player-meta .player-albumart {
+        min-height: 50px;
+        min-width: 50px;
+        border-radius: 50%;
+        overflow: hidden;
+        display: flex;
+        position: relative;
+        justify-content: center;
+    }
+
+    .player-meta .player-albumart img {
+        max-height: 50px;
+        display: inline-block;
+        position: absolute;
+    }
+
+    .stream-player-wrapper {
+        display: flex;
+        align-items: center;
+    }
+
+    .player-name-artist {
+        margin-left: 10px;
+        overflow: hidden;
+        overflow-wrap: break-word;
+        line-height: 1.3em;
+        height: 2.6em;;
+    }
+
+    .player-name {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .player-meta .player-artist {
+        font-size: 1.25rem;
+        color: #039be5;
+    }
+
+    .tandc-btn {
+        position: absolute;
+        bottom: 20px;
+        font-size: 1.8rem;
+        color: #039be5;
+    }
+
+    .tandc-btn:hover {
+        color: #039be5;
+    }
 
 
 </style>
@@ -293,7 +322,7 @@ input[type=range]+.thumb.active {
                 </ul>
                 <div class="search-bar hide-on-large-only">
                     <form style="display: flex; flex-direction: row">
-                        <input type="text" class="search-input" name="query"  required>
+                        <input type="text" class="search-input" name="query" required>
                         <button class="btn-icon-only" type="submit">
                             <i class="small material-icons"> search</i>
                         </button>
@@ -329,6 +358,19 @@ input[type=range]+.thumb.active {
                 Trending Songs
             </h4>
         </div>
+            <div class="preloader-wrapper active preloader" style="left: 50%">
+                <div class="spinner-layer spinner-red-only">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="gap-patch">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
         {% for category, songs in pl.items %}
         <div class="row">
             <div>
@@ -399,50 +441,51 @@ input[type=range]+.thumb.active {
 <script src="http://blog.xoundboy.com/mustache/mustache.js" type="text/javascript"></script>
 
 <script>
-    $('body').on('click', '.search-icon', function(){
+    $('body').on('click', '.search-icon', function () {
         console.log("hello world");
         var query = $('input[name=query]').val();
         console.log(query);
         $('div.row').detach();
+        $('.preloader-wrapper').removeClass('preloader');
         $('.rows').append("<div class='row' id='search-results'></div>>");
         $('#hdr').text("search results for " + query);
-        var data = $.post("/search", {query:query}, function(data){
-            var res = data ;
+        var data = $.post("/search", {query: query}, function (data) {
+            var res = data;
             console.log(res);
             res = JSON.parse(res);
             console.log("hello world");
             console.log(res);
             console.log(res[0]);
-            for (var i=0;i<res.length;++i){
-               $('#search-results').append("<div class='col s6 m4 l3'>" +
-                       "<div class='card card-cr card--ym3'>"+
-                    "<div class='card-image card-image-cr'>"+
-                        "<img src='"+res[i].thumbnail+"'>"+
-                    "</div>"+
-                    "<div class='card-content'>"+
-                        "<div class='card-content-cr flow-text card--ym3--title'>"+
-                            res[i].title+
-                        "</div>"+
-                        "<div class='meta-data'>"+
-                            "<div class='channel'>"+
-                                "<p>"+res[i].artist+"</p>"+
-                            "</div>"+
-                            "<div class='views'>"+
-                                "<p>"+res[i].views+"</p>"+
-                            "</div>"+
-                        "</div>"+
-                        "<div class='stream-btn'>"+
-                            "<a class='stream-now btn-primary' href='#stream-player' data-stream-url='"+res[i].id+"'>"+
-                                "<i class='material-icons'>play_circle_outline</i>"+
-                            "</a>"+
-                        "</div>"+
-                    "</div>"+
-                "</div>"+
-            "</div>")
-           }
-         $('.row').css("width", "100%");
-         $('.rows').css("width", "100%");
-
+            for (var i = 0; i < res.length; ++i) {
+                $('#search-results').append("<div class='col s6 m4 l3'>" +
+                        "<div class='card card-cr card--ym3'>" +
+                        "<div class='card-image card-image-cr'>" +
+                        "<img src='" + res[i].thumbnail + "'>" +
+                        "</div>" +
+                        "<div class='card-content'>" +
+                        "<div class='card-content-cr flow-text card--ym3--title'>" +
+                        res[i].title +
+                        "</div>" +
+                        "<div class='meta-data'>" +
+                        "<div class='channel'>" +
+                        "<p>" + res[i].artist + "</p>" +
+                        "</div>" +
+                        "<div class='views'>" +
+                        "<p>" + res[i].views + "</p>" +
+                        "</div>" +
+                        "</div>" +
+                        "<div class='stream-btn'>" +
+                        "<a class='stream-now btn-primary' href='#stream-player' data-stream-url='" + res[i].id + "'>" +
+                        "<i class='material-icons'>play_circle_outline</i>" +
+                        "</a>" +
+                        "</div>" +
+                        "</div>" +
+                        "</div>" +
+                        "</div>")
+            }
+            $('.row').css("width", "100%");
+            $('.rows').css("width", "100%");
+            $('.preloader-wrapper').addClass('preloader');
         });
     });
 </script>
@@ -457,17 +500,17 @@ input[type=range]+.thumb.active {
 </script>
 <script>
     var streamPlayer = plyr.setup(document.querySelector('#stream-player'));
-     $('body').on('click', '.stream-now', function(e) {
+    $('body').on('click', '.stream-now', function (e) {
         e.preventDefault();
-         var $this = $(this);
+        var $this = $(this);
         var streamUrl = $(this).data('stream-url');
         var card = $this.closest('.card--ym3');
         console.log(card);
         var title = card.find('.card--ym3--title').text();
-         console.log(title);
+        console.log(title);
         var artist = card.find('.channel').text();
         var albumart = card.find('.card-image').find('img').attr('src');
-         console.log(albumart);
+        console.log(albumart);
         var streamData = {
             title: title,
             artist: artist,
@@ -478,36 +521,42 @@ input[type=range]+.thumb.active {
         startStream(streamPlayer, streamData);
     });
     function startStream(streamPlayer, streamData) {
-    var $streamContainer = $('#stream-player-container');
-    streamPlayer[0].pause();
-    console.log(streamData);
-    $streamContainer.addClass('stream-wait');
-    $streamContainer.find('.player-albumart img').attr('src', streamData.albumart);
-    $streamContainer.find('.player-name').text(streamData.title);
-    $streamContainer.find('.player-artist').text(streamData.artist);
-    if ($streamContainer.hasClass('no-music')) {
-        $streamContainer.removeClass('no-music')
-    }
-        console.log('/audio/geturl/'+streamData.streamUrl);
-        $.get('/audio/geturl/'+streamData.streamUrl, function(data) {
+        var $streamContainer = $('#stream-player-container');
+        streamPlayer[0].pause();
+        console.log(streamData);
+        $streamContainer.addClass('stream-wait');
+        $streamContainer.find('.player-albumart img').attr('src', streamData.albumart);
+        $streamContainer.find('.player-name').text(streamData.title);
+        $streamContainer.find('.player-artist').text(streamData.artist);
+        if ($streamContainer.hasClass('no-music')) {
+            $streamContainer.removeClass('no-music')
+        }
+        console.log('/audio/geturl/' + streamData.streamUrl);
+        $.get('/audio/geturl/' + streamData.streamUrl, function (data) {
             $('#stream-player-container').removeClass('stream-wait');
             console.log(data);
-             $('#stream-player').attr('src', data);
-             streamPlayer[0].play();
+            $('#stream-player').attr('src', data);
+            streamPlayer[0].play();
         }
-   {% comment %} $.getJSON('/audio/geturl/'+streamData.streamUrl, success = function(data, textStatus, jqXHR) {
-        $('#stream-player-container').removeClass('stream-wait');
-          console.log(data);
-        if (data['status'] != 200) {
-            Materialize.toast('<h4 class="font-200">Can\'t Stream</h4>', 4000);
-            return;
-        }
-        $('#stream-player').attr('src', data['url']);
-        streamPlayer[0].play();
-    }{% endcomment %}
-    );
-    return false;
-}
+//        {%
+//            comment %
+//        }
+//        $.getJSON('/audio/geturl/' + streamData.streamUrl, success = function (data, textStatus, jqXHR) {
+//            $('#stream-player-container').removeClass('stream-wait');
+//            console.log(data);
+//            if (data['status'] != 200) {
+//                Materialize.toast('<h4 class="font-200">Can\'t Stream</h4>', 4000);
+//                return;
+//            }
+//            $('#stream-player').attr('src', data['url']);
+//            streamPlayer[0].play();
+//        }
+//        {%
+//            endcomment %
+//        }
+        );
+        return false;
+    }
 </script>
 
 
