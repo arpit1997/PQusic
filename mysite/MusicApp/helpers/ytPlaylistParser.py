@@ -38,7 +38,6 @@ class YtPlaylist:
 				video_object = YtVideo()
 				video_object.yt_href = h3_yt_lockup_title[0].find_all('a')[0].get('href')
 				video_object.yt_id = video_object.yt_href[9:]
-				print(video_object.yt_id)
 				video_object.yt_title = h3_yt_lockup_title[0].find_all('a')[0].get('title')
 				video_object.yt_thumbnail = "http://img.youtube.com/vi/%s/default.jpg" % video_object.yt_href[9:]
 				video_object.yt_duration = li_element.find_all('span', {'class': 'video-time'})[0].find_all('span')[

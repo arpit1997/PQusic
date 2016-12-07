@@ -75,6 +75,7 @@
         height: 1.3em;
         overflow: hidden;
         overflow-wrap: break-word;
+        word-break: break-all;
     }
 
     .card .card-content {
@@ -132,6 +133,9 @@
         text-overflow: ellipsis;
         word-break: break-all;
         font-family: Roboto;
+    }
+    .row{
+        width: 100%;
     }
 
 
@@ -257,6 +261,7 @@ input[type=range]+.thumb.active {
     color: #039be5;
 }
 
+
 </style>
 <body>
 <script src="https://code.jquery.com/jquery-2.2.4.min.js"
@@ -272,9 +277,11 @@ input[type=range]+.thumb.active {
                     <li>
                         <div class="search--bar hide-on-med-and-down">
                             <form style="display: flex; flex-direction: row">
-                                <input type="text" class="search--input" required>
-                                <button class="btn-icon-only" type="submit">
+                                <input id="search" type="text" class="search--input" name="query" required>
+                                <a href="#search" class="search-icon">
                                     <i class="small material-icons"> search</i>
+                                </a>
+
                                 </button>
                             </form>
                         </div>
@@ -286,7 +293,7 @@ input[type=range]+.thumb.active {
                 </ul>
                 <div class="search-bar hide-on-large-only">
                     <form style="display: flex; flex-direction: row">
-                        <input type="text" class="search-input" required>
+                        <input type="text" class="search-input" name="query"  required>
                         <button class="btn-icon-only" type="submit">
                             <i class="small material-icons"> search</i>
                         </button>
@@ -318,7 +325,7 @@ input[type=range]+.thumb.active {
     </div>
     <div class="rows">
         <div style="padding-bottom: 20px">
-            <h4 style="text-align:center">
+            <h4 id="hdr" style="text-align:center">
                 Trending Songs
             </h4>
         </div>
@@ -389,7 +396,56 @@ input[type=range]+.thumb.active {
     </div>
 </div>
 <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script src="http://blog.xoundboy.com/mustache/mustache.js" type="text/javascript"></script>
 
+<script>
+    $('body').on('click', '.search-icon', function(){
+        console.log("hello world");
+        var query = $('input[name=query]').val();
+        console.log(query);
+        $('div.row').detach();
+        $('.rows').append("<div class='row' id='search-results'></div>>");
+        $('#hdr').text("search results for " + query);
+        var data = $.post("/search", {query:query}, function(data){
+            var res = data ;
+            console.log(res);
+            res = JSON.parse(res);
+            console.log("hello world");
+            console.log(res);
+            console.log(res[0]);
+            for (var i=0;i<res.length;++i){
+               $('#search-results').append("<div class='col s6 m4 l3'>" +
+                       "<div class='card card-cr card--ym3'>"+
+                    "<div class='card-image card-image-cr'>"+
+                        "<img src='"+res[i].thumbnail+"'>"+
+                    "</div>"+
+                    "<div class='card-content'>"+
+                        "<div class='card-content-cr flow-text card--ym3--title'>"+
+                            res[i].title+
+                        "</div>"+
+                        "<div class='meta-data'>"+
+                            "<div class='channel'>"+
+                                "<p>"+res[i].artist+"</p>"+
+                            "</div>"+
+                            "<div class='views'>"+
+                                "<p>"+res[i].views+"</p>"+
+                            "</div>"+
+                        "</div>"+
+                        "<div class='stream-btn'>"+
+                            "<a class='stream-now btn-primary' href='#stream-player' data-stream-url='"+res[i].id+"'>"+
+                                "<i class='material-icons'>play_circle_outline</i>"+
+                            "</a>"+
+                        "</div>"+
+                    "</div>"+
+                "</div>"+
+            "</div>")
+           }
+         $('.row').css("width", "100%");
+         $('.rows').css("width", "100%");
+
+        });
+    });
+</script>
 <script>
     $(document).ready(function () {
         $(".button-collapse").sideNav({

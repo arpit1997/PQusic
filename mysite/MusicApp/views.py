@@ -2,6 +2,7 @@ import binascii
 import os
 import re
 import smtplib
+import string
 from copy import copy, deepcopy
 
 import requests
@@ -11,7 +12,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.shortcuts import render, render_to_response
 from django.template.context_processors import csrf
 from django.utils import timezone
@@ -85,27 +86,51 @@ def home(request):
 	return render(request, "MusicApp/homepage.html", context)
 
 
+@csrf_exempt
 def results_query(request):
 	if request.method == "POST":
-		query = str(request.POST.get("query"))
+		query = request.POST.get("query")
 		print(query)
 		x = ""
 		for it in query:
 			if it == ' ':
 				it = '+'
+			elif (it not in string.ascii_lowercase) and (it not in string.ascii_uppercase):
+				it = '%'+str(ord(it))
 			x += it
+
 		print(x)
 		query = x
+		query = str(query)
 		results = YtQueryParser(query)
 		context = {
 			'results':results.yt_search_list,
 		}
 		# print(results.yt_search_list[0].yt_title)
 		# print(results.yt_search_list[0].yt_id)
-		return render(request, "MusicApp/main.html", context)
+		import json
+		x = json.dumps(results.yt_search_json)
+		return JsonResponse(x, safe=False)
+		# return render(request, "MusicApp/main.html", context)
 	else:
 		return HttpResponse("Bad request")
 
+@csrf_exempt
+def results_query_json(request, query):
+	if request.method == "GET":
+		query = str(query)
+		results = YtQueryParser(query)
+		context = {
+			'results':results.yt_search_list,
+		}
+		# print(results.yt_search_list[0].yt_title)
+		# print(results.yt_search_list[0].yt_id)
+		import json
+		x = json.dumps(str(results.yt_search_json))
+		return JsonResponse(x)
+		# return render(request, "MusicApp/main.html", context)
+	else:
+		return HttpResponse("Bad request")
 
 def user_signup(request):
 	"""
