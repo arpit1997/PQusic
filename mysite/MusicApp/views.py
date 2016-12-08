@@ -34,6 +34,7 @@ email_address = "shockwavemoto@gmail.com"
 email_password = "9829667088"
 
 
+@csrf_exempt
 def user_login(request):
 	"""
 	handle for user login
@@ -41,6 +42,7 @@ def user_login(request):
 	:return: httpresponse or rendered template
 	"""
 	if request.method == "POST":
+		print(request.POST)
 		username = request.POST.get("username")
 		passwd = request.POST.get("password")
 		user = authenticate(username=username, password=passwd)
@@ -48,7 +50,11 @@ def user_login(request):
 			# if user's email has been verified then this will be true. default is false here
 			if user.is_active:
 				login(request, user)
-				return HttpResponseRedirect(reverse('musicapp:home'))
+				x = {'status': "1"}
+				import json
+				x = json.dumps(x)
+				# return HttpResponseRedirect(reverse('musicapp:home'))
+				return JsonResponse(x, safe=False)
 			else:
 				return HttpResponseRedirect(reverse('musicapp:activate'))
 		else:
@@ -81,7 +87,7 @@ def home(request):
 	# x = x[:3]
 	context = {
 		'user': request.user,
-		'pl':pl.yt_playlist,
+		'pl': pl.yt_playlist,
 	}
 	return render(request, "MusicApp/homepage.html", context)
 
@@ -96,7 +102,7 @@ def results_query(request):
 			if it == ' ':
 				it = '+'
 			elif (it not in string.ascii_lowercase) and (it not in string.ascii_uppercase):
-				it = '%'+str(ord(it))
+				it = '%' + str(ord(it))
 			x += it
 
 		print(x)
@@ -104,16 +110,17 @@ def results_query(request):
 		query = str(query)
 		results = YtQueryParser(query)
 		context = {
-			'results':results.yt_search_list,
+			'results': results.yt_search_list,
 		}
 		# print(results.yt_search_list[0].yt_title)
 		# print(results.yt_search_list[0].yt_id)
 		import json
 		x = json.dumps(results.yt_search_json)
 		return JsonResponse(x, safe=False)
-		# return render(request, "MusicApp/main.html", context)
+	# return render(request, "MusicApp/main.html", context)
 	else:
 		return HttpResponse("Bad request")
+
 
 @csrf_exempt
 def results_query_json(request, query):
@@ -121,16 +128,17 @@ def results_query_json(request, query):
 		query = str(query)
 		results = YtQueryParser(query)
 		context = {
-			'results':results.yt_search_list,
+			'results': results.yt_search_list,
 		}
 		# print(results.yt_search_list[0].yt_title)
 		# print(results.yt_search_list[0].yt_id)
 		import json
 		x = json.dumps(str(results.yt_search_json))
 		return JsonResponse(x)
-		# return render(request, "MusicApp/main.html", context)
+	# return render(request, "MusicApp/main.html", context)
 	else:
 		return HttpResponse("Bad request")
+
 
 def user_signup(request):
 	"""
@@ -147,9 +155,9 @@ def user_signup(request):
 		passwd = request.POST.get("passwd")
 		first_name = request.POST.get("first_name")
 		last_name = request.POST.get("last_name")
-		print(username,email,passwd,first_name,last_name,sep='$')
-		#privacy = request.POST.get("privacy")
-		#privacy = bool(privacy)
+		print(username, email, passwd, first_name, last_name, sep='$')
+		# privacy = request.POST.get("privacy")
+		# privacy = bool(privacy)
 		# creating user
 		user_exists_or_not, message = validate_username_email(username, email)
 		if not user_exists_or_not:
@@ -280,7 +288,7 @@ def user_logout(request):
 
 
 @csrf_exempt
-def get_video_url(request,yt_url):
+def get_video_url(request, yt_url):
 	"""
 	also sue a create history function
 	:param request:
@@ -293,7 +301,7 @@ def get_video_url(request,yt_url):
 		print("Can not import Pafy")
 	if request.method == "GET":
 		video_id = yt_url
-		yt_url = "http://youtube.com/watch?v="+yt_url
+		yt_url = "http://youtube.com/watch?v=" + yt_url
 		print(yt_url)
 		video = pafy.new(yt_url)
 		audio = video.audiostreams
@@ -305,11 +313,12 @@ def get_video_url(request,yt_url):
 			print(r.status_code)
 			page = r.text
 			soup = BeautifulSoup(page, 'html.parser')
-			span_title = soup.find_all('span', {'class':'watch-title'})
-			print(span_title  )
+			span_title = soup.find_all('span', {'class': 'watch-title'})
+			print(span_title)
 			title = span_title[0]['title']
 			print(title)
-			new_song_history,_ = SongHistory.objects.get_or_create(song_id=video_id, song_name=title, last_listened=timezone.now())
+			new_song_history, _ = SongHistory.objects.get_or_create(song_id=video_id, song_name=title,
+																	last_listened=timezone.now())
 			new_song_history.save()
 			user = request.user
 			history_object, _ = History.objects.get_or_create(user=user)
@@ -324,7 +333,7 @@ def get_video_url(request,yt_url):
 def view_user_profile(request):
 	if request.method == "GET":
 		user = request.user
-		name = user.first_name+" "+user.last_name
+		name = user.first_name + " " + user.last_name
 		email = user.email
 		followers_count = 0
 		followings_count = 0
@@ -341,12 +350,12 @@ def view_user_profile(request):
 		if following_object is not None:
 			followings_count = following_object.followings.all().count()
 		context = {
-			'name':name,
-			'email':email,
-			'followers':followers_count,
-			'followings':followings_count,
+			'name': name,
+			'email': email,
+			'followers': followers_count,
+			'followings': followings_count,
 		}
-		return render(request,"MusicApp/profile.html", context)
+		return render(request, "MusicApp/profile.html", context)
 
 
 @csrf_exempt
@@ -364,7 +373,7 @@ def search_users(request):
 		relevent_users = User.objects.filter(username__icontains=query)[:10]
 		print(relevent_users)
 		context = {
-			'users':relevent_users,
+			'users': relevent_users,
 		}
 		return render(request, "MusicApp/users_list.html", context)
 	else:
@@ -392,14 +401,14 @@ def create_playlist(request):
 			new_playlist.save()
 			return HttpResponseRedirect(reverse("musicapp:view-playlists"))
 		else:
-			messages.error(request,"playlist already exists")
+			messages.error(request, "playlist already exists")
 			return render(request, "MusicApp/create_playlist.html")
 	else:
 		return render(request, "MusicApp/create_playlist.html")
 
 
 @login_required
-def delete_playlist(request,name):
+def delete_playlist(request, name):
 	"""
 	name parameter is case sensitive ve careful
 	:param request:
@@ -469,22 +478,21 @@ def add_to_playlist_router(request, song_id):
 	if request.user:
 		pl = Playlist.objects.filter(user__username=user.username)
 		# scraper
-		yt_url = "https://www.youtube.com/watch?v="+song_id
+		yt_url = "https://www.youtube.com/watch?v=" + song_id
 		r = requests.get(yt_url)
 		soup = BeautifulSoup(r.text, 'html.parser')
-		span_tag = soup.find_all('span', {'class':'watch-title'})
+		span_tag = soup.find_all('span', {'class': 'watch-title'})
 		span_tag = span_tag[0]
 		print(span_tag)
 		title = span_tag.get_text()
 		print(title)
 		# scrpaer
 		context = {
-			'playlists':pl,
-			'song_id':song_id,
-			'title':title,
+			'playlists': pl,
+			'song_id': song_id,
+			'title': title,
 		}
-		return  render(request, "MusicApp/add_to_playlist.html", context)
-
+		return render(request, "MusicApp/add_to_playlist.html", context)
 
 
 def remove_from_playlist(request, playlist_name, song_id):
@@ -505,7 +513,7 @@ def remove_from_playlist(request, playlist_name, song_id):
 			if song is not None:
 				playlist.songs.remove(song)
 				playlist.save()
-				messages.success(request,"song deleted")
+				messages.success(request, "song deleted")
 				return HttpResponseRedirect(reverse("musicapp:playlist_songs", args=(playlist_name,)))
 			else:
 				return HttpResponse("song not found")
@@ -534,10 +542,10 @@ def view_playlists(request):
 		for playlist in playlists:
 			n = playlist.playlist_name
 			c = playlist.songs.all().count()
-			playlist_attr.append((n,c))
+			playlist_attr.append((n, c))
 			print(c)
 		context = {
-			"playlists":playlist_attr
+			"playlists": playlist_attr
 		}
 		return render(request, "MusicApp/playlist.html", context)
 
@@ -557,9 +565,9 @@ def view_playlist_songs(request, playlist_name):
 			for song in songs:
 				print(song.song_name)
 		context = {
-			'name':playlist_name,
-			'songs':songs,
-			'privacy':playlist.privacy
+			'name': playlist_name,
+			'songs': songs,
+			'privacy': playlist.privacy
 		}
 		return render(request, "MusicApp/song_list.html", context)
 
@@ -579,7 +587,7 @@ def follow_user(request, username):
 		if follow.followers.filter(followers__followers__username=follower_user).exists():
 			return HttpResponse("already followed")
 		else:
-			follower_user_object,_ = User.objects.get_or_create(username=follower_user)
+			follower_user_object, _ = User.objects.get_or_create(username=follower_user)
 			follow.followers.add(follower_user_object)
 			follow.save()
 			reverse_follow_method(request, username)
@@ -589,7 +597,7 @@ def follow_user(request, username):
 def reverse_follow_method(request, username):
 	user = request.user
 	following_user = User.objects.get(username=username)
-	following,_ = Followings.objects.get_or_create(following_user=following_user)
+	following, _ = Followings.objects.get_or_create(following_user=following_user)
 	following.save()
 	following.followings.add(user)
 	following.save()
@@ -624,11 +632,11 @@ def view_user_playlists(request, username):
 		for playlist in playlists:
 			n = playlist.playlist_name
 			c = playlist.songs.all().count()
-			playlist_attr.append((n,c))
+			playlist_attr.append((n, c))
 			print(c)
 		context = {
-			"playlists":playlist_attr,
-			'uname':username,
+			"playlists": playlist_attr,
+			'uname': username,
 		}
 		return render(request, "MusicApp/user_playlist.html", context)
 
@@ -648,13 +656,12 @@ def view_user_playlist_songs(request, username, playlist_name):
 			songs = playlist.songs.all()
 			print(songs)
 		context = {
-			'name':playlist_name,
-			'songs':songs,
-			'privacy':playlist.privacy,
-			'uname':username,
+			'name': playlist_name,
+			'songs': songs,
+			'privacy': playlist.privacy,
+			'uname': username,
 		}
 		return render(request, "MusicApp/song_list.html", context)
-
 
 
 def list_followers(request):
@@ -678,8 +685,8 @@ def share_playlist_router(request, playlist_name):
 			return HttpResponse("you do't follow anyone so you can't share")
 		followers_list = follow_object.followers.all()
 		context = {
-			'followers':followers_list,
-			'playlist_name':playlist_name
+			'followers': followers_list,
+			'playlist_name': playlist_name
 		}
 		return render(request, "MusicApp/share.html", context)
 	else:
