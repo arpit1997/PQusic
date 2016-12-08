@@ -1,9 +1,5 @@
 .idea/
 db.sqlite3
-mysite/MusicApp/__pycache__/admin.cpython-34.pyc
-mysite/MusicApp/__pycache__/models.cpython-34.pyc
-mysite/MusicApp/__pycache__/urls.cpython-34.pyc
-mysite/MusicApp/__pycache__/views.cpython-34.pyc
 mysite/MusicApp/__pycache__/
 mysite/requirements.txt~
 mysite/MusicApp/migrations/
