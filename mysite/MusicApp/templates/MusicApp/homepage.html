@@ -354,7 +354,7 @@
     </div>
     <div class="rows">
         <div style="padding-bottom: 20px">
-            <h4 id="hdr" style="text-align:center">
+            <h4 id="hdr" class="truncate" style="text-align:center">
                 Trending Songs
             </h4>
         </div>
@@ -386,11 +386,11 @@
                     </div>
                     <div class="card-content">
                         <div class="card-content-cr flow-text card--ym3--title">
-                            {{ song.yt_title }}
+                            <p class="truncate">{{ song.yt_title }}</p>
                         </div>
                         <div class="meta-data">
                             <div class="channel">
-                                <p>{{ song.yt_artist }}</p>
+                                <p class="truncate">{{ song.yt_artist }}</p>
                             </div>
                             <div class="views">
                                 <p>{{ song.yt_views }}</p>
