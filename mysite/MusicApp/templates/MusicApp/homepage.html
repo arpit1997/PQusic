@@ -412,6 +412,9 @@
     </div>
       <div id="loginmodal" class="modal">
     <div class="modal-content">
+        <div  style="width: 100%;" class="center-align">
+		    <span id="message" style="color: #039be5"></span>
+        </div>
           <form id="loginform" class="col s12">
       <div class="row">
         <div class="input-field col s12">
@@ -477,6 +480,10 @@
                 $('#login').text("me");
                 $('#login').removeClass('modal-trigger');
                 $('#loginmodal').modal('close');
+            }
+            else {
+                console.log("failed");
+                $('#message').text('Username or Password is incorrect');
             }
        },
        'json' // I expect a JSON response

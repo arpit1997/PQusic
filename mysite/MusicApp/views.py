@@ -5,6 +5,7 @@ import smtplib
 import string
 from copy import copy, deepcopy
 
+import json
 import requests
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -51,15 +52,14 @@ def user_login(request):
 			if user.is_active:
 				login(request, user)
 				x = {'status': "1"}
-				import json
 				x = json.dumps(x)
 				# return HttpResponseRedirect(reverse('musicapp:home'))
 				return JsonResponse(x, safe=False)
 			else:
 				return HttpResponseRedirect(reverse('musicapp:activate'))
 		else:
-			messages.error(request, "username and password did not match")
-			return render(request, "MusicApp/user_login.html")
+			x = json.dumps({'status':'0'})
+			return JsonResponse(x, safe=False)
 
 	# for a GET request
 	else:
