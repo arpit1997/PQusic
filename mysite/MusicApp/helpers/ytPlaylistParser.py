@@ -16,9 +16,11 @@ class YtPlaylist:
 		self.fetch_videos()
 
 	def get_page(self):
-		r = requests.get(self.yt_playlist_url)
-		print(r.status_code)
-		page = BeautifulSoup(r.text, 'html.parser')
+		# r = requests.get(self.yt_playlist_url)
+		# print(r.status_code)
+		f = open('/home/arpit/Desktop/youtube.html', 'r')
+		c = f.read()
+		page = BeautifulSoup(c, 'html.parser')
 		return page
 
 	def fetch_videos(self):

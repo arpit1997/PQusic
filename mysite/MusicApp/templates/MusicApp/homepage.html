@@ -413,6 +413,7 @@
                             </select>
                             <label>Materialize Select</label>
                         </div>
+                        <a class="btn-small add-button" href="#">Add</a>
                     </div>
                     <div class="card-content">
                         <div class="card-content-cr flow-text card--ym3--title">
@@ -509,21 +510,50 @@
 <!--</script>-->
 <!--<option value="" disabled selected>Choose your option</option>-->
 
-<!--<script>-->
-    <!--$('body').on('click', '.add-to-pl', function(){-->
-        <!--var pl = $('#pl').html();-->
-        <!--var json = JSON.parse(pl);-->
-        <!--var obj = json.names ;-->
-        <!--for (var i=0; i < obj.length;++i){-->
-            <!--$('.pl-select').append("<option value='"+json.names[i]+"'>"+-->
-                <!--json.names[i]+-->
-                <!--"</option>"-->
-            <!--);-->
-        <!--}-->
-        <!--$('select').material_select();-->
+<script>
+    $('body').on('click', '.add-to-pl', function(){
+        var pl = $('#pl').html();
+        var $this = $(this);
+        card = $this.closest('.card-cr');
+        console.log(card);
+        var pl_select = card.find('.pl-select');
+        var json = JSON.parse(pl);
+        var obj = json.names ;
+        for (var i=0; i < obj.length;++i){
+            pl_select.append("<option value='"+json.names[i]+"'>"+
+                json.names[i]+
+                "</option>"
+            );
+        }
+        pl_select.material_select();
 
-    <!--})-->
-<!--</script>-->
+    });
+    $('body').on('click', '.add-button', function(){
+        var $this = $(this);
+        var card = $this.closest('.card-cr');
+        var playlist_name = card.find('select');
+        playlist_name = playlist_name.val();
+        var stream_btn = card.find('.stream-now');
+        var id = stream_btn.attr('data-stream-url');
+        var card_title = card.find('.card--ym3--title');
+        card_title = card_title.find('p');
+        var title = card_title.text();
+        card_title = card.find('.channel');
+        card_title = card_title.find('p');
+        var artist = card_title.text();
+        card_title = card.find('img');
+        console.log(artist);
+        var thumbnail = card_title.attr('src');
+        console.log(thumbnail);
+        $.post('/playlists/add/', {name:playlist_name, song_id:id, song_name:title, song_thumbnail:thumbnail, song_artist:artist}, function(data){
+            var res = JSON.parse(data);
+            if (res.status == '1'){
+                console.log("success");
+            }
+        })
+
+    })
+</script>
 <script>
     $('body').on('click', '#submitbutton', function () {
         console.log("search button pressed");
@@ -546,14 +576,6 @@
                             var json = res;
                             console.log(res);
                             $('body').append("<script id='pl' type='application/json'>"+data+"");
-                            var obj = res.names ;
-                            for (var i=0; i < obj.length;++i){
-                            $('.pl-select').append("<option value='"+json.names[i]+"'>"+
-                                json.names[i]+
-                                "</option>"
-                            );
-                            }
-                            $('select').material_select();
                         });
                     }
                     else {

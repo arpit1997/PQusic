@@ -432,6 +432,7 @@ def delete_playlist(request, name):
 
 
 @login_required
+@csrf_exempt
 def add_to_playlist(request):
 	"""
 	adds a song to playlist
@@ -440,6 +441,7 @@ def add_to_playlist(request):
 	:return:
 	"""
 	if request.method == "POST":
+		print(request.POST)
 		user = request.user
 		playlist_name = request.POST.get('name')
 		try:
@@ -466,12 +468,15 @@ def add_to_playlist(request):
 				playlist.songs.add(song)
 				playlist.save()
 				messages.success(request, "song added")
-				return HttpResponseRedirect(reverse("musicapp:view-playlists"))
+				return HttpResponse(json.dumps({'status':'1'}))
+				# return HttpResponseRedirect(reverse("musicapp:view-playlists"))
 			else:
 				playlist.songs.add(song)
 				playlist.save()
 				messages.success(request, "song added")
-				return HttpResponseRedirect(reverse("musicapp:view-playlists"))
+				return HttpResponse(json.dumps({'status':'1'}))
+
+				# return HttpResponseRedirect(reverse("musicapp:view-playlists"))
 		else:
 			return HttpResponse("Playlist does not exist")
 
