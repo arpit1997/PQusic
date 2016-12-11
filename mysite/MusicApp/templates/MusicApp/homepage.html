@@ -397,7 +397,7 @@
                 <div class="card card-cr card--ym3">
                     <div class="card-image card-image-cr">
                         <span class="add-btn">
-                            <a class="activator btn-floating btn-medium waves-effect waves-light red">
+                            <a class="activator add-to-pl btn-floating btn-medium waves-effect waves-light red">
                                 <i class="material-icons">add</i>
                             </a>
                         </span>
@@ -407,11 +407,9 @@
 
                     <div class="card-reveal">
                         <div class="input-field col s12">
-                            <select>
+                            <select class="pl-select">
                                 <option value="" disabled selected>Choose your option</option>
-                                <option value="1">Option 1</option>
-                                <option value="2">Option 2</option>
-                                <option value="3">Option 3</option>
+
                             </select>
                             <label>Materialize Select</label>
                         </div>
@@ -509,6 +507,23 @@
 <!--$('.dropdown-button').dropdown('open');-->
 <!--})-->
 <!--</script>-->
+<!--<option value="" disabled selected>Choose your option</option>-->
+
+<!--<script>-->
+    <!--$('body').on('click', '.add-to-pl', function(){-->
+        <!--var pl = $('#pl').html();-->
+        <!--var json = JSON.parse(pl);-->
+        <!--var obj = json.names ;-->
+        <!--for (var i=0; i < obj.length;++i){-->
+            <!--$('.pl-select').append("<option value='"+json.names[i]+"'>"+-->
+                <!--json.names[i]+-->
+                <!--"</option>"-->
+            <!--);-->
+        <!--}-->
+        <!--$('select').material_select();-->
+
+    <!--})-->
+<!--</script>-->
 <script>
     $('body').on('click', '#submitbutton', function () {
         console.log("search button pressed");
@@ -525,6 +540,21 @@
                         $('#login-m').text('LogOut');
                         $('.name').text(res.username);
                         $('#loginmodal').modal('close');
+                        $.get('/playlist', function(data){
+                            console.log(data);
+                            res = JSON.parse(data);
+                            var json = res;
+                            console.log(res);
+                            $('body').append("<script id='pl' type='application/json'>"+data+"");
+                            var obj = res.names ;
+                            for (var i=0; i < obj.length;++i){
+                            $('.pl-select').append("<option value='"+json.names[i]+"'>"+
+                                json.names[i]+
+                                "</option>"
+                            );
+                            }
+                            $('select').material_select();
+                        });
                     }
                     else {
                         console.log("failed");
@@ -532,6 +562,7 @@
                     }
                 },
                 'json' // I expect a JSON response
+
         );
     })
 </script>
@@ -652,6 +683,7 @@
         return false;
     }
 </script>
+
 
 
 <!--<script>-->
