@@ -17,6 +17,9 @@ class PlaylistSongs(models.Model):
 	"""
 	song_id = models.CharField(max_length=20, unique=True)
 	song_name = models.TextField()
+	song_thumbnail = models.TextField(blank=True, null=True)
+	song_duration = models.TextField(blank=True, null=True)
+	song_artist = models.TextField(blank=True, null=True)
 	mood = models.TextField(blank=True, null=True)
 
 

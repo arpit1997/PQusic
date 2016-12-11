@@ -449,6 +449,9 @@ def add_to_playlist(request):
 		if playlist is not None:
 			song_id = request.POST.get('song_id')
 			song_name = request.POST.get('song_name')
+			song_thumbnail = request.POST.get('song_thumbnail')
+			# song_duration = request.POST.get('song_duration')
+			song_artist = request.POST.get('song_artist')
 			try:
 				mood = request.POST.get('mood')
 			except KeyError:
@@ -458,7 +461,7 @@ def add_to_playlist(request):
 			except ObjectDoesNotExist:
 				song = None
 			if song is None:
-				song = PlaylistSongs(song_id=song_id, song_name=song_name, mood=mood)
+				song = PlaylistSongs(song_id=song_id, song_name=song_name, song_thumbnail=song_thumbnail, song_artist=song_artist)
 				song.save()
 				playlist.songs.add(song)
 				playlist.save()
@@ -519,6 +522,19 @@ def remove_from_playlist(request, playlist_name, song_id):
 				return HttpResponse("song not found")
 		else:
 			return HttpResponse("playlist not found")
+
+
+def list_of_playlists(request):
+	if request.method == "GET":
+		user = request.user
+		playlists = Playlist.objects.filter(user__username=user.username)
+		names = []
+		for playlist in playlists:
+			names.append(playlist.playlist_name)
+		pl = {
+			'names':names,
+		}
+		return HttpResponse(json.dumps(pl))
 
 
 def view_playlists(request):

@@ -291,7 +291,7 @@
         color: #039be5;
     }
 
-    .add-btn{
+    .add-btn {
         position: absolute;
         width: 100%;
         height: 100%;
@@ -331,12 +331,12 @@
                     <li><a id="login-d" class="modal-trigger login" href="#loginmodal">Login</a>
                     </li>
                 </ul>
-                                   <ul class="side-nav" id="mobile-demo">
-        <li><a href="sass.html">Sass</a></li>
-        <li><a href="badges.html">Components</a></li>
-        <li><a href="collapsible.html">Javascript</a></li>
-        <li><a href="mobile.html">Mobile</a></li>
-      </ul>
+                <ul class="side-nav show-on-med-and-down" id="mobile-demo">
+                    <li><a href="sass.html">Sass</a></li>
+                    <li><a href="badges.html">Components</a></li>
+                    <li><a href="collapsible.html">Javascript</a></li>
+                    <li><a href="mobile.html">Mobile</a></li>
+                </ul>
                 <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
 
                 <div class="search-bar hide-on-large-only">
@@ -348,19 +348,19 @@
                     </form>
                 </div>
                 <!--<ul id="slide-out" class="side-nav">-->
-                    <!--<li>-->
-                        <!--<div class="userView">-->
-                            <!--<div class="background">-->
-                                <!--<img src="http://demo.geekslabs.com/materialize/v2.2/layout03/images/user-profile-bg.jpg">-->
-                            <!--</div>-->
-                            <!--<a href="#!user"><img class="circle" src="http://material-design.storage.googleapis.com/publish/v_2/material_ext_publish/0Bx4BSt6jniD7TDlCYzRROE84YWM/materialdesign_introduction.png"></a>-->
-                            <!--<a href="#!name"><span class="white-text name">John Doe</span></a>-->
-                        <!--</div>-->
-                    <!--</li>-->
-                    <!--<li><a href="#!"><i class="material-icons">cloud</i>First Link With Icon</a></li>-->
-                    <!--<li><a href="#!">Second Link</a></li>-->
-                    <!--<li><a class="subheader">Subheader</a></li>-->
-                    <!--<li><a class="waves-effect" href="#!">Third Link With Waves</a></li>-->
+                <!--<li>-->
+                <!--<div class="userView">-->
+                <!--<div class="background">-->
+                <!--<img src="http://demo.geekslabs.com/materialize/v2.2/layout03/images/user-profile-bg.jpg">-->
+                <!--</div>-->
+                <!--<a href="#!user"><img class="circle" src="http://material-design.storage.googleapis.com/publish/v_2/material_ext_publish/0Bx4BSt6jniD7TDlCYzRROE84YWM/materialdesign_introduction.png"></a>-->
+                <!--<a href="#!name"><span class="white-text name">John Doe</span></a>-->
+                <!--</div>-->
+                <!--</li>-->
+                <!--<li><a href="#!"><i class="material-icons">cloud</i>First Link With Icon</a></li>-->
+                <!--<li><a href="#!">Second Link</a></li>-->
+                <!--<li><a class="subheader">Subheader</a></li>-->
+                <!--<li><a class="waves-effect" href="#!">Third Link With Waves</a></li>-->
                 <!--</ul>-->
 
             </div>
@@ -406,9 +406,15 @@
                     </div>
 
                     <div class="card-reveal">
-      					    <span class="card-title grey-text text-darken-4">Card Title<i class="material-icons right">close</i></span>
-     		 			    <p>Here is some more information about this product that is only revealed once clicked on.
-     		 			    </p>
+                        <div class="input-field col s12">
+                            <select>
+                                <option value="" disabled selected>Choose your option</option>
+                                <option value="1">Option 1</option>
+                                <option value="2">Option 2</option>
+                                <option value="3">Option 3</option>
+                            </select>
+                            <label>Materialize Select</label>
+                        </div>
                     </div>
                     <div class="card-content">
                         <div class="card-content-cr flow-text card--ym3--title">
@@ -498,10 +504,10 @@
 
 </script>
 <!--<script type="text/javascript">-->
-    <!--$('.dropdown-button').on('click', function(){-->
-        <!--console.log("hello");-->
-        <!--$('.dropdown-button').dropdown('open');-->
-    <!--})-->
+<!--$('.dropdown-button').on('click', function(){-->
+<!--console.log("hello");-->
+<!--$('.dropdown-button').dropdown('open');-->
+<!--})-->
 <!--</script>-->
 <script>
     $('body').on('click', '#submitbutton', function () {
@@ -530,7 +536,7 @@
     })
 </script>
 <script>
-    $('body').on('click', '#login-m', function(){
+    $('body').on('click', '#login-m', function () {
         console.log("button pressed");
         $('.button-collapse').sideNav('hide');
         $('#loginmodal').modal('open');

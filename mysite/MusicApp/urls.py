@@ -11,6 +11,8 @@ urlpatterns = [
 	url(r"^u-logout", views.user_logout, name="logout"),
 	# url(r'^(?P<name>[a-zA-Z]{1,})', views.hello, name='hello'),
 	# Test view url
+	url(r'^playlist$', views.list_of_playlists, name="listofpl"),
+	url(r'^playlist/$', views.list_of_playlists, name="listofpl"),
 	url(r'^playlists$', views.view_playlists, name="view-playlists"),
 	url(r'^playlists/$', views.view_playlists, name="view-playlists"),
 	url(r'^playlist/(?P<playlist_name>[a-zA-Z0-9]+)$', views.view_playlist_songs, name="playlist_songs"),
