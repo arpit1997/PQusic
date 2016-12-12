@@ -406,7 +406,8 @@
                     </div>
 
                     <div class="card-reveal">
-                        <span class="card-title grey-text text-darken-4">Card Title<i class="material-icons right">close</i></span>
+                        <span class="card-title grey-text text-darken-4">Card Title<i
+                                class="material-icons right">close</i></span>
                         <div class="input-field col s12">
                             <select class="pl-select">
                                 <option value="" disabled selected>Choose your option</option>
@@ -512,24 +513,29 @@
 <!--<option value="" disabled selected>Choose your option</option>-->
 
 <script>
-    $('body').on('click', '.add-to-pl', function(){
+    $('body').on('click', '.add-to-pl', function () {
         var pl = $('#pl').html();
         var $this = $(this);
-        card = $this.closest('.card-cr');
-        console.log(card);
-        var pl_select = card.find('.pl-select');
-        var json = JSON.parse(pl);
-        var obj = json.names ;
-        for (var i=0; i < obj.length;++i){
-            pl_select.append("<option value='"+json.names[i]+"'>"+
-                json.names[i]+
-                "</option>"
-            );
+        var $card = $this.closest('.card-cr');
+        var x = $card.find('li');
+        if (x.length <= 1) {
+            var pl_select = $card.find('.pl-select');
+            pl_select.material_select();
+            var json = JSON.parse(pl);
+            var obj = json.names;
+            for (var i = 0; i < obj.length; ++i) {
+                pl_select.append("<option value='" + json.names[i] + "'>" +
+                        json.names[i] +
+                        "</option>"
+                );
+            }
+            pl_select.material_select('destroy');
+            pl_select.material_select();
         }
-        pl_select.material_select();
+
 
     });
-    $('body').on('click', '.add-button', function(){
+    $('body').on('click', '.add-button', function () {
         var $this = $(this);
         var card = $this.closest('.card-cr');
         var playlist_name = card.find('select');
@@ -546,9 +552,15 @@
         console.log(artist);
         var thumbnail = card_title.attr('src');
         console.log(thumbnail);
-        $.post('/playlists/add/', {name:playlist_name, song_id:id, song_name:title, song_thumbnail:thumbnail, song_artist:artist}, function(data){
+        $.post('/playlists/add/', {
+            name: playlist_name,
+            song_id: id,
+            song_name: title,
+            song_thumbnail: thumbnail,
+            song_artist: artist
+        }, function (data) {
             var res = JSON.parse(data);
-            if (res.status == '1'){
+            if (res.status == '1') {
                 console.log("success");
             }
         })
@@ -571,12 +583,12 @@
                         $('#login-m').text('LogOut');
                         $('.name').text(res.username);
                         $('#loginmodal').modal('close');
-                        $.get('/playlist', function(data){
+                        $.get('/playlist', function (data) {
                             console.log(data);
                             res = JSON.parse(data);
                             var json = res;
                             console.log(res);
-                            $('body').append("<script id='pl' type='application/json'>"+data+"");
+                            $('body').append("<script id='pl' type='application/json'>" + data + "");
                         });
                     }
                     else {
@@ -600,13 +612,13 @@
     $('body').on('click', '.search-icon', function () {
         console.log("hello world");
         var query = $('input[name=query]').val();
-        if (query == ""){
+        if (query == "") {
             query = $('.search-input').val();
         }
         console.log(query);
         $('div.row-trend').detach();
         $('.preloader-wrapper').removeClass('preloader');
-        $('.rows').append("<div class='row' id='search-results'></div>>");
+        $('.rows').append("<div class='row row-trend' id='search-results'></div>>");
         $('#hdr').text("search results for " + query);
         var data = $.post("/search", {query: query}, function (data) {
             var res = data;
@@ -619,23 +631,23 @@
                 $('#search-results').append("<div class='col s6 m4 l3'>" +
                         "<div class='card card-cr card--ym3'>" +
                         "<div class='card-image card-image-cr'>" +
-                        "<span class='add-btn'>"+
-                            "<a class='activator add-to-pl btn-floating btn-medium waves-effect waves-light red'>"+
-                                "<i class='material-icons'>add</i>"+
-                            "</a>"+
-                        "</span>"+
+                        "<span class='add-btn'>" +
+                        "<a class='activator add-to-pl btn-floating btn-medium waves-effect waves-light red'>" +
+                        "<i class='material-icons'>add</i>" +
+                        "</a>" +
+                        "</span>" +
                         "<img src='" + res[i].thumbnail + "'>" +
                         "</div>" +
-                        "<div class='card-reveal'>"+
-                        "<span class='card-title grey-text text-darken-4'>Card Title<i class='material-icons right'>close</i></span>"+
-                        "<div class='input-field col s12'>"+
-                            "<select class='pl-select'>"+
-                                "<option value='' disabled selected>Choose your option</option>"+
-                            "</select>"+
-                            "<label>Materialize Select</label>"+
-                        "</div>"+
-                        "<a class='btn-small add-button' href='#'>Add</a>"+
-                        "</div>"+
+                        "<div class='card-reveal'>" +
+                        "<span class='card-title grey-text text-darken-4'>Card Title<i class='material-icons right'>close</i></span>" +
+                        "<div class='input-field col s12'>" +
+                        "<select class='pl-select'>" +
+                        "<option value='' disabled selected>Choose your option</option>" +
+                        "</select>" +
+                        "<label>Materialize Select</label>" +
+                        "</div>" +
+                        "<a class='btn-small add-button' href='#'>Add</a>" +
+                        "</div>" +
                         "<div class='card-content'>" +
                         "<div class='card-content-cr flow-text card--ym3--title'>" +
                         res[i].title +
@@ -724,7 +736,6 @@
         return false;
     }
 </script>
-
 
 
 <!--<script>-->
