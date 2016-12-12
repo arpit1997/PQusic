@@ -386,7 +386,7 @@
             </div>
         </div>
         {% for category, songs in pl.items %}
-        <div class="row">
+        <div class="row row-trend">
             <div>
                 <h5>
                     {{ category }}
@@ -604,7 +604,7 @@
             query = $('.search-input').val();
         }
         console.log(query);
-        $('div.row').detach();
+        $('div.row-trend').detach();
         $('.preloader-wrapper').removeClass('preloader');
         $('.rows').append("<div class='row' id='search-results'></div>>");
         $('#hdr').text("search results for " + query);
@@ -619,8 +619,23 @@
                 $('#search-results').append("<div class='col s6 m4 l3'>" +
                         "<div class='card card-cr card--ym3'>" +
                         "<div class='card-image card-image-cr'>" +
+                        "<span class='add-btn'>"+
+                            "<a class='activator add-to-pl btn-floating btn-medium waves-effect waves-light red'>"+
+                                "<i class='material-icons'>add</i>"+
+                            "</a>"+
+                        "</span>"+
                         "<img src='" + res[i].thumbnail + "'>" +
                         "</div>" +
+                        "<div class='card-reveal'>"+
+                        "<span class='card-title grey-text text-darken-4'>Card Title<i class='material-icons right'>close</i></span>"+
+                        "<div class='input-field col s12'>"+
+                            "<select class='pl-select'>"+
+                                "<option value='' disabled selected>Choose your option</option>"+
+                            "</select>"+
+                            "<label>Materialize Select</label>"+
+                        "</div>"+
+                        "<a class='btn-small add-button' href='#'>Add</a>"+
+                        "</div>"+
                         "<div class='card-content'>" +
                         "<div class='card-content-cr flow-text card--ym3--title'>" +
                         res[i].title +
