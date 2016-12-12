@@ -406,6 +406,7 @@
                     </div>
 
                     <div class="card-reveal">
+                        <span class="card-title grey-text text-darken-4">Card Title<i class="material-icons right">close</i></span>
                         <div class="input-field col s12">
                             <select class="pl-select">
                                 <option value="" disabled selected>Choose your option</option>
@@ -599,6 +600,9 @@
     $('body').on('click', '.search-icon', function () {
         console.log("hello world");
         var query = $('input[name=query]').val();
+        if (query == ""){
+            query = $('.search-input').val();
+        }
         console.log(query);
         $('div.row').detach();
         $('.preloader-wrapper').removeClass('preloader');

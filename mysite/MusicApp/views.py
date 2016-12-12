@@ -563,12 +563,15 @@ def view_playlists(request):
 		for playlist in playlists:
 			n = playlist.playlist_name
 			c = playlist.songs.all().count()
-			playlist_attr.append((n, c))
+			# playlist_attr.append((n, c))
+			o = {"name":n, "count":c}
+			playlist_attr.append(o)
 			print(c)
-		context = {
-			"playlists": playlist_attr
-		}
-		return render(request, "MusicApp/playlist.html", context)
+		# context = {
+		# 	"playlists": playlist_attr
+		# }
+		return HttpResponse(json.dumps(playlist_attr))
+		# return render(request, "MusicApp/playlist.html", context)
 
 
 def view_playlist_songs(request, playlist_name):
