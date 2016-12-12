@@ -326,7 +326,7 @@
                         </div>
                     </li>
                     <li><a href="sass.html">People</a></li>
-                    <li><a href="badges.html">Playlists</a></li>
+                    <li><a id="playlist-button" href="#">Playlists</a></li>
                     <li><a href="collapsible.html">Signup</a></li>
                     <li><a id="login-d" class="modal-trigger login" href="#loginmodal">Login</a>
                     </li>
@@ -565,6 +565,45 @@
             }
         })
 
+    });
+    $('body').on('click', '#playlist-button', function(){
+        $('div.row-trend').detach();
+        $('.rows').append("<div class='row row-trend' id='search-results'></div>>");
+        $('.row-trend').append("<ul class='collection' id='pl-collection'></ul>");
+        $('#hdr').text("Playlists");
+        $('.preloader-wrapper').removeClass('preloader');
+        $.get('/playlists', function(data){
+            var res = JSON.parse(data);
+            for (var i=0; i < res.length; ++i){
+                $('#pl-collection').append(
+                    "<li class='collection-item avatar'>"+
+                    "<i class='material-icons circle red'>play_arrow</i>"+
+                    "<span class='title'>"+res[i].name+"</span>"+
+                    "<p>"+res[i].count+" songs</p>"+
+                    "<a href='#!' class='secondary-content delete--button'><i class='material-icons'>delete</i></a>"
+                )
+            }
+            $('.preloader-wrapper').addClass('preloader');
+            $('.row').css("width", "100%");
+            $('.rows').css("width", "100%");
+        });
+    });
+    $('body').on('click', '.delete--button', function(){
+        var $this = $(this);
+        var li = $this.closest('li');
+        var p = li.find('.title');
+        var title = p.text();
+        console.log(title);
+        $.get('/playlists/delete/'+title+"/", function(data){
+            var res = JSON.parse(data);
+            if (res.status == "1"){
+                console.log("deleted");
+            }
+            else {
+                console.log("not deleted");
+            }
+        })
+
     })
 </script>
 <script>
@@ -669,8 +708,7 @@
                         "</div>" +
                         "</div>")
             }
-            $('.row').css("width", "100%");
-            $('.rows').css("width", "100%");
+
             $('.preloader-wrapper').addClass('preloader');
         });
     });

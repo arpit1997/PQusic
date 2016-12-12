@@ -27,7 +27,6 @@ urlpatterns = [
 	url(r'^plylist/(?P<username>[\S]+)/view/(?P<playlist_name>[a-zA-Z0-9]{1,})/$',views.view_user_playlist_songs, name="view_user_playlist_songs"),
 	url(r'^playlist/add/song/(?P<song_id>[\S]+)$', views.add_to_playlist_router, name="add_to_playlist_router"),
 	url(r'^playlist/add/song/(?P<song_id>[\S]+)$/', views.add_to_playlist_router, name="add_to_playlist_router"),
-	url(r'^playlists/delete/(?P<name>[a-zA-Z]{1,})', views.delete_playlist, name="delete-playlist"),
 	url(r'^playlists/(?P<playlist_name>[a-zA-Z0-9]{1,})/songs/(?P<song_id>[\S]+)', views.remove_from_playlist, name="delete-songs"),
 	url(r'^playlists/(?P<username>[\S]+)/import/(?P<name>[a-zA-Z0-9]{1,})$', views.import_playlist, name="import_playlist"),
 	url(r'^playlists/(?P<username>[\S]+)/import/(?P<name>[a-zA-Z0-9]{1,})/$', views.import_playlist, name="import_playlist"),
@@ -49,4 +48,6 @@ urlpatterns = [
 	url(r'profile/$', views.view_user_profile, name="view_profile"),
 	url(r'history$', views.view_history, name="view_history"),
 	url(r'history/$', views.view_history, name="view_history"),
+	url(r'^playlists/delete/(?P<name>[\S]+)/$', views.delete_playlist, name="delete-playlist"),
+
 ]

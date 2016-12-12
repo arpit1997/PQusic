@@ -424,9 +424,11 @@ def delete_playlist(request, name):
 			playlist = None
 		if playlist is not None:
 			playlist.delete()
-			return HttpResponseRedirect(reverse("musicapp:view-playlists"))
+			return HttpResponse(json.dumps({"status":"1"}))
+			# return HttpResponseRedirect(reverse("musicapp:view-playlists"))
 		else:
-			return HttpResponse("playlist Does not exist")
+			return HttpResponse(json.dumps({"status":"0"}))
+			# return HttpResponse("playlist Does not exist")
 	else:
 		return HttpResponse("Bad request")
 
