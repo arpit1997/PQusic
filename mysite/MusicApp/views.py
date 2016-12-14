@@ -89,7 +89,7 @@ def home(request):
 		'user': request.user,
 		'pl': pl.yt_playlist,
 	}
-	return render(request, "MusicApp/homepage.html", context)
+	return render(request, "MusicApp/homepage1.html", context)
 
 
 @csrf_exempt
