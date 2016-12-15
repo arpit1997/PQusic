@@ -800,15 +800,20 @@
 
     });
     function startStreamPl(){
-        i = i+1 ;
+        i = (i+1)%n ;
         console.log(i);
+        var $stream_container = $('#stream-player-container-playlist');
+        $stream_container.addClass('stream-wait');
+        $stream_container.find('.player-albumart img').attr('src', res[i].thumbnail);
+        $stream_container.find('.player-name').text(res[i].name);
+        $stream_container.find('.player-artist').text(res[i].artist);
         $.get('/audio/geturl/'+res[i].id, function(data){
             console.log(data);
             $('#stream-player-playlist').attr('src', data);
             var $stream_container = $('#stream-player-container-playlist');
             $stream_container.removeClass('stream-wait');
             streamPlayerPl[0].play();
-        })
+        });
     }
     $('#stream-player-playlist').on('ended', function(event) {
         console.log("hello world");
