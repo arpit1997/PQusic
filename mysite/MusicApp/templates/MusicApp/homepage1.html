@@ -779,9 +779,10 @@
 </script>
 <script>
     streamPlayerPl = plyr.setup(document.querySelector('#stream-player-playlist'));
-    i = -1;
-    n = 0;
+
     $('body').on('click', '#pl-play-btn', function () {
+        i = -1;
+        n = 0;
         var $this = $(this);
         var collection = $this.closest('.collection-item');
         var pl_name = collection.find('span').text();
@@ -795,12 +796,19 @@
             res = JSON.parse(data);
             n = res.length;
             console.log(res);
-            startStreamPl();
+            startStreamPl("FORWARD");
         });
 
     });
-    function startStreamPl(){
-        i = (i+1)%n ;
+    function startStreamPl(options){
+        if (options == "FORWARD"){
+            i = (i+1)%n ;
+        }
+        else {
+            if (options == "BACKWARD"){
+                i = (i-1)%n ;
+            }
+        }
         console.log(i);
         var $stream_container = $('#stream-player-container-playlist');
         $stream_container.addClass('stream-wait');
@@ -819,6 +827,7 @@
         console.log("hello world");
         startStreamPl();
     });
+
 </script>
 <script>
     var streamPlayer = plyr.setup(document.querySelector('#stream-player'));
