@@ -520,9 +520,10 @@
             r
             <div class="plyr--wrapper">
                 <div style="display: inline-block;position: relative;/* justify-content: center; */height: 100%;margin-left: auto;margin-right: auto;float: left;">
-                    <a href="#" style="display: inline-block">
-                        <i class="material-icons small">play_circle_outline</i></a>
-                    <a href="#"><i class="material-icons small">play_circle_outline</i></a>
+                    <a href="#" id="forward" style="display: inline-block" class="btn-floating btn-flat">
+                        <i class="material-icons medium" style="color: #039be5">play_circle_outline</i></a>
+                    <a href="#" id="backward" class="btn-floating btn-flat">
+                        <i class="material-icons medium" style="color: #039be5;">play_circle_outline</i></a>
                 </div>
                 <audio class="" id="stream-player-playlist" src="" controls preload="metadata">
                 </audio>
@@ -779,7 +780,6 @@
 </script>
 <script>
     streamPlayerPl = plyr.setup(document.querySelector('#stream-player-playlist'));
-
     $('body').on('click', '#pl-play-btn', function () {
         i = -1;
         n = 0;
@@ -788,6 +788,8 @@
         var pl_name = collection.find('span').text();
         console.log(pl_name);
         var $stream_container = $('#stream-player-container-playlist');
+        $('#stream-player-container').addClass('no-music');
+        $('#stream-player').attr('src', "");
         $stream_container.addClass('stream-wait');
         if ($stream_container.hasClass('no-music')) {
             $stream_container.removeClass('no-music')
@@ -806,7 +808,7 @@
         }
         else {
             if (options == "BACKWARD"){
-                i = (i-1)%n ;
+                i = Math.abs((i-1)%n);
             }
         }
         console.log(i);
@@ -825,7 +827,13 @@
     }
     $('#stream-player-playlist').on('ended', function(event) {
         console.log("hello world");
-        startStreamPl();
+        startStreamPl("FORWARD");
+    });
+    $('body').on('click', '#forward', function(){
+        startStreamPl("FORWARD");
+    });
+    $('body').on('click', '#backward', function(){
+        startStreamPl("BACKWARD");
     });
 
 </script>
@@ -851,19 +859,12 @@
         console.log(streamUrl);
         startStream(streamPlayer, streamData);
     });
-    $('#stream-player-container').on('ready', function(event) {
-        console.log('ready')
-    });
-    $('#stream-player-container').on('pause', function(event) {
-        console.log("paused")
-    });
-    $('#stream-player-container').on('ended', function(event) {
-        console.log("hello world")
-    });
     function startStream(streamPlayer, streamData) {
         var $streamContainer = $('#stream-player-container');
         streamPlayer[0].pause();
         console.log(streamData);
+        $('#stream-player-container-playlist').addClass('no-music');
+        $('#stream-player-playlist').attr('src', "");
         $streamContainer.addClass('stream-wait');
         $streamContainer.find('.player-albumart img').attr('src', streamData.albumart);
         $streamContainer.find('.player-name').text(streamData.title);
