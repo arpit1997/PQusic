@@ -598,8 +598,23 @@ def view_playlist_songs(request, playlist_name):
 		return render(request, "MusicApp/song_list.html", context)
 
 
-def view_history(request):
-	pass
+@csrf_exempt
+def get_playlist_info(request, name):
+	if request.method == "GET":
+		user = request.user
+		name = str(name)
+		try:
+			playlist = Playlist.objects.get(user=user, playlist_name=name)
+		except ObjectDoesNotExist:
+			playlist = None
+		playlist_info = []
+		if playlist is not None:
+			songs = playlist.songs.all()
+			for song in songs:
+				obj = {"id":song.song_id, "name":song.song_name, "thumbnail":song.song_thumbnail, "artist":song.song_artist}
+				playlist_info.append(obj)
+			playlist_info = json.dumps(playlist_info)
+		return HttpResponse(playlist_info)
 
 
 def follow_user(request, username):

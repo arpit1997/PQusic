@@ -15,6 +15,8 @@ urlpatterns = [
 	url(r'^playlist/$', views.list_of_playlists, name="listofpl"),
 	url(r'^playlists$', views.view_playlists, name="view-playlists"),
 	url(r'^playlists/$', views.view_playlists, name="view-playlists"),
+	url(r'^playlists/info/(?P<name>[\S]+)$', views.get_playlist_info, name="pl-info"),
+	url(r'^playlists/info/(?P<name>[\S]+)/$', views.get_playlist_info, name="pl-info"),
 	url(r'^playlist/(?P<playlist_name>[a-zA-Z0-9]+)$', views.view_playlist_songs, name="playlist_songs"),
 	url(r'^playlist/(?P<playlist_name>[a-zA-Z0-9]+)/$', views.view_playlist_songs, name="playlist_songs"),
 	url(r'^playlists/create$', views.create_playlist, name="create-playlists"),
@@ -46,8 +48,6 @@ urlpatterns = [
 	url(r'^searchuser/$', views.search_users, name="search_user"),
 	url(r'profile$', views.view_user_profile, name="view_profile"),
 	url(r'profile/$', views.view_user_profile, name="view_profile"),
-	url(r'history$', views.view_history, name="view_history"),
-	url(r'history/$', views.view_history, name="view_history"),
 	url(r'^playlists/delete/(?P<name>[\S]+)/$', views.delete_playlist, name="delete-playlist"),
 
 ]

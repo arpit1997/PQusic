@@ -652,12 +652,6 @@
             $('.rows').css("width", "100%");
         })
     });
-    $('body').on('click', '#pl-play-btn', function () {
-        console.log("hello");
-        var streamPlayer = plyr.setup(document.querySelector('#stream-player-playlist'));
-        var $stream_player = $('#stream-player-container-playlist');
-        $stream_player.removeClass('no-music')
-    });
     $('body').on('click', '.delete--button', function () {
         var $this = $(this);
         var li = $this.closest('li');
@@ -783,7 +777,44 @@
         });
     });
 </script>
+<script>
+    streamPlayerPl = plyr.setup(document.querySelector('#stream-player-playlist'));
+    i = -1;
+    n = 0;
+    $('body').on('click', '#pl-play-btn', function () {
+        var $this = $(this);
+        var collection = $this.closest('.collection-item');
+        var pl_name = collection.find('span').text();
+        console.log(pl_name);
+        var $stream_container = $('#stream-player-container-playlist');
+        $stream_container.addClass('stream-wait');
+        if ($stream_container.hasClass('no-music')) {
+            $stream_container.removeClass('no-music')
+        }
+        $.get('/playlists/info/'+pl_name, function(data){
+            res = JSON.parse(data);
+            n = res.length;
+            console.log(res);
+            startStreamPl();
+        });
 
+    });
+    function startStreamPl(){
+        i = i+1 ;
+        console.log(i);
+        $.get('/audio/geturl/'+res[i].id, function(data){
+            console.log(data);
+            $('#stream-player-playlist').attr('src', data);
+            var $stream_container = $('#stream-player-container-playlist');
+            $stream_container.removeClass('stream-wait');
+            streamPlayerPl[0].play();
+        })
+    }
+    $('#stream-player-playlist').on('ended', function(event) {
+        console.log("hello world");
+        startStreamPl();
+    });
+</script>
 <script>
     var streamPlayer = plyr.setup(document.querySelector('#stream-player'));
     $('body').on('click', '.stream-now', function (e) {
@@ -806,6 +837,15 @@
         console.log(streamUrl);
         startStream(streamPlayer, streamData);
     });
+    $('#stream-player-container').on('ready', function(event) {
+        console.log('ready')
+    });
+    $('#stream-player-container').on('pause', function(event) {
+        console.log("paused")
+    });
+    $('#stream-player-container').on('ended', function(event) {
+        console.log("hello world")
+    });
     function startStream(streamPlayer, streamData) {
         var $streamContainer = $('#stream-player-container');
         streamPlayer[0].pause();
@@ -824,6 +864,7 @@
             $('#stream-player').attr('src', data);
             streamPlayer[0].play();
         }
+
 //        {%
 //            comment %
 //        }
