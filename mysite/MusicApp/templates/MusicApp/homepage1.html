@@ -329,6 +329,12 @@
         justify-content: center;
         display: flex;
     }
+    .nav-overlay{
+        display: none;
+        position: absolute;
+        width: 0px;
+        z-index: 1102;
+    }
 
 </style>
 <body>
@@ -341,6 +347,26 @@
         <nav>
             <div class="nav-wrapper">
                 <a href="#" style="padding-left: 20px" class="brand-logo">PQusic</a>
+                <div id="slide-out" class="nav-overlay">
+                    <ul class="">
+                        <li><a href="saas.html">First Sidebar Link</a></li>
+                        <li><a href="saas.html">Second Sidebar Link</a></li>
+                        <li><a href="saas.html">Second Sidebar Link</a></li>
+                        <li><a href="saas.html">Second Sidebar Link</a></li>
+                        <li><a href="saas.html">Second Sidebar Link</a></li>
+                        <li><a href="saas.html">Second Sidebar Link</a></li>
+                        <li><a href="saas.html">Second Sidebar Link</a></li>
+                        <li><a href="saas.html">Second Sidebar Link</a></li>
+                        <li><a href="saas.html">Second Sidebar Link</a></li>
+                        <a href="homepage.html" class="btn"></a>
+                        <li><a href="saas.html">Second Sidebar Link</a></li>
+                        <li><a href="saas.html">Second Sidebar Link</a></li>
+                        <li><a href="saas.html">Second Sidebar Link</a></li>
+                     </ul>
+                </div>
+
+                <a href="#" id="collapse"><i class="material-icons">menu</i></a>
+
                 <ul class="right hide-on-med-and-down">
                     <li>
                         <div class="search--bar hide-on-med-and-down">
@@ -360,13 +386,6 @@
                     <li><a id="login-d" class="modal-trigger login" href="#loginmodal">Login</a>
                     </li>
                 </ul>
-                <ul class="side-nav show-on-med-and-down" id="mobile-demo">
-                    <li><a href="sass.html">Sass</a></li>
-                    <li><a href="badges.html">Components</a></li>
-                    <li><a href="collapsible.html">Javascript</a></li>
-                    <li><a href="mobile.html">Mobile</a></li>
-                </ul>
-                <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
 
                 <div class="search-bar hide-on-large-only">
                     <form style="display: flex; flex-direction: row">
@@ -559,12 +578,20 @@
 </div>
 <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/js/materialize.min.js"></script>
+
 <script>
     $(document).ready(function () {
         // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
         $('.modal').modal();
     });
 
+</script>
+<script>
+    $('body').on('click', '#collapse', function(){
+        $('.nav-overlay').css('display', 'block');
+        $('.nav-overlay').css('width', '100%');
+        $('.nav-overlay').css('background-color', '#fff');
+    })
 </script>
 
 
@@ -794,7 +821,7 @@
         if ($stream_container.hasClass('no-music')) {
             $stream_container.removeClass('no-music')
         }
-        $.get('/playlists/info/'+pl_name, function(data){
+        $.get('/playlists/info/' + pl_name, function (data) {
             res = JSON.parse(data);
             n = res.length;
             console.log(res);
@@ -802,13 +829,13 @@
         });
 
     });
-    function startStreamPl(options){
-        if (options == "FORWARD"){
-            i = (i+1)%n ;
+    function startStreamPl(options) {
+        if (options == "FORWARD") {
+            i = (i + 1) % n;
         }
         else {
-            if (options == "BACKWARD"){
-                i = Math.abs((i-1)%n);
+            if (options == "BACKWARD") {
+                i = Math.abs((i - 1) % n);
             }
         }
         console.log(i);
@@ -817,7 +844,7 @@
         $stream_container.find('.player-albumart img').attr('src', res[i].thumbnail);
         $stream_container.find('.player-name').text(res[i].name);
         $stream_container.find('.player-artist').text(res[i].artist);
-        $.get('/audio/geturl/'+res[i].id, function(data){
+        $.get('/audio/geturl/' + res[i].id, function (data) {
             console.log(data);
             $('#stream-player-playlist').attr('src', data);
             var $stream_container = $('#stream-player-container-playlist');
@@ -825,14 +852,14 @@
             streamPlayerPl[0].play();
         });
     }
-    $('#stream-player-playlist').on('ended', function(event) {
+    $('#stream-player-playlist').on('ended', function (event) {
         console.log("hello world");
         startStreamPl("FORWARD");
     });
-    $('body').on('click', '#forward', function(){
+    $('body').on('click', '#forward', function () {
         startStreamPl("FORWARD");
     });
-    $('body').on('click', '#backward', function(){
+    $('body').on('click', '#backward', function () {
         startStreamPl("BACKWARD");
     });
 
@@ -900,7 +927,14 @@
         return false;
     }
 </script>
-
+<script>
+    $(document).ready(function () {
+        $('.button-collapse').sideNav({
+                    edge: 'right' // Choose the horizontal origin
+                }
+        );
+    });
+</script>
 
 <!--<script>-->
 <!--document.getElementById("search-button").addEventListener("click", function myfunction() {-->
@@ -926,13 +960,6 @@
 <!--// })-->
 
 <!--Import jQuery before materialize.js-->
-<script>
-    $(document).ready(function () {
-        $(".button-collapse").sideNav({
-            closeOnClick: false // Closes side-nav on <a> clicks, useful for Angular/Meteor
 
-        });
-    });
-</script>
 </body>
 </html>
