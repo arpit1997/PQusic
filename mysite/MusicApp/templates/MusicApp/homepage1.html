@@ -329,12 +329,6 @@
         justify-content: center;
         display: flex;
     }
-    .nav-overlay{
-        display: none;
-        position: absolute;
-        width: 0px;
-        z-index: 1102;
-    }
 
 </style>
 <body>
@@ -347,26 +341,17 @@
         <nav>
             <div class="nav-wrapper">
                 <a href="#" style="padding-left: 20px" class="brand-logo">PQusic</a>
-                <div id="slide-out" class="nav-overlay">
-                    <ul class="">
-                        <li><a href="saas.html">First Sidebar Link</a></li>
-                        <li><a href="saas.html">Second Sidebar Link</a></li>
-                        <li><a href="saas.html">Second Sidebar Link</a></li>
-                        <li><a href="saas.html">Second Sidebar Link</a></li>
-                        <li><a href="saas.html">Second Sidebar Link</a></li>
-                        <li><a href="saas.html">Second Sidebar Link</a></li>
-                        <li><a href="saas.html">Second Sidebar Link</a></li>
-                        <li><a href="saas.html">Second Sidebar Link</a></li>
-                        <li><a href="saas.html">Second Sidebar Link</a></li>
-                        <a href="homepage.html" class="btn"></a>
-                        <li><a href="saas.html">Second Sidebar Link</a></li>
-                        <li><a href="saas.html">Second Sidebar Link</a></li>
-                        <li><a href="saas.html">Second Sidebar Link</a></li>
-                     </ul>
-                </div>
+                <!--<a href="#" id="collapse"></a>-->
+                <a class='dropdown-button btn' href='#' data-activates='dropdown1'><i
+                        class="material-icons">menu</i></a>
 
-                <a href="#" id="collapse"><i class="material-icons">menu</i></a>
-
+                <!-- Dropdown Structure -->
+                <ul id='dropdown1' class='dropdown-content'>
+                    <li><a href="#!">one</a></li>
+                    <li><a href="#!">two</a></li>
+                    <li class="divider"></li>
+                    <li><a href="#!">three</a></li>
+                </ul>
                 <ul class="right hide-on-med-and-down">
                     <li>
                         <div class="search--bar hide-on-med-and-down">
@@ -586,13 +571,13 @@
     });
 
 </script>
-<script>
-    $('body').on('click', '#collapse', function(){
-        $('.nav-overlay').css('display', 'block');
-        $('.nav-overlay').css('width', '100%');
-        $('.nav-overlay').css('background-color', '#fff');
-    })
-</script>
+<!--<script>-->
+<!--$('body').on('click', '#collapse', function(){-->
+<!--$('.nav-overlay').css('display', 'block');-->
+<!--$('.nav-overlay').css('width', '80%');-->
+<!--$('.nav-overlay').css('background-color', '#fff');-->
+<!--})-->
+<!--</script>-->
 
 
 <!--<script type="text/javascript">-->
@@ -668,17 +653,86 @@
             for (var i = 0; i < res.length; ++i) {
                 $('#pl-collection').append(
                         "<li class='collection-item avatar'>" +
-                        "<a href='#' id='pl-play-btn'>" +
+                        "<a href='#' class='pl-play-btn'>" +
                         "<i class='material-icons circle red'>play_arrow</i></a>" +
+                        "<a href='#' class='playlist-title'>" +
                         "<span class='title'>" + res[i].name + "</span>" +
+                        "</a>" +
                         "<p>" + res[i].count + " songs</p>" +
-                        "<a href='#!' class='secondary-content delete--button'><i class='material-icons'>delete</i></a>"
+                        "<a href='#' class='secondary-content delete--button'><i class='material-icons'>delete</i></a>"
                 )
             }
             $('.preloader-wrapper').addClass('preloader');
             $('.row').css("width", "100%");
             $('.rows').css("width", "100%");
         })
+    });
+    $('body').on('click', '.playlist-title', function () {
+        console.log("hello wolrld");
+        var $this = $(this);
+        var pl = $this.closest('.collection-item');
+        pl = pl.find('.title').text();
+        console.log(pl);
+        $('div.row-trend').detach();
+        $('.preloader-wrapper').removeClass('preloader');
+        $('.rows').append("<div class='row row-trend' id='search-results'></div>>");
+        $('#hdr').text(pl);
+        var data = $.get('/playlists/info/'+pl, function (data) {
+            var res = data;
+            console.log(res);
+            res = JSON.parse(res);
+            console.log("hello world");
+            console.log(res);
+            console.log(res[0]);
+            for (var i = 0; i < res.length; ++i) {
+                $('#search-results').append("<div class='col s6 m4 l3'>" +
+                        "<div class='card card-cr card--ym3'>" +
+                        "<div class='card-image card-image-cr'>" +
+                        "<span class='add-btn'>" +
+                        "<a class='activator add-to-pl btn-floating btn-medium waves-effect waves-light red'>" +
+                        "<i class='material-icons'>add</i>" +
+                        "</a>" +
+                        "</span>" +
+                        "<img src='" + res[i].thumbnail + "'>" +
+                        "</div>" +
+                        "<div class='card-reveal'>" +
+                        "<span class='card-title grey-text text-darken-4'>Card Title<i class='material-icons right'>close</i></span>" +
+                        "<div class='input-field col s12'>" +
+                        "<select class='pl-select'>" +
+                        "<option value='' disabled selected>Choose your option</option>" +
+                        "</select>" +
+                        "<label>Materialize Select</label>" +
+                        "</div>" +
+                        "<a class='btn-small add-button' href='#'>Add</a>" +
+                        "</div>" +
+                        "<div class='card-content'>" +
+                        "<div class='card-content-cr flow-text card--ym3--title'>" +
+                        res[i].title +
+                        "</div>" +
+                        "<div class='meta-data'>" +
+                        "<div class='channel'>" +
+                        "<p>" + res[i].artist + "</p>" +
+                        "</div>" +
+                        "<div class='views'>" +
+                        "<p>" + res[i].views + "</p>" +
+                        "</div>" +
+                        "</div>" +
+                        "<div class='stream-btn'>" +
+                        "<a class='stream-now btn-primary' href='#stream-player' data-stream-url='" + res[i].id + "'>" +
+                        "<i class='material-icons'>play_circle_outline</i>" +
+                        "</a>" +
+                        "</div>" +
+                        "</div>" +
+                        "</div>" +
+                        "</div>")
+            }
+
+            $('.preloader-wrapper').addClass('preloader');
+            $('.row').css("width", "100%");
+            $('.rows').css("width", "100%");
+        });
+
+
     });
     $('body').on('click', '.delete--button', function () {
         var $this = $(this);
@@ -807,7 +861,7 @@
 </script>
 <script>
     streamPlayerPl = plyr.setup(document.querySelector('#stream-player-playlist'));
-    $('body').on('click', '#pl-play-btn', function () {
+    $('body').on('click', '.pl-play-btn', function () {
         i = -1;
         n = 0;
         var $this = $(this);
