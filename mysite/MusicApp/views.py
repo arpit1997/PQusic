@@ -51,7 +51,7 @@ def user_login(request):
 			# if user's email has been verified then this will be true. default is false here
 			if user.is_active:
 				login(request, user)
-				x = {'status': "1", 'username': user.first_name}
+				x = {'status': "1", 'username': user.username}
 				x = json.dumps(x)
 				# return HttpResponseRedirect(reverse('musicapp:home'))
 				return JsonResponse(x, safe=False)

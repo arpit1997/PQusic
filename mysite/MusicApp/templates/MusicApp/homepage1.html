@@ -358,8 +358,7 @@
                             </form>
                         </div>
                     </li>
-                    <li><a href="sass.html">People</a></li>
-                    <li><a id="playlist-button" href="#">Playlists</a></li>
+                    <li><a class="playlist-button" href="#">Playlists</a></li>
                     <li><a href="collapsible.html">Signup</a></li>
                     <li><a id="login-d" class="modal-trigger login" href="#loginmodal">Login</a>
                     </li>
@@ -370,24 +369,19 @@
                     <li>
                         <div class="userView">
                             <div class="background">
-                                <img src="images/office.jpg">
+                                <img src="http://demo.geekslabs.com/materialize/v2.2/layout03/images/user-profile-bg.jpg">
                             </div>
-                            <a href="#!user"><img class="circle" src="images/yuna.jpg"></a>
+                            <a href="#!user"><img class="circle" src="http://material-design.storage.googleapis.com/publish/v_2/material_ext_publish/0Bx4BSt6jniD7TDlCYzRROE84YWM/materialdesign_introduction.png"></a>
                             <a href="#!name"><span class="white-text name">John Doe</span></a>
                             <a href="#!email"><span class="white-text email">jdandturk@gmail.com</span></a>
                         </div>
                     </li>
-                    <li><a href="homepage.html"><i class="material-icons">cloud</i>First Link With Icon</a></li>
-                    <li><a href="homepage.html">Second Link</a></li>
-                    <li>
-                        <div class="divider"></div>
-                    </li>
-                    <li><a class="subheader">Subheader</a></li>
-                    <li><a class="waves-effect" href="homepage.html">Third Link With Waves</a></li>
+                    <li><a id="login-m" class="modal-trigger login" href="#loginmodal">Login</a></li>
+                    <li><a>Signup</a></li>
+                    <li><a class="playlist-button" href="#">Playlists</a></li>
                 </ul>
                 </div>
                 <a href="#" data-activates="slide-out" class="button-collapse"><i class="material-icons">menu</i></a>
-
                 <div class="search-bar hide-on-large-only">
                     <form style="display: flex; flex-direction: row">
                         <input type="text" class="search-input" name="query" required>
@@ -658,7 +652,7 @@
         })
 
     });
-    $('body').on('click', '#playlist-button', function () {
+    $('body').on('click', '.playlist-button', function () {
         $('div.row-trend').detach();
         $('.rows').append("<div class='row row-trend' id='search-results'></div>>");
         $('.row-trend').append("<ul class='collection' id='pl-collection'></ul>");
@@ -777,11 +771,15 @@
                     if (res.status == '1') {
                         console.log("success");
                         $('#login-d').text("me");
-                        $('#login-d').removeClass('modal-trigger');
+                        $('#login-d').removeClass('login');
                         $('#login-d').addClass('dropdown-button');
                         $('#login-d').attr('data-activates', 'dropdown1');
-                        $('#login-d').attr('href', '#');
+                        $('#login-d').attr('href', '');
                         $('#login-m').text('LogOut');
+                        $('#login-m').removeClass('login');
+                        $('#login-m').removeClass('modal-trigger');
+                        $('#login-m').addClass('logout');
+                        $('#login-m').attr('href', '#');
                         $('.name').text(res.username);
                         $('#loginmodal').modal('close');
                         $.get('/playlist', function (data) {
@@ -802,13 +800,13 @@
         );
     })
 </script>
-<script>
-    $('body').on('click', '#login-m', function () {
-        console.log("button pressed");
-        $('.button-collapse').sideNav('hide');
-        $('#loginmodal').modal('open');
-    })
-</script>
+<!--<script>-->
+    <!--$('body').on('click', '#login-m', function () {-->
+        <!--console.log("button pressed");-->
+        <!--$('.button-collapse').sideNav('hide');-->
+        <!--$('#loginmodal').modal('open');-->
+    <!--})-->
+<!--</script>-->
 <script>
     $('body').on('click', '.search-icon', function () {
         console.log("hello world");
