@@ -329,6 +329,9 @@
         justify-content: center;
         display: flex;
     }
+    .side-nav{
+        transform: translateX(70px); !important;
+    }
 
 </style>
 <body>
@@ -341,17 +344,7 @@
         <nav>
             <div class="nav-wrapper">
                 <a href="#" style="padding-left: 20px" class="brand-logo">PQusic</a>
-                <!--<a href="#" id="collapse"></a>-->
-                <a class='dropdown-button btn' href='#' data-activates='dropdown1'><i
-                        class="material-icons">menu</i></a>
 
-                <!-- Dropdown Structure -->
-                <ul id='dropdown1' class='dropdown-content'>
-                    <li><a href="#!">one</a></li>
-                    <li><a href="#!">two</a></li>
-                    <li class="divider"></li>
-                    <li><a href="#!">three</a></li>
-                </ul>
                 <ul class="right hide-on-med-and-down">
                     <li>
                         <div class="search--bar hide-on-med-and-down">
@@ -371,6 +364,29 @@
                     <li><a id="login-d" class="modal-trigger login" href="#loginmodal">Login</a>
                     </li>
                 </ul>
+                <div>
+                <div id="slide-out" class="side-nav hide-on-large-only" >
+                <ul>
+                    <li>
+                        <div class="userView">
+                            <div class="background">
+                                <img src="images/office.jpg">
+                            </div>
+                            <a href="#!user"><img class="circle" src="images/yuna.jpg"></a>
+                            <a href="#!name"><span class="white-text name">John Doe</span></a>
+                            <a href="#!email"><span class="white-text email">jdandturk@gmail.com</span></a>
+                        </div>
+                    </li>
+                    <li><a href="homepage.html"><i class="material-icons">cloud</i>First Link With Icon</a></li>
+                    <li><a href="homepage.html">Second Link</a></li>
+                    <li>
+                        <div class="divider"></div>
+                    </li>
+                    <li><a class="subheader">Subheader</a></li>
+                    <li><a class="waves-effect" href="homepage.html">Third Link With Waves</a></li>
+                </ul>
+                </div>
+                <a href="#" data-activates="slide-out" class="button-collapse"><i class="material-icons">menu</i></a>
 
                 <div class="search-bar hide-on-large-only">
                     <form style="display: flex; flex-direction: row">
@@ -677,7 +693,7 @@
         $('.preloader-wrapper').removeClass('preloader');
         $('.rows').append("<div class='row row-trend' id='search-results'></div>>");
         $('#hdr').text(pl);
-        var data = $.get('/playlists/info/'+pl, function (data) {
+        var data = $.get('/playlists/info/' + pl, function (data) {
             var res = data;
             console.log(res);
             res = JSON.parse(res);
@@ -982,8 +998,12 @@
     }
 </script>
 <script>
+    var x = $(window).width();
+    console.log(x);
+    x = x/2;
     $(document).ready(function () {
         $('.button-collapse').sideNav({
+            menuWidth: x,
                     edge: 'right' // Choose the horizontal origin
                 }
         );
