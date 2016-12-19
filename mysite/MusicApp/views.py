@@ -58,7 +58,7 @@ def user_login(request):
 			else:
 				return HttpResponseRedirect(reverse('musicapp:activate'))
 		else:
-			x = json.dumps({'status':'0'})
+			x = json.dumps({'status': '0'})
 			return JsonResponse(x, safe=False)
 
 	# for a GET request
@@ -139,6 +139,7 @@ def results_query_json(request, query):
 	else:
 		return HttpResponse("Bad request")
 
+
 @csrf_exempt
 def user_signup(request):
 	"""
@@ -168,9 +169,9 @@ def user_signup(request):
 			# # sending account verification mail
 			# message = "Your Email address is" + email + "activation key is " + activation_key.decode("utf-8")
 			# send_verification_mail(email, activation_key, message)
-			return HttpResponse(json.dumps({"status":"1"}))
+			return HttpResponse(json.dumps({"status": "1"}))
 		else:
-			return HttpResponse(json.dumps({"status":"0", "message":message}))
+			return HttpResponse(json.dumps({"status": "0", "message": message}))
 
 
 def activate(request):
@@ -278,7 +279,7 @@ def change_password(request):
 def user_logout(request):
 	print(request.user)
 	logout(request)
-	res = {"status":'1'}
+	res = {"status": '1'}
 	return HttpResponse(json.dumps(res))
 
 
@@ -376,6 +377,7 @@ def search_users(request):
 
 
 @login_required
+@csrf_exempt
 def create_playlist(request):
 	"""
 	create playlist
@@ -394,10 +396,10 @@ def create_playlist(request):
 		if p is None:
 			new_playlist = Playlist(user=user, playlist_name=playlist_name, privacy=privacy)
 			new_playlist.save()
-			return HttpResponseRedirect(reverse("musicapp:view-playlists"))
+			return HttpResponse(json.dumps({"status": "1"}))
 		else:
-			messages.error(request, "playlist already exists")
-			return render(request, "MusicApp/create_playlist.html")
+			message = "Playlist already exists"
+			return HttpResponse(json.dumps({"status": "0", "message":message}))
 	else:
 		return render(request, "MusicApp/create_playlist.html")
 
@@ -419,11 +421,11 @@ def delete_playlist(request, name):
 			playlist = None
 		if playlist is not None:
 			playlist.delete()
-			return HttpResponse(json.dumps({"status":"1"}))
-			# return HttpResponseRedirect(reverse("musicapp:view-playlists"))
+			return HttpResponse(json.dumps({"status": "1"}))
+		# return HttpResponseRedirect(reverse("musicapp:view-playlists"))
 		else:
-			return HttpResponse(json.dumps({"status":"0"}))
-			# return HttpResponse("playlist Does not exist")
+			return HttpResponse(json.dumps({"status": "0"}))
+		# return HttpResponse("playlist Does not exist")
 	else:
 		return HttpResponse("Bad request")
 
@@ -460,20 +462,21 @@ def add_to_playlist(request):
 			except ObjectDoesNotExist:
 				song = None
 			if song is None:
-				song = PlaylistSongs(song_id=song_id, song_name=song_name, song_thumbnail=song_thumbnail, song_artist=song_artist)
+				song = PlaylistSongs(song_id=song_id, song_name=song_name, song_thumbnail=song_thumbnail,
+									 song_artist=song_artist)
 				song.save()
 				playlist.songs.add(song)
 				playlist.save()
 				messages.success(request, "song added")
-				return HttpResponse(json.dumps({'status':'1'}))
-				# return HttpResponseRedirect(reverse("musicapp:view-playlists"))
+				return HttpResponse(json.dumps({'status': '1'}))
+			# return HttpResponseRedirect(reverse("musicapp:view-playlists"))
 			else:
 				playlist.songs.add(song)
 				playlist.save()
 				messages.success(request, "song added")
-				return HttpResponse(json.dumps({'status':'1'}))
+				return HttpResponse(json.dumps({'status': '1'}))
 
-				# return HttpResponseRedirect(reverse("musicapp:view-playlists"))
+			# return HttpResponseRedirect(reverse("musicapp:view-playlists"))
 		else:
 			return HttpResponse("Playlist does not exist")
 
@@ -534,7 +537,7 @@ def list_of_playlists(request):
 		for playlist in playlists:
 			names.append(playlist.playlist_name)
 		pl = {
-			'names':names,
+			'names': names,
 		}
 		return HttpResponse(json.dumps(pl))
 
@@ -561,14 +564,14 @@ def view_playlists(request):
 			n = playlist.playlist_name
 			c = playlist.songs.all().count()
 			# playlist_attr.append((n, c))
-			o = {"name":n, "count":c}
+			o = {"name": n, "count": c}
 			playlist_attr.append(o)
 			print(c)
 		# context = {
 		# 	"playlists": playlist_attr
 		# }
 		return HttpResponse(json.dumps(playlist_attr))
-		# return render(request, "MusicApp/playlist.html", context)
+	# return render(request, "MusicApp/playlist.html", context)
 
 
 def view_playlist_songs(request, playlist_name):
@@ -606,7 +609,8 @@ def get_playlist_info(request, name):
 		if playlist is not None:
 			songs = playlist.songs.all()
 			for song in songs:
-				obj = {"id":song.song_id, "name":song.song_name, "thumbnail":song.song_thumbnail, "artist":song.song_artist}
+				obj = {"id": song.song_id, "name": song.song_name, "thumbnail": song.song_thumbnail,
+					   "artist": song.song_artist}
 				playlist_info.append(obj)
 			playlist_info = json.dumps(playlist_info)
 		return HttpResponse(playlist_info)

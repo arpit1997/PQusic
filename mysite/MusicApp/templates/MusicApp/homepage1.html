@@ -348,7 +348,7 @@
                 <ul class="right hide-on-med-and-down">
                     <li>
                         <div class="search--bar hide-on-med-and-down">
-                            <form style="display: flex; flex-direction: row">
+                            <form action="javascript:void(0);" style="display: flex; flex-direction: row">
                                 <input id="search" type="text" class="search--input" name="query" required>
                                 <a href="#search" class="search-icon">
                                     <i class="small material-icons"> search</i>
@@ -363,10 +363,9 @@
                     </li>
                     <ul id='dropdown1' class='dropdown-content'>
                         <li><a class="playlist-button" href="#href">Playlists</a></li>
-                        <li><a href="#href">two</a></li>
-                        <li><a href="#!">three</a></li>
+                        <li><a href="#plmodal" class="modal-trigger">create</a></li>
                     </ul>
-                    <li><a href="#signupmodal"  class="modal-trigger signup">Signup</a></li>
+                    <li><a href="#signupmodal" id="signup-d"  class="modal-trigger signup">Signup</a></li>
                     <li><a id="login-d" class="modal-trigger login" href="#loginmodal">Login</a>
                     </li>
                 </ul>
@@ -390,14 +389,13 @@
                     </li>
                     <ul id='dropdown2' class='dropdown-content'>
                         <li><a class="playlist-button" href="#">Playlists</a></li>
-                        <li><a href="#!">two</a></li>
-                        <li><a href="#!">three</a></li>
+                        <li><a href="#plmodal" class="modal-trigger">create</a></li>
                     </ul>
                 </ul>
                 </div>
                 <a href="#" data-activates="slide-out" class="button-collapse"><i class="material-icons">menu</i></a>
                 <div class="search-bar hide-on-large-only">
-                    <form style="display: flex; flex-direction: row">
+                    <form action="javascript:void(0);" style="display: flex; flex-direction: row">
                         <input type="text" class="search-input" name="query" required>
                         <a href="#search" class="search-icon">
                             <i class="small material-icons"> search</i>
@@ -521,6 +519,25 @@
         </div>
         <div class="modal-footer">
             <button id="submitbutton" class=" waves-effect waves-green btn-flat ">Login</button>
+        </div>
+    </div>
+    <div id="plmodal" class="modal">
+        <div class="modal-content">
+            <div style="width: 100%;" class="center-align">
+                <span id="pl-message" style="color: #039be5"></span>
+            </div>
+            <form id="plform" class="col s12">
+                <div class="row">
+                    <div class="input-field col s12">
+                        <i class="material-icons prefix">playlist_add</i>
+                        <input type="text" name="name" class="validate">
+                        <label for="icon_prefix">playlist name</label>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button id="create-button" class=" waves-effect waves-green btn-flat ">Create</button>
         </div>
     </div>
     <div id="signupmodal" class="modal">
@@ -695,7 +712,7 @@
     });
     $('body').on('click', '.playlist-button', function () {
         $('div.row-trend').detach();
-        $('.rows').append("<div class='row row-trend' id='search-results'></div>>");
+        $('.rows').append("<div class='row row-trend' id='search-results'></div>");
         $('.row-trend').append("<ul class='collection' id='pl-collection'></ul>");
         $('#hdr').text("Playlists");
         $('.preloader-wrapper').removeClass('preloader');
@@ -820,6 +837,41 @@
     })
 </script>
 <script>
+    $('body').on('click', '#create-button', function () {
+        var pl_name = $('input[name=name]').val();
+        $('#pl-message').text("");
+        $.post('/playlists/create/', $('form#plform').serialize(), function(data){
+            var res = JSON.parse(data);
+            if (res.status == "1"){
+                console.log("created");
+                $('#plmodal').modal('close');
+                $.get('/playlist', function (data) {
+                    var pl = $('#pl');
+                    pl.remove();
+                    console.log(data);
+                    res = JSON.parse(data);
+                    var json = res;
+                    console.log(res);
+                    $('body').append("<script id='pl' type='application/json'>" + data + "");
+                });
+                $('#pl-collection').append(
+                        "<li class='collection-item avatar'>" +
+                        "<a href='#' class='pl-play-btn'>" +
+                        "<i class='material-icons circle red'>play_arrow</i></a>" +
+                        "<a href='#' class='playlist-title'>" +
+                        "<span class='title'>" + pl_name + "</span>" +
+                        "</a>" +
+                        "<p>" + "0" + " songs</p>" +
+                        "<a href='#' class='secondary-content delete--button'><i class='material-icons'>delete</i></a>"
+                )
+            }
+            else {
+                $('#pl-message').text(res.message);
+            }
+        })
+    })
+</script>
+<script>
     $('body').on('click', '#submitbutton', function () {
         console.log("search button pressed");
         $('#message').text("");
@@ -830,9 +882,7 @@
                         console.log("success");
                         $('#login-d').text("me");
                         $('#login-d').removeClass('login');
-                        $('#login-d').addClass('dropdown-button');
-                        $('#login-d').attr('data-activates', 'dropdown1');
-                        $('#login-d').attr('href', '');
+                        $('#login-d').attr('href', '#');
                         $('#signup-d').removeClass('signup');
                         $('#signup-d').addClass('logout');
                         $('#signup-d').attr('href', '#');
@@ -872,9 +922,9 @@
                 $('#login-d').addClass('login');
                 $('#login-d').attr('href', '#loginmodal');
                 $('#signup-d').addClass('signup');
+                $('#signup-d').text('Signup');
                 $('#signup-d').removeClass('logout');
-                $('#signup-d').attr('href', '#');
-                $('#signup-m').removeClass('disabled');
+                $('#signup-d').attr('href', '#signupmodal');
                 $('#login-m').text('Login');
                 $('#login-m').addClass('login');
                 $('#login-m').addClass('modal-trigger');
@@ -927,9 +977,8 @@
                         "<span class='card-title grey-text text-darken-4'>Card Title<i class='material-icons right'>close</i></span>" +
                         "<div class='input-field col s12'>" +
                         "<select class='pl-select'>" +
-                        "<option value='' disabled selected>Choose your option</option>" +
+                        "<option value='' disabled selected>Choose</option>" +
                         "</select>" +
-                        "<label>Materialize Select</label>" +
                         "</div>" +
                         "<a class='btn-small add-button' href='#'>Add</a>" +
                         "</div>" +
