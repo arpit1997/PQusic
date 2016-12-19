@@ -358,7 +358,14 @@
                             </form>
                         </div>
                     </li>
-                    <li><a class="playlist-button" href="#">Playlists</a></li>
+                    <li>
+                        <a class="dropdown-button" href='#' data-activates='dropdown1'>Playlists</a>
+                    </li>
+                    <ul id='dropdown1' class='dropdown-content'>
+                        <li><a class="playlist-button" href="#href">Playlists</a></li>
+                        <li><a href="#href">two</a></li>
+                        <li><a href="#!">three</a></li>
+                    </ul>
                     <li><a href="#signupmodal"  class="modal-trigger signup">Signup</a></li>
                     <li><a id="login-d" class="modal-trigger login" href="#loginmodal">Login</a>
                     </li>
@@ -378,7 +385,14 @@
                     </li>
                     <li><a id="login-m" class="modal-trigger login" href="#loginmodal">Login</a></li>
                     <li><a href="#signupmodal"  class="modal-trigger signup">Signup</a></li>
-                    <li><a class="playlist-button" href="#">Playlists</a></li>
+                    <li>
+                        <a class="dropdown-button" href='#' data-activates='dropdown2'>Playlists</a>
+                    </li>
+                    <ul id='dropdown2' class='dropdown-content'>
+                        <li><a class="playlist-button" href="#">Playlists</a></li>
+                        <li><a href="#!">two</a></li>
+                        <li><a href="#!">three</a></li>
+                    </ul>
                 </ul>
                 </div>
                 <a href="#" data-activates="slide-out" class="button-collapse"><i class="material-icons">menu</i></a>
@@ -512,7 +526,7 @@
     <div id="signupmodal" class="modal">
         <div class="modal-content">
             <div style="width: 100%;" class="center-align">
-                <span id="pl-message" style="color: #039be5"></span>
+                <span id="su-message" style="color: #039be5"></span>
             </div>
             <form id="signupform" class="col s12">
                 <div class="row">
@@ -527,8 +541,9 @@
                         <label for="icon_lock">Password</label>
                     </div>
                     <div class="input-field col s12">
-                        <i class="material-icons prefix">lock</i>
+                        <i class="material-icons prefix">email</i>
                         <input type="email" name="email" class="validate">
+                        <label for="icon_email">Email</label>
                     </div>
                 </div>
             </form>
@@ -790,7 +805,7 @@
 </script>
 <script>
     $('body').on('click' ,'#signupbutton', function () {
-        $('#message').text("");
+        $('#su-message').text("");
         $.post('/signup/', $('form#signupform').serialize(), function (data) {
             var res = JSON.parse(data);
             console.log(res);
@@ -799,7 +814,7 @@
                 $('#signupmodal').modal('close');
             }
             else {
-                $('#pl-message').text(res.message);
+                $('#su-message').text(res.message);
             }
         })
     })
@@ -855,8 +870,6 @@
             if (res.status == '1'){
                 $('#login-d').text("Login");
                 $('#login-d').addClass('login');
-                $('#login-d').addClass('dropdown-button');
-                $('#login-d').attr('data-activates', 'dropdown1');
                 $('#login-d').attr('href', '#loginmodal');
                 $('#signup-d').addClass('signup');
                 $('#signup-d').removeClass('logout');
@@ -867,6 +880,8 @@
                 $('#login-m').addClass('modal-trigger');
                 $('#login-m').addClass('login');
                 $('#login-m').attr('href', '#loginmodal');
+                var pl = $('#pl');
+                pl.remove();
             }
         })
     })
@@ -1077,6 +1092,21 @@
                 }
         );
     });
+</script>
+<script>
+    $(document).ready(function () {
+          $('.dropdown-button').dropdown({
+      inDuration: 300,
+      outDuration: 225,
+      constrain_width: false, // Does not change width of dropdown to that of the activator
+      hover: true, // Activate on hover
+      gutter: 0, // Spacing from edge
+      belowOrigin: false, // Displays dropdown below the button
+      alignment: 'left' // Displays dropdown with edge aligned to the left of button
+    }
+  );
+
+    })
 </script>
 
 <!--<script>-->
