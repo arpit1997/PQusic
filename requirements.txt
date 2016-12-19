@@ -1,2 +1,4 @@
 django==1.9.2
 pycrypto
+pafy
+requests
