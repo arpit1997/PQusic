@@ -8,7 +8,8 @@ urlpatterns = [
 	url(r'^activate', views.activate, name="activate"),
 	url(r'^password-reset', views.password_reset, name='password_reset'),
 	url(r'^change-password', views.change_password, name='change_password'),
-	url(r"^u-logout", views.user_logout, name="logout"),
+	url(r"^u-logout$", views.user_logout, name="logout"),
+	url(r"^u-logout/$", views.user_logout, name="logout"),
 	# url(r'^(?P<name>[a-zA-Z]{1,})', views.hello, name='hello'),
 	# Test view url
 	url(r'^playlist$', views.list_of_playlists, name="listofpl"),

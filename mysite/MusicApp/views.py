@@ -139,7 +139,7 @@ def results_query_json(request, query):
 	else:
 		return HttpResponse("Bad request")
 
-
+@csrf_exempt
 def user_signup(request):
 	"""
 	handle for user sign up
@@ -149,34 +149,28 @@ def user_signup(request):
 
 	"""
 	if request.method == "POST":
+		print(request.POST)
 		# extracting form's data submitted by user
 		username = request.POST.get("username")
 		email = request.POST.get("email")
-		passwd = request.POST.get("passwd")
-		first_name = request.POST.get("first_name")
-		last_name = request.POST.get("last_name")
-		print(username, email, passwd, first_name, last_name, sep='$')
+		passwd = request.POST.get("password")
+		print(username, email, passwd, sep='$')
 		# privacy = request.POST.get("privacy")
 		# privacy = bool(privacy)
 		# creating user
 		user_exists_or_not, message = validate_username_email(username, email)
 		if not user_exists_or_not:
-			user = User.objects.create_user(username, email, passwd, first_name=first_name, last_name=last_name)
+			user = User.objects.create_user(username, email, passwd)
 			user = AppUserProfile.objects.create(user=user)
 			# custom save for creating non active user
 			custom_save(user)
-			activation_key = encrypt(secret_key, email)
-			# sending account verification mail
-			message = "Your Email address is" + email + "activation key is " + activation_key.decode("utf-8")
-			send_verification_mail(email, activation_key, message)
-			return HttpResponseRedirect(reverse("musicapp:activate"))
+			# activation_key = encrypt(secret_key, email)
+			# # sending account verification mail
+			# message = "Your Email address is" + email + "activation key is " + activation_key.decode("utf-8")
+			# send_verification_mail(email, activation_key, message)
+			return HttpResponse(json.dumps({"status":"1"}))
 		else:
-			messages.error(request, message)
-		return render(request, "MusicApp/user_signup.html")
-
-	# for a GET request
-	else:
-		return render(request, "MusicApp/user_signup.html")
+			return HttpResponse(json.dumps({"status":"0", "message":message}))
 
 
 def activate(request):
@@ -284,7 +278,8 @@ def change_password(request):
 def user_logout(request):
 	print(request.user)
 	logout(request)
-	return HttpResponseRedirect(reverse("musicapp:home"))
+	res = {"status":'1'}
+	return HttpResponse(json.dumps(res))
 
 
 @csrf_exempt

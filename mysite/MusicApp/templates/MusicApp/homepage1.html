@@ -187,7 +187,7 @@
     }
 
     #stream-player-container-playlist.no-music {
-        transform: translateY(75px);
+        transform: translateY(80px);
     }
 
     #stream-player-container {
@@ -359,7 +359,7 @@
                         </div>
                     </li>
                     <li><a class="playlist-button" href="#">Playlists</a></li>
-                    <li><a href="collapsible.html">Signup</a></li>
+                    <li><a href="#signupmodal"  class="modal-trigger signup">Signup</a></li>
                     <li><a id="login-d" class="modal-trigger login" href="#loginmodal">Login</a>
                     </li>
                 </ul>
@@ -377,7 +377,7 @@
                         </div>
                     </li>
                     <li><a id="login-m" class="modal-trigger login" href="#loginmodal">Login</a></li>
-                    <li><a>Signup</a></li>
+                    <li><a href="#signupmodal"  class="modal-trigger signup">Signup</a></li>
                     <li><a class="playlist-button" href="#">Playlists</a></li>
                 </ul>
                 </div>
@@ -449,14 +449,12 @@
                     </div>
 
                     <div class="card-reveal">
-                        <span class="card-title grey-text text-darken-4">Card Title<i
-                                class="material-icons right">close</i></span>
+                        <span class="card-title grey-text text-darken-4" style="float: right;"><i class="material-icons right">close</i></span>
                         <div class="input-field col s12">
                             <select class="pl-select">
-                                <option value="" disabled selected>Choose your option</option>
+                                <option value="" disabled selected>Choose</option>
 
                             </select>
-                            <label>Materialize Select</label>
                         </div>
                         <a class="btn-small add-button" href="#">Add</a>
                     </div>
@@ -509,6 +507,34 @@
         </div>
         <div class="modal-footer">
             <button id="submitbutton" class=" waves-effect waves-green btn-flat ">Login</button>
+        </div>
+    </div>
+    <div id="signupmodal" class="modal">
+        <div class="modal-content">
+            <div style="width: 100%;" class="center-align">
+                <span id="pl-message" style="color: #039be5"></span>
+            </div>
+            <form id="signupform" class="col s12">
+                <div class="row">
+                    <div class="input-field col s12">
+                        <i class="material-icons prefix">account_circle</i>
+                        <input  type="text" name="username" class="validate">
+                        <label for="icon_prefix">Username</label>
+                    </div>
+                    <div class="input-field col s12">
+                        <i class="material-icons prefix">lock</i>
+                        <input type="password" name="password" class="validate">
+                        <label for="icon_lock">Password</label>
+                    </div>
+                    <div class="input-field col s12">
+                        <i class="material-icons prefix">lock</i>
+                        <input type="email" name="email" class="validate">
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button id="signupbutton" class=" waves-effect waves-green btn-flat ">Signup</button>
         </div>
     </div>
     <div id="stream-player-container-playlist" class="stream-player no-music">
@@ -685,7 +711,7 @@
         console.log(pl);
         $('div.row-trend').detach();
         $('.preloader-wrapper').removeClass('preloader');
-        $('.rows').append("<div class='row row-trend' id='search-results'></div>>");
+        $('.rows').append("<div class='row row-trend' id='search-results'></div>");
         $('#hdr').text(pl);
         var data = $.get('/playlists/info/' + pl, function (data) {
             var res = data;
@@ -706,12 +732,11 @@
                         "<img src='" + res[i].thumbnail + "'>" +
                         "</div>" +
                         "<div class='card-reveal'>" +
-                        "<span class='card-title grey-text text-darken-4'>Card Title<i class='material-icons right'>close</i></span>" +
+                        "<span style='float: right;' class='card-title grey-text text-darken-4'><i class='material-icons right'>close</i></span>" +
                         "<div class='input-field col s12'>" +
                         "<select class='pl-select'>" +
-                        "<option value='' disabled selected>Choose your option</option>" +
+                        "<option value='' disabled selected>Choose</option>" +
                         "</select>" +
-                        "<label>Materialize Select</label>" +
                         "</div>" +
                         "<a class='btn-small add-button' href='#'>Add</a>" +
                         "</div>" +
@@ -754,6 +779,7 @@
             var res = JSON.parse(data);
             if (res.status == "1") {
                 console.log("deleted");
+                li.remove();
             }
             else {
                 console.log("not deleted");
@@ -763,8 +789,25 @@
     })
 </script>
 <script>
+    $('body').on('click' ,'#signupbutton', function () {
+        $('#message').text("");
+        $.post('/signup/', $('form#signupform').serialize(), function (data) {
+            var res = JSON.parse(data);
+            console.log(res);
+            if (res.status == '1'){
+                console.log('signup success');
+                $('#signupmodal').modal('close');
+            }
+            else {
+                $('#pl-message').text(res.message);
+            }
+        })
+    })
+</script>
+<script>
     $('body').on('click', '#submitbutton', function () {
         console.log("search button pressed");
+        $('#message').text("");
         $.post('/login/', $('form#loginform').serialize(), function (data) {
                     res = JSON.parse(data);
                     console.log(res);
@@ -775,6 +818,11 @@
                         $('#login-d').addClass('dropdown-button');
                         $('#login-d').attr('data-activates', 'dropdown1');
                         $('#login-d').attr('href', '');
+                        $('#signup-d').removeClass('signup');
+                        $('#signup-d').addClass('logout');
+                        $('#signup-d').attr('href', '#');
+                        $('#signup-d').text('Logout');
+                        $('#signup-m').addClass('disabled');
                         $('#login-m').text('LogOut');
                         $('#login-m').removeClass('login');
                         $('#login-m').removeClass('modal-trigger');
@@ -798,6 +846,29 @@
                 'json' // I expect a JSON response
 
         );
+    })
+</script>
+<script>
+    $('body').on('click', '.logout', function(){
+        $.get('/u-logout/', function (data) {
+            var res = JSON.parse(data);
+            if (res.status == '1'){
+                $('#login-d').text("Login");
+                $('#login-d').addClass('login');
+                $('#login-d').addClass('dropdown-button');
+                $('#login-d').attr('data-activates', 'dropdown1');
+                $('#login-d').attr('href', '#loginmodal');
+                $('#signup-d').addClass('signup');
+                $('#signup-d').removeClass('logout');
+                $('#signup-d').attr('href', '#');
+                $('#signup-m').removeClass('disabled');
+                $('#login-m').text('Login');
+                $('#login-m').addClass('login');
+                $('#login-m').addClass('modal-trigger');
+                $('#login-m').addClass('login');
+                $('#login-m').attr('href', '#loginmodal');
+            }
+        })
     })
 </script>
 <!--<script>-->
