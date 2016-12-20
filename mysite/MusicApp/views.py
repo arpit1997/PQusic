@@ -93,6 +93,12 @@ def home(request):
 
 
 @csrf_exempt
+def get_trending(request):
+	pl = YtPlaylist()
+	return HttpResponse(pl.pl_songs)
+
+
+@csrf_exempt
 def results_query(request):
 	if request.method == "POST":
 		query = request.POST.get("query")

@@ -343,7 +343,7 @@
     <div class="navbar-fixed">
         <nav>
             <div class="nav-wrapper">
-                <a href="#" style="padding-left: 20px" class="brand-logo">PQusic</a>
+                <a href="#" style="padding-left: 20px" class="brand-logo home">PQusic</a>
 
                 <ul class="right hide-on-med-and-down">
                     <li>
@@ -417,7 +417,7 @@
                 <!--<li><a class="subheader">Subheader</a></li>-->
                 <!--<li><a class="waves-effect" href="#!">Third Link With Waves</a></li>-->
                 <!--</ul>-->
-
+                </div>
             </div>
         </nav>
     </div>
@@ -440,62 +440,7 @@
                 </div>
             </div>
         </div>
-        {% for category, songs in pl.items %}
-        <div class="row row-trend">
-            <div>
-                <h5>
-                    {{ category }}
-                </h5>
-            </div>
-            {% for song in songs %}
-            <div class="col s6 m4 l3">
-                <div class="card card-cr card--ym3">
-                    <div class="card-image card-image-cr">
-                        <span class="add-btn">
-                            <a class="activator add-to-pl btn-floating btn-medium waves-effect waves-light red">
-                                <i class="material-icons">add</i>
-                            </a>
-                        </span>
 
-                        <img src="{{ song.yt_thumbnail }}">
-                    </div>
-
-                    <div class="card-reveal">
-                        <span class="card-title grey-text text-darken-4" style="float: right;"><i class="material-icons right">close</i></span>
-                        <div class="input-field col s12">
-                            <select class="pl-select">
-                                <option value="" disabled selected>Choose</option>
-
-                            </select>
-                        </div>
-                        <a class="btn-small add-button" href="#">Add</a>
-                    </div>
-                    <div class="card-content">
-                        <div class="card-content-cr flow-text card--ym3--title">
-                            <p class="truncate">{{ song.yt_title }}</p>
-                        </div>
-
-                        <div class="meta-data">
-                            <div class="channel">
-                                <p class="truncate">{{ song.yt_artist }}</p>
-                            </div>
-                            <div class="views">
-                                <p>{{ song.yt_views }}</p>
-                            </div>
-                        </div>
-                        <div class="stream-btn">
-                            <a class="stream-now btn-primary" href="#stream-player" data-stream-url="{{ song.yt_id }}">
-                                <i class="material-icons">play_circle_outline</i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-
-
-        </div>
-        {% endfor %}
     </div>
     <div id="loginmodal" class="modal">
         <div class="modal-content">
@@ -944,6 +889,83 @@
     <!--})-->
 <!--</script>-->
 <script>
+    function trending(){
+        $('div.row-trend').detach();
+        $('.preloader-wrapper').removeClass('preloader');
+        $('.rows').append("<div class='row row-trend' id='search-results'></div>");
+        $('#hdr').text("Trending Songs");
+        var data = $.get("/trending/", function (data) {
+            console.log(data);
+            var res = JSON.parse(data);
+            console.log(res);
+            console.log("hello world");
+            for (var i = 0; i < res.length; ++i) {
+                var category = res[i].category;
+                var songs = res[i].songs;
+                var div = $('.rows').append("<div class='row row-trend'>" +
+                        "<div>" +
+                        "<h5>"+
+                        category+
+                        "</h5>" +
+                        "</div>"+
+                        "</div>");
+                var d = $(div).children().last();
+                console.log(d);
+                for (var j = 0; j < songs.length; j++){
+                    d.append("<div class='col s6 m4 l3'>" +
+                        "<div class='card card-cr card--ym3'>" +
+                        "<div class='card-image card-image-cr'>" +
+                        "<span class='add-btn'>" +
+                        "<a class='activator add-to-pl btn-floating btn-medium waves-effect waves-light red'>" +
+                        "<i class='material-icons'>add</i>" +
+                        "</a>" +
+                        "</span>" +
+                        "<img src='" + songs[j].thumbnail + "'>" +
+                        "</div>" +
+                        "<div class='card-reveal'>" +
+                        "<span class='card-title grey-text text-darken-4'><i class='material-icons right'>close</i></span>" +
+                        "<div class='input-field col s12'>" +
+                        "<select class='pl-select'>" +
+                        "<option value='' disabled selected>Choose</option>" +
+                        "</select>" +
+                        "</div>" +
+                        "<a class='btn-small add-button' href='#'>Add</a>" +
+                        "</div>" +
+                        "<div class='card-content'>" +
+                        "<div class='card-content-cr flow-text card--ym3--title'>" +
+                        songs[j].title +
+                        "</div>" +
+                        "<div class='meta-data'>" +
+                        "<div class='channel'>" +
+                        "<p>" + songs[j].artist + "</p>" +
+                        "</div>" +
+                        "<div class='views'>" +
+                        "<p>" + songs[j].views + "</p>" +
+                        "</div>" +
+                        "</div>" +
+                        "<div class='stream-btn'>" +
+                        "<a class='stream-now btn-primary' href='#stream-player' data-stream-url='" + songs[j].id + "'>" +
+                        "<i class='material-icons'>play_circle_outline</i>" +
+                        "</a>" +
+                        "</div>" +
+                        "</div>" +
+                        "</div>" +
+                        "</div>")
+                }
+
+            }
+
+            $('.preloader-wrapper').addClass('preloader');
+        });
+    }
+    $(document).ready(function () {
+        trending();
+    });
+    $('body').on('click','.home' ,function () {
+        trending();
+    })
+</script>
+<script>
     $('body').on('click', '.search-icon', function () {
         console.log("hello world");
         var query = $('input[name=query]').val();
@@ -974,7 +996,7 @@
                         "<img src='" + res[i].thumbnail + "'>" +
                         "</div>" +
                         "<div class='card-reveal'>" +
-                        "<span class='card-title grey-text text-darken-4'>Card Title<i class='material-icons right'>close</i></span>" +
+                        "<span class='card-title grey-text text-darken-4'><i class='material-icons right'>close</i></span>" +
                         "<div class='input-field col s12'>" +
                         "<select class='pl-select'>" +
                         "<option value='' disabled selected>Choose</option>" +

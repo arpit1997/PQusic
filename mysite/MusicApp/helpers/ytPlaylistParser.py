@@ -1,3 +1,6 @@
+import json
+
+import re
 import requests
 from bs4 import BeautifulSoup
 
@@ -8,12 +11,15 @@ class YtPlaylist:
 	key: playlist title
 	value: an array containing list of YtVideo objects
 	"""
+
 	def __init__(self):
 		self.yt_playlist = dict()
+		self.pl_songs = []
 		self.yt_playlist_url = "https://www.youtube.com/channel/UC-9-kyTW8ZkZNDHQJ6FgpwQ/featured"
 		self.page = self.get_page()
 		self.playlist_titles = []
 		self.fetch_videos()
+		self.create_json()
 
 	def get_page(self):
 		# r = requests.get(self.yt_playlist_url)
@@ -39,9 +45,9 @@ class YtPlaylist:
 				h3_yt_lockup_title = li_element.find_all('h3', {'class': 'yt-lockup-title'})
 				video_object = YtVideo()
 				video_object.yt_href = h3_yt_lockup_title[0].find_all('a')[0].get('href')
-				video_object.yt_id = video_object.yt_href[9:]
+				video_object.yt_id = re.split("=", video_object.yt_href)[1]
 				video_object.yt_title = h3_yt_lockup_title[0].find_all('a')[0].get('title')
-				video_object.yt_thumbnail = "http://img.youtube.com/vi/%s/default.jpg" % video_object.yt_href[9:]
+				video_object.yt_thumbnail = "http://img.youtube.com/vi/%s/default.jpg" % video_object.yt_id
 				video_object.yt_duration = li_element.find_all('span', {'class': 'video-time'})[0].find_all('span')[
 					0].get_text()
 				video_object.yt_views = li_element.find_all('ul', {'class': 'yt-lockup-meta-info'})[0].find_all('li')[
@@ -54,16 +60,29 @@ class YtPlaylist:
 		"""
 		just for debugging
 		"""
-		# x = self.yt_playlist['R&B']
-		# print(x[0].yt_title)
-		# print(x[0].yt_href)
-		# print(x[0].yt_thumbnail)
+
+	# x = self.yt_playlist['R&B']
+	# print(x[0].yt_title)
+	# print(x[0].yt_href)
+	# print(x[0].yt_thumbnail)
+
+	def create_json(self):
+		pl_songs = []
+		for category, songs in self.yt_playlist.items():
+			songs_obj = []
+			for song in songs:
+				songs_obj.append(
+					{"id": song.yt_id, "title": song.yt_title, "href": song.yt_href, "thumbnail": song.yt_thumbnail,
+					 "artist": song.yt_artist, "duration": song.yt_duration})
+			pl_songs.append({"category":category, "songs":songs_obj})
+		self.pl_songs = json.dumps(pl_songs)
 
 
 class YtVideo:
 	"""
 	video object containing properties of a video
 	"""
+
 	def __init__(self):
 		self.yt_title = ""
 		self.yt_href = ""
@@ -72,7 +91,6 @@ class YtVideo:
 		self.yt_views = ""
 		self.yt_thumbnail = ""
 		self.yt_id = ""
-
 
 # if __name__ == "__main__":
 # 	x = YtPlaylist()
