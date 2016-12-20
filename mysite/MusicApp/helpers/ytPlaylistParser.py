@@ -73,7 +73,7 @@ class YtPlaylist:
 			for song in songs:
 				songs_obj.append(
 					{"id": song.yt_id, "title": song.yt_title, "href": song.yt_href, "thumbnail": song.yt_thumbnail,
-					 "artist": song.yt_artist, "duration": song.yt_duration})
+					 "artist": song.yt_artist, "duration": song.yt_duration, "views":song.yt_views})
 			pl_songs.append({"category":category, "songs":songs_obj})
 		self.pl_songs = json.dumps(pl_songs)
 
