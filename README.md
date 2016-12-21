@@ -1,26 +1,6 @@
 # MusicWebApp
-A Music playlist app
-
+A Music playlist [app](http://159.203.216.55:8100/home/)
 [![Build Status](https://travis-ci.com/arpit1997/MusicWebApp.svg?token=3Uc9gKxpBA3p2jCgiRiz&branch=master)](https://travis-ci.com/arpit1997/MusicWebApp)
-## How to run this code
-1. pull this repository
-2. set three environment variables to your machine:
-  - This wil point to sender's email address in verification email.variable Name:email
-  - This will point to sender's email's password.variable Name: password_a
-  - This will point to encryption key.variable Name: encryption_key     Value:"1234567812345678"
-3. make migrations (create database)
-
-    `python3 manage.py makemigrations`
-    
-    `python3 manage.py migrate`
-3. run the server
-
-    `python3 manage.py runserver`
-    
-4. Go to Browser and type:
-
-    `127.0.0.1:8000`
-    
 ##Screenshots
 ![alt_text](https://raw.githubusercontent.com/arpit1997/pqusic/development3/docs/sc.png "Logo title-text 1")
 
