@@ -632,7 +632,6 @@
         var stream_btn = card.find('.stream-now');
         var id = stream_btn.attr('data-stream-url');
         var card_title = card.find('.card--ym3--title');
-        card_title = card_title.find('p');
         var title = card_title.text();
         card_title = card.find('.channel');
         card_title = card_title.find('p');
@@ -719,14 +718,14 @@
                         "</div>" +
                         "<div class='card-content'>" +
                         "<div class='card-content-cr flow-text card--ym3--title'>" +
-                        res[i].title +
+                        res[i].name +
                         "</div>" +
                         "<div class='meta-data'>" +
                         "<div class='channel'>" +
                         "<p>" + res[i].artist + "</p>" +
                         "</div>" +
                         "<div class='views'>" +
-                        "<p>" + res[i].views + "</p>" +
+                        "<p>" + "</p>" +
                         "</div>" +
                         "</div>" +
                         "<div class='stream-btn'>" +

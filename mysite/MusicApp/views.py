@@ -615,8 +615,7 @@ def get_playlist_info(request, name):
 		if playlist is not None:
 			songs = playlist.songs.all()
 			for song in songs:
-				obj = {"id": song.song_id, "name": song.song_name, "thumbnail": song.song_thumbnail,
-					   "artist": song.song_artist}
+				obj = {"id": song.song_id, "name": song.song_name, "thumbnail": song.song_thumbnail,"artist": song.song_artist}
 				playlist_info.append(obj)
 			playlist_info = json.dumps(playlist_info)
 		return HttpResponse(playlist_info)
