@@ -1,6 +1,6 @@
 # MusicWebApp
 [![Build Status](https://travis-ci.com/arpit1997/MusicWebApp.svg?token=3Uc9gKxpBA3p2jCgiRiz&branch=master)](https://travis-ci.com/arpit1997/MusicWebApp)
-
+[![Coverage Status](https://coveralls.io/repos/github/arpit1997/PQusic/badge.svg?branch=development3)](https://coveralls.io/github/arpit1997/PQusic?branch=development3)
 A Music playlist [app](http://159.203.216.55:8100/home/)
 
 ##Screenshots
