@@ -1030,10 +1030,9 @@
     });
 </script>
 <script>
+    window.i = -1;
     streamPlayerPl = plyr.setup(document.querySelector('#stream-player-playlist'));
     $('body').on('click', '.pl-play-btn', function () {
-        i = -1;
-        n = 0;
         var $this = $(this);
         var collection = $this.closest('.collection-item');
         var pl_name = collection.find('span').text();
@@ -1053,22 +1052,27 @@
         });
 
     });
+    function mod(n, m) {
+        return ((n % m) + m) % m;
+    }
     function startStreamPl(options) {
         if (options == "FORWARD") {
-            i = (i + 1) % n;
+            console.log(n);
+            window.i = (window.i + 1) % n;
         }
         else {
             if (options == "BACKWARD") {
-                i = Math.abs((i - 1) % n);
+                window.i = mod(window.i - 1, n);
+                console.log(window.i)
             }
         }
-        console.log(i);
+        console.log(window.i);
         var $stream_container = $('#stream-player-container-playlist');
         $stream_container.addClass('stream-wait');
-        $stream_container.find('.player-albumart img').attr('src', res[i].thumbnail);
-        $stream_container.find('.player-name').text(res[i].name);
-        $stream_container.find('.player-artist').text(res[i].artist);
-        $.get('/audio/geturl/' + res[i].id, function (data) {
+        $stream_container.find('.player-albumart img').attr('src', res[window.i].thumbnail);
+        $stream_container.find('.player-name').text(res[window.i].name);
+        $stream_container.find('.player-artist').text(res[window.i].artist);
+        $.get('/audio/geturl/' + res[window.i].id, function (data) {
             console.log(data);
             $('#stream-player-playlist').attr('src', data);
             var $stream_container = $('#stream-player-container-playlist');
