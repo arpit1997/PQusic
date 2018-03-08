@@ -1,6 +1,4 @@
 # MusicWebApp
-[![Build Status](https://travis-ci.com/arpit1997/MusicWebApp.svg?token=3Uc9gKxpBA3p2jCgiRiz&branch=master)](https://travis-ci.com/arpit1997/MusicWebApp)
-[![Coverage Status](https://coveralls.io/repos/github/arpit1997/PQusic/badge.svg?branch=development3)](https://coveralls.io/github/arpit1997/PQusic?branch=development3)
 [![Codeship status](https://codeship.com/projects/52cd7180-b737-0134-bc16-5240c481c562/status?branch=development3)
 
 
